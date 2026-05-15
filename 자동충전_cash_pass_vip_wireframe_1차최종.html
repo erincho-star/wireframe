@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>캐시 PASS VIP — 자동충전창 와이어프레임</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#e8e8e8;padding:20px;color:#1a1a1a;min-height:100vh}
+
+/* ── 상단 네비 ── */
+.page-title{font-size:14px;font-weight:700;color:#333;margin-bottom:12px}
+.nav-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;background:#fff;padding:12px;border-radius:10px;border:1px solid #ddd}
+.nav-label{font-size:11px;font-weight:700;color:#999;align-self:center;margin-right:4px;white-space:nowrap}
+.nav-divider{width:1px;background:#eee;align-self:stretch;margin:0 4px}
+.nbtn{font-size:11px;padding:5px 10px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#555;font-family:inherit;transition:all 0.15s;white-space:nowrap}
+.nbtn:hover{border-color:#FFD700;color:#333}
+.nbtn.on{background:#1a1a1a;color:#FFD700;border-color:#1a1a1a;font-weight:600}
+.nbtn.popup{background:#f5f5f5;color:#888}
+.nbtn.popup.on{background:#555;color:#fff;border-color:#555}
+
+/* ── 메인 레이아웃 ── */
+.main-wrap{display:flex;gap:20px;align-items:flex-start}
+.phone-col{flex-shrink:0}
+.frame{width:360px;border:1px solid #bbb;border-radius:14px;overflow:hidden;background:#fff;position:relative;box-shadow:0 6px 24px rgba(0,0,0,0.15)}
+
+/* ── 화면 공통 ── */
+.screen{display:none}
+.screen.on{display:block}
+
+/* ── 헤더 ── */
+.hd{background:#1a1a1a;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.hd-title{font-size:16px;font-weight:600;color:#fff;position:absolute;left:50%;transform:translateX(-50%)}
+.hd-close{color:rgba(255,255,255,0.6);font-size:18px;cursor:pointer;margin-left:auto}
+.hd-wrap{display:flex;width:100%;align-items:center;position:relative}
+
+/* ── 다크 배너 ── */
+.dark-banner{background:#0d0d1a;padding:16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222}
+.db-left .db-title{font-size:15px;font-weight:700;color:#FFD700;margin-bottom:3px}
+.db-left .db-sub{font-size:11px;color:rgba(255,255,255,0.5)}
+.db-coin{width:48px;height:48px;border-radius:50%;background:#2a2500;border:2px solid #FFD700;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.db-bubble{background:#222;border:1px solid #444;border-radius:12px;padding:5px 10px;margin-top:8px;display:inline-flex;align-items:center;gap:4px}
+.db-bubble span{font-size:10px;color:#FFD700}
+
+/* 이용중 배너 */
+.using-banner{padding:14px 16px;display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid #eee}
+.ub-dark{background:#0d0d1a}
+.ub-kp{background:#0d1428}
+.svc-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-right:6px;vertical-align:middle}
+.svc-tag.kp{background:#fee200;color:#3d3000}
+.svc-tag.kw{background:#5a2fff;color:#fff}
+.using-badge{font-size:10px;font-weight:700;background:#22c55e;color:#fff;padding:2px 7px;border-radius:10px;vertical-align:middle}
+.inactive-badge{font-size:10px;font-weight:700;background:#e85c33;color:#fff;padding:2px 7px;border-radius:10px;vertical-align:middle}
+.ub-title{font-size:14px;font-weight:600;color:#fff;margin:5px 0 2px}
+.ub-sub{font-size:11px;color:rgba(255,255,255,0.55)}
+.ub-icon{width:40px;height:40px;border-radius:50%;background:#1e1e30;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:2px}
+
+/* 안내 박스 */
+.notice-box{margin:10px 16px;padding:10px 12px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe}
+.nb-title{font-size:12px;font-weight:600;color:#1e40af;margin-bottom:2px}
+.nb-sub{font-size:11px;color:#3b82f6;line-height:1.5}
+
+/* ── 탭 ── */
+.tabs{display:flex;border-bottom:2px solid #eee;background:#fff}
+.tab{flex:1;text-align:center;padding:11px 0;font-size:13px;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;font-weight:500;transition:all 0.15s}
+.tab.on{color:#1a1a1a;border-bottom-color:#FFD700;font-weight:700}
+
+/* ── 보유캐시 ── */
+.cash-row{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f0f0}
+.cash-lb{font-size:13px;color:#666}
+.cash-val{font-size:14px;font-weight:600;color:#1a1a1a}
+
+/* ── 충전단위 ── */
+.unit-wrap{padding:12px 16px;border-bottom:1px solid #f0f0f0;background:#fafafa}
+.unit-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;margin-bottom:4px}
+.unit-sel{font-size:12px;padding:4px 8px;border:1px solid #ccc;border-radius:6px;background:#fff;color:#1a1a1a;cursor:pointer}
+.unit-desc{font-size:12px;color:#333;font-weight:500}
+.tooltip-pill{display:inline-flex;align-items:center;background:#1a1a1a;border-radius:10px;padding:3px 9px;margin-left:auto}
+.tooltip-pill span{font-size:10px;color:#FFD700;font-weight:600}
+
+/* ── 상품 리스트 헤더 ── */
+.prod-hd{display:flex;padding:6px 16px;background:#fafafa;border-bottom:1px solid #f0f0f0}
+.prod-hd-l{font-size:11px;color:#999;flex:1}
+.prod-hd-r{font-size:11px;color:#999;text-align:right}
+
+/* ── 상품 아이템 ── */
+.prod-list{padding:0 16px}
+.prod{display:flex;align-items:center;padding:11px 0;border-bottom:1px solid #f5f5f5;cursor:pointer}
+.prod:last-child{border-bottom:none}
+.radio{width:18px;height:18px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-right:10px;transition:all 0.15s}
+.radio.on{border-color:#FFD700;background:#FFD700}
+.radio.on::after{content:'';width:7px;height:7px;border-radius:50%;background:#1a1a1a}
+.prod-main{flex:1}
+.prod-cash{font-size:14px;color:#1a1a1a;font-weight:500}
+.prod-bonus{font-size:11px;color:#555;margin-top:3px;display:flex;align-items:center;gap:5px}
+.prod-bonus-txt{color:#555}
+.prod-rate{font-size:10px;font-weight:700;background:#ebebeb;color:#555;padding:2px 6px;border-radius:10px;display:inline-block}
+.prod-price{font-size:13px;color:#666;text-align:right;min-width:72px}
+
+/* ── 하단 요약 ── */
+.bottom-summ{margin:8px 16px;padding:11px 13px;background:#f7f7f7;border-radius:8px;border:1px solid #ebebeb}
+.bs-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0}
+.bs-lb{font-size:12px;color:#666}
+.bs-val{font-size:12px;font-weight:600;color:#666}
+.bs-row.main .bs-lb{font-size:14px;font-weight:700;color:#1a1a1a}
+.bs-row.main .bs-val{font-size:16px;font-weight:700;color:#1a1a1a}
+.bs-div{height:1px;background:#e5e5e5;margin:5px 0}
+
+/* ── 이용안내 동의 ── */
+.agree-wrap{padding:8px 16px 4px;font-size:11px;color:#aaa;line-height:1.5}
+.agree-row-chk{display:flex;align-items:flex-start;gap:8px;padding:8px 16px 4px}
+.agree-chk{width:17px;height:17px;border-radius:4px;border:1.5px solid #ccc;flex-shrink:0;margin-top:1px;cursor:pointer;accent-color:#FFD700}
+.agree-chk-txt{font-size:12px;color:#555;line-height:1.5}
+.agree-link{color:#4a7cdc;text-decoration:underline;cursor:pointer}
+
+/* ── 버튼 ── */
+.btn-wrap{padding:8px 16px 14px;display:flex;flex-direction:column;gap:8px}
+.btn-wrap.row{flex-direction:row}
+.btn{width:100%;padding:14px;font-size:15px;font-weight:700;border:none;border-radius:8px;cursor:pointer;font-family:inherit;transition:opacity 0.15s}
+.btn:hover{opacity:0.88}
+.btn.primary{background:#FFD700;color:#1a1a1a}
+.btn.secondary{background:#fff;color:#1a1a1a;border:1px solid #ddd}
+.btn.danger{background:#fff;color:#888;border:1px solid #ccc}
+.btn.gray{background:#f0f0f0;color:#666}
+.btn.half{flex:1}
+
+/* ── 이용안내 텍스트 ── */
+.info-footer{padding:8px 16px 16px;font-size:10px;color:#aaa;line-height:1.7;border-top:1px solid #f0f0f0}
+
+/* ── 정보 테이블 ── */
+.info-tbl{margin:12px 16px;border:1px solid #ebebeb;border-radius:8px;overflow:hidden}
+.info-row{display:flex;align-items:center;padding:10px 13px;border-bottom:1px solid #f5f5f5}
+.info-row:last-child{border-bottom:none}
+.info-lb{font-size:12px;color:#888;min-width:88px;flex-shrink:0}
+.info-val{font-size:12px;color:#1a1a1a;font-weight:500;flex:1}
+
+/* ── 완료 화면 ── */
+.complete-area{padding:24px 16px 16px;text-align:center}
+.complete-icon{width:52px;height:52px;border-radius:50%;background:#FFD700;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px}
+.complete-title{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:5px}
+.complete-sub{font-size:12px;color:#888;line-height:1.5}
+
+/* ── 해지 확인 화면 ── */
+.termination-area{padding:20px 16px 12px}
+.term-title{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:5px}
+.term-sub{font-size:12px;color:#888;line-height:1.5;margin-bottom:12px}
+
+/* ── 팝업 오버레이 ── */
+.overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:20;align-items:center;justify-content:center;border-radius:14px}
+.overlay.on{display:flex}
+.popup{background:#fff;border-radius:12px;width:calc(100% - 40px);padding:0;overflow:hidden}
+.popup-body{padding:20px 18px 16px}
+.popup-title{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+.popup-sub{font-size:12px;color:#666;line-height:1.6;margin-bottom:14px}
+.popup-info{background:#f7f7f7;border-radius:6px;padding:10px 12px;margin-bottom:14px}
+.popup-info-row{display:flex;justify-content:space-between;padding:2px 0}
+.popup-info-lb{font-size:11px;color:#888}
+.popup-info-val{font-size:11px;font-weight:600;color:#1a1a1a}
+.popup-btns{display:flex;gap:8px;padding:0 18px 16px}
+.popup-btn{flex:1;padding:12px;font-size:13px;font-weight:700;border-radius:8px;border:none;cursor:pointer;font-family:inherit}
+.popup-btn.cancel{background:#f0f0f0;color:#666}
+.popup-btn.confirm{background:#FFD700;color:#1a1a1a}
+.popup-btn.danger{background:#FFD700;color:#1a1a1a}
+.popup-btn.black{background:#1a1a1a;color:#fff}
+.popup-tall{max-height:82%}
+.popup-hd-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:1}
+.popup-hd-title{font-size:15px;font-weight:700;color:#1a1a1a}
+.popup-hd-close{font-size:12px;color:#666;background:none;border:1px solid #ddd;border-radius:6px;padding:4px 10px;cursor:pointer;font-family:inherit}
+.popup-scroll{max-height:340px;overflow-y:auto;padding:14px 16px 16px}
+.popup-notice-list{list-style:none;padding:0;margin:0}
+.popup-notice-list li{font-size:11px;color:#555;line-height:1.7;padding:5px 0 5px 14px;border-bottom:1px solid #f5f5f5;position:relative}
+.popup-notice-list li:last-child{border-bottom:none}
+.popup-notice-list li::before{content:'·';position:absolute;left:0;color:#aaa}
+
+/* ── 사이드 패널 ── */
+.side-col{flex:1;min-width:280px;max-width:360px}
+.side-card{background:#fff;border-radius:10px;border:1px solid #e0e0e0;padding:16px;margin-bottom:14px}
+.side-title{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:6px}
+.side-title .dot{width:7px;height:7px;border-radius:50%;background:#FFD700}
+.flow-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid #f5f5f5;cursor:pointer}
+.flow-item:last-child{border-bottom:none}
+.flow-item:hover .flow-name{color:#1a1a1a}
+.flow-num{width:20px;height:20px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#888;flex-shrink:0;margin-top:1px}
+.flow-num.on{background:#1a1a1a;color:#FFD700}
+.flow-name{font-size:12px;color:#555;line-height:1.4}
+.flow-name strong{color:#1a1a1a;font-weight:600}
+.flow-arrow{font-size:10px;color:#ccc;margin-left:auto;align-self:center}
+.popup-flow{display:flex;flex-direction:column;gap:6px}
+.pf-item{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f7f7f7;border-radius:6px;cursor:pointer;transition:background 0.15s}
+.pf-item:hover{background:#efefef}
+.pf-name{font-size:12px;color:#555}
+.pf-btn{font-size:10px;padding:3px 8px;background:#555;color:#fff;border-radius:4px;border:none;cursor:pointer;font-family:inherit;margin-left:auto}
+.pf-btn:hover{background:#333}
+.hint-box{background:#fffbea;border:1px solid #ffe58f;border-radius:6px;padding:10px 12px;margin-top:10px}
+.hint-box p{font-size:11px;color:#7a5c00;line-height:1.6}
+.screen-badge{display:inline-flex;font-size:10px;background:#f0f0f0;color:#666;border-radius:4px;padding:1px 5px;margin-right:4px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="page-title">캐시 PASS VIP — 자동충전창 와이어프레임</div>
+
+<div class="nav-wrap">
+  <span class="nav-label">화면</span>
+  <button class="nbtn on" onclick="showScreen('s01',this)">① 미가입 (지정금액)</button>
+  <button class="nbtn" onclick="showScreen('s02',this)">② 미가입 (지정일)</button>
+  <button class="nbtn" onclick="showScreen('s03',this)">③ 가입 완료</button>
+  <button class="nbtn" onclick="showScreen('s04',this)">④ 이용중 (동일서비스)</button>
+  <button class="nbtn" onclick="showScreen('s05',this)">⑤ 이용중 (타서비스)</button>
+  <button class="nbtn" onclick="showScreen('s06',this)">⑥ 이용중 (비활성화)</button>
+  <button class="nbtn" onclick="showScreen('s07',this)">⑦ 해지 확인</button>
+  <button class="nbtn" onclick="showScreen('s08',this)">⑧ 해지 완료</button>
+  <div class="nav-divider"></div>
+  <span class="nav-label">팝업</span>
+  <button class="nbtn popup" onclick="openPopup('p01')">중복가입 불가</button>
+  <button class="nbtn popup" onclick="openPopup('p02')">조건변경 확인</button>
+  <button class="nbtn popup" onclick="openPopup('p03')">해지 확인</button>
+  <button class="nbtn popup" onclick="openPopup('p04')">결제 실패</button>
+  <button class="nbtn popup" onclick="openPopup('p05')">이용안내</button>
+  <button class="nbtn popup" onclick="openPopup('p06')">해지 실패</button>
+</div>
+
+<div class="main-wrap">
+  <div class="phone-col">
+    <div class="frame" id="frame">
+
+      <!-- ══════════════════════════════════
+           S01: 미가입 — 지정금액 충전
+      ══════════════════════════════════ -->
+      <div class="screen on" id="s01">
+        <div class="hd">
+          <div class="hd-wrap">
+            <div class="hd-title">캐시 PASS VIP</div>
+            <span class="hd-close">✕</span>
+          </div>
+        </div>
+        <div class="dark-banner">
+          <div class="db-left">
+            <div class="db-title">캐시 PASS VIP</div>
+            <div class="db-sub">편리하게 자동으로 캐시를 충전하세요</div>
+            <div class="db-bubble"><span>충전시마다 보너스 캐시 지급</span></div>
+          </div>
+          <div class="db-coin">🪙</div>
+        </div>
+        <div class="tabs">
+          <div class="tab on">지정금액 충전</div>
+          <div class="tab" onclick="showScreen('s02',null)">지정일 충전</div>
+        </div>
+        <div class="cash-row">
+          <span class="cash-lb">보유 캐시</span>
+          <span class="cash-val">4,000 캐시</span>
+        </div>
+        <div class="unit-wrap">
+          <div class="unit-row">
+            <select class="unit-sel"><option>1,000캐시</option><option>3,000캐시</option><option>5,000캐시</option><option>10,000캐시</option><option>30,000캐시</option></select>
+            <span class="unit-desc">미만인 경우 아래 금액을 자동으로 충전합니다.</span>
+          </div>
+        </div>
+        <div class="prod-hd">
+          <span class="prod-hd-l">충전 캐시</span>
+          <span class="prod-hd-r">원화금액</span>
+        </div>
+        <div class="prod-list">
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">3,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 100 캐시</span><span class="prod-rate">3%</span></div></div><div class="prod-price">3,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">5,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 200 캐시</span><span class="prod-rate">4%</span></div></div><div class="prod-price">5,000원</div></div>
+          <div class="prod"><div class="radio on"></div><div class="prod-main"><div class="prod-cash">10,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 500 캐시</span><span class="prod-rate">5%</span></div></div><div class="prod-price">10,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">30,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 1,800 캐시</span><span class="prod-rate">6%</span></div></div><div class="prod-price">30,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">50,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 3,500 캐시</span><span class="prod-rate">7%</span></div></div><div class="prod-price">50,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">100,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 10,000 캐시</span><span class="prod-rate">10%</span></div></div><div class="prod-price">100,000원</div></div>
+        </div>
+        <div class="bottom-summ">
+          <div class="bs-row main"><span class="bs-lb">결제 금액</span><span class="bs-val">10,000 원</span></div>
+          <div class="bs-div"></div>
+          <div class="bs-row"><span class="bs-lb">보너스 캐시</span><span class="bs-val">+ 500 캐시</span></div>
+          <div class="bs-row"><span class="bs-lb">충전 후 보유 캐시</span><span class="bs-val">14,500 캐시</span></div>
+        </div>
+        <div class="agree-wrap">· 캐시 PASS VIP 가입 완료 즉시 첫 번째 결제가 발생합니다.</div>
+        <div class="agree-row-chk">
+          <input type="checkbox" class="agree-chk" id="chk01">
+          <label class="agree-chk-txt" for="chk01"><span class="agree-link" onclick="openPopup('p05')">이용안내</span> 및 자동충전에 동의합니다.</label>
+        </div>
+        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s03',null)">다음</button></div>
+        <div class="info-footer">공동대표이사 고정희, 장윤중 | 사업자등록번호 220-88-02594 | 통신판매업 2018-성남분당B-0004 | 대표전화 1644-4755 | © Kakao Entertainment Corp.</div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           S02: 미가입 — 지정일 충전
+      ══════════════════════════════════ -->
+      <div class="screen" id="s02">
+        <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
+        <div class="dark-banner">
+          <div class="db-left">
+            <div class="db-title">캐시 PASS VIP</div>
+            <div class="db-sub">편리하게 자동으로 캐시를 충전하세요</div>
+            <div class="db-bubble"><span>충전시마다 보너스 캐시 지급</span></div>
+          </div>
+          <div class="db-coin">🪙</div>
+        </div>
+        <div class="tabs">
+          <div class="tab" onclick="showScreen('s01',null)">지정금액 충전</div>
+          <div class="tab on">지정일 충전</div>
+        </div>
+        <div class="cash-row"><span class="cash-lb">보유 캐시</span><span class="cash-val">4,000 캐시</span></div>
+        <div class="unit-wrap">
+          <div class="unit-row">
+            <span>매월</span>
+            <select class="unit-sel"><option>5일</option><option>10일</option><option>15일</option><option>20일</option><option>25일</option></select>
+            <span class="unit-desc">에 자동 충전됩니다.</span>
+          </div>
+        </div>
+        <div class="prod-hd"><span class="prod-hd-l">충전 캐시</span><span class="prod-hd-r">원화금액</span></div>
+        <div class="prod-list">
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">3,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 100 캐시</span><span class="prod-rate">3%</span></div></div><div class="prod-price">3,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">5,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 200 캐시</span><span class="prod-rate">4%</span></div></div><div class="prod-price">5,000원</div></div>
+          <div class="prod"><div class="radio on"></div><div class="prod-main"><div class="prod-cash">10,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 500 캐시</span><span class="prod-rate">5%</span></div></div><div class="prod-price">10,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">30,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 1,800 캐시</span><span class="prod-rate">6%</span></div></div><div class="prod-price">30,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">50,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 3,500 캐시</span><span class="prod-rate">7%</span></div></div><div class="prod-price">50,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">100,000캐시</div><div class="prod-bonus"><span class="prod-bonus-txt">+ 10,000 캐시</span><span class="prod-rate">10%</span></div></div><div class="prod-price">100,000원</div></div>
+        </div>
+        <div class="bottom-summ">
+          <div class="bs-row main"><span class="bs-lb">결제 금액</span><span class="bs-val">10,000 원</span></div>
+          <div class="bs-div"></div>
+          <div class="bs-row"><span class="bs-lb">보너스 캐시</span><span class="bs-val">+ 500 캐시</span></div>
+          <div class="bs-row"><span class="bs-lb">충전 후 보유 캐시</span><span class="bs-val">14,500 캐시</span></div>
+        </div>
+        <div class="agree-wrap">· 캐시 PASS VIP 가입 완료 즉시 첫 번째 결제가 발생합니다.</div>
+        <div class="agree-row-chk">
+          <input type="checkbox" class="agree-chk" id="chk02">
+          <label class="agree-chk-txt" for="chk02"><span class="agree-link" onclick="openPopup('p05')">이용안내</span> 및 자동충전에 동의합니다.</label>
+        </div>
+        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s03',null)">다음</button></div>
+        <div class="info-footer">공동대표이사 고정희, 장윤중 | 사업자등록번호 220-88-02594 | 통신판매업 2018-성남분당B-0004 | © Kakao Entertainment Corp.</div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           S03: 가입 완료
+      ══════════════════════════════════ -->
+      <div class="screen" id="s03">
+        <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
+        <div class="complete-area">
+          <div class="complete-icon">✓</div>
+          <div class="complete-title">자동충전 가입이 완료되었습니다</div>
+          <div class="complete-sub">아래 조건으로 자동 충전이 시작됩니다.</div>
+        </div>
+        <div class="info-tbl">
+          <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액 충전</span></div>
+          <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">1,000캐시 미만 시</span></div>
+          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
+          <div class="info-row"><span class="info-lb">보너스 캐시</span><span class="info-val">500캐시</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          <div class="info-row"><span class="info-lb">결제 일시</span><span class="info-val">2026.05.13 14:32</span></div>
+          <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
+        </div>
+        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s04',null)">확인</button></div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           S04: 이용중 — 동일 서비스
+      ══════════════════════════════════ -->
+      <div class="screen" id="s04">
+        <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
+        <div class="using-banner ub-dark">
+          <div class="ub-icon">🪙</div>
+          <div style="flex:1">
+            <div><span class="svc-tag kp">카카오페이지</span><span class="using-badge">이용중</span></div>
+            <div class="ub-title">캐시 PASS VIP</div>
+            <div class="ub-sub">지정금액 충전</div>
+          </div>
+        </div>
+        <div class="info-tbl">
+          <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액</span></div>
+          <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">5,000캐시 미만 시</span></div>
+          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
+        </div>
+        <div class="btn-wrap">
+          <button class="btn primary" onclick="openPopup('p02')">조건 변경하기</button>
+          <button class="btn secondary" onclick="showScreen('s07',null)">해지하기</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           S05: 이용중 — 타 서비스
+      ══════════════════════════════════ -->
+      <div class="screen" id="s05">
+        <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
+        <div class="using-banner ub-kp">
+          <div class="ub-icon">🪙</div>
+          <div style="flex:1">
+            <div><span class="svc-tag kp">카카오페이지</span><span class="using-badge">이용중</span></div>
+            <div class="ub-title">캐시 PASS VIP</div>
+            <div class="ub-sub">카카오페이지에서 가입된 자동 충전입니다</div>
+          </div>
+        </div>
+        <div class="notice-box">
+          <div class="nb-title">카카오페이지 캐시 PASS VIP 가입 중인 자동충전이에요</div>
+          <div class="nb-sub">조건 변경 시 현재 서비스(카카오웹툰) 기준으로 재가입됩니다.</div>
+        </div>
+        <div class="info-tbl">
+          <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액</span></div>
+          <div class="info-row"><span class="info-lb">가입 서비스</span><span class="info-val">카카오페이지</span></div>
+          <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">5,000캐시 미만 시</span></div>
+          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
+        </div>
+        <div class="btn-wrap">
+          <button class="btn primary" onclick="openPopup('p02')">조건 변경하기</button>
+          <button class="btn secondary" onclick="showScreen('s07',null)">해지하기</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           S06: 이용중 — 비활성화
+      ══════════════════════════════════ -->
+      <div class="screen" id="s06">
+        <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
+        <div class="using-banner" style="background:#1a0a00">
+          <div class="ub-icon" style="background:#2a1800;border:2px solid #e85c33">⚠</div>
+          <div style="flex:1">
+            <div><span class="svc-tag kp">카카오페이지</span><span class="inactive-badge">비활성화</span></div>
+            <div class="ub-title">캐시 PASS VIP</div>
+            <div class="ub-sub" style="color:rgba(255,100,60,0.8)">결제 실패로 자동충전이 중단되었습니다</div>
+          </div>
+        </div>
+        <div class="notice-box" style="background:#fff5f5;border-color:#fecaca">
+          <div class="nb-title" style="color:#991b1b">자동충전이 비활성화 상태입니다</div>
+          <div class="nb-sub" style="color:#e85c33">결제 수단을 확인 후 활성화해 주세요. 활성화 직후 즉시 충전되지 않으며, 다음 조건 충족 시 재개됩니다.</div>
+        </div>
+        <div class="info-tbl">
+          <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액</span></div>
+          <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">5,000캐시 미만 시</span></div>
+          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니 (결제 실패)</span></div>
+        </div>
+        <div class="btn-wrap">
+          <button class="btn primary">활성화하기</button>
+          <button class="btn secondary" onclick="showScreen('s07',null)">해지하기</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           S07: 해지 확인 화면
+      ══════════════════════════════════ -->
+      <div class="screen" id="s07">
+        <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
+        <div class="termination-area">
+          <div class="term-title">이용 중인 자동 충전을 해지하시겠습니까?</div>
+          <div class="term-sub">해지는 즉시 적용되며, 이미 충전된 건에는 영향이 없어요.</div>
+          <div class="info-tbl" style="margin:0">
+            <div class="info-row"><span class="info-lb">가입 상품</span><span class="info-val">캐시 PASS VIP</span></div>
+            <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">5,000캐시 미만 시</span></div>
+            <div class="info-row"><span class="info-lb">충전 캐시</span><span class="info-val">10,000캐시 (10,000원)</span></div>
+            <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          </div>
+        </div>
+        <div class="btn-wrap row">
+          <button class="btn danger half" onclick="showScreen('s08',null)">해지하기</button>
+          <button class="btn primary half" onclick="showScreen('s04',null)">유지하기</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           S08: 해지 완료
+      ══════════════════════════════════ -->
+      <div class="screen" id="s08">
+        <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
+        <div class="complete-area" style="padding-top:40px">
+          <div class="complete-icon" style="background:#f0f0f0;color:#888;font-size:22px">✓</div>
+          <div class="complete-title">자동충전 해지가 완료되었습니다</div>
+          <div class="complete-sub">언제든지 다시 가입할 수 있어요</div>
+        </div>
+        <div style="height:60px"></div>
+        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s01',null)">확인</button></div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           POPUP: P01 중복 가입 불가
+      ══════════════════════════════════ -->
+      <div class="overlay" id="p01">
+        <div class="popup">
+          <div class="popup-body">
+            <div class="popup-title">자동 충전 상품은 중복 가입 불가합니다.</div>
+            <div class="popup-sub">기존 상품 해지 후 가입이 가능합니다.</div>
+          </div>
+          <div class="popup-btns">
+            <button class="popup-btn cancel" onclick="closePopup('p01')">취소</button>
+            <button class="popup-btn black" onclick="closePopup('p01');showScreen('s07',null)">해지하러 가기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POPUP: P02 조건 변경 확인 -->
+      <div class="overlay" id="p02">
+        <div class="popup">
+          <div class="popup-body">
+            <div class="popup-title">기존 가입된 상품은 해지됩니다.</div>
+            <div class="popup-sub">새로운 충전 조건으로 신규 가입하시겠습니까?</div>
+            <div class="popup-info">
+              <div class="popup-info-row"><span class="popup-info-lb">자동충전 종류</span><span class="popup-info-val">캐시 PASS VIP</span></div>
+              <div class="popup-info-row"><span class="popup-info-lb">충전 조건</span><span class="popup-info-val">5,000캐시 미만 시</span></div>
+              <div class="popup-info-row"><span class="popup-info-lb">충전 금액</span><span class="popup-info-val">10,000캐시 (10,000원)</span></div>
+              <div class="popup-info-row"><span class="popup-info-lb">가입 일자</span><span class="popup-info-val">2026.05.13</span></div>
+            </div>
+          </div>
+          <div class="popup-btns">
+            <button class="popup-btn cancel" onclick="closePopup('p02')">취소</button>
+            <button class="popup-btn confirm" onclick="closePopup('p02');showScreen('s01',null)">확인</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POPUP: P03 해지 확인 -->
+      <div class="overlay" id="p03">
+        <div class="popup">
+          <div class="popup-body">
+            <div class="popup-title">이 자동 충전을 해지하시겠습니까?</div>
+            <div class="popup-sub">해지는 즉시 적용되며, 이미 충전된 건에는 영향이 없습니다.</div>
+          </div>
+          <div class="popup-btns">
+            <button class="popup-btn cancel" onclick="closePopup('p03')">취소</button>
+            <button class="popup-btn danger" onclick="closePopup('p03');showScreen('s08',null)">해지할게요</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POPUP: P04 결제 실패 -->
+      <div class="overlay" id="p04">
+        <div class="popup">
+          <div class="popup-body">
+            <div class="popup-title">자동충전 결제 실패</div>
+            <div class="popup-sub">결제 수단 잔액 부족 등의 이유로 자동충전에 실패했습니다.<br>결제 수단을 확인해 주세요.<br><br>실패가 지속되면 자동충전이 비활성화됩니다.</div>
+          </div>
+          <div class="popup-btns">
+            <button class="popup-btn confirm" onclick="closePopup('p04')">확인</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POPUP: P05 이용안내 -->
+      <div class="overlay" id="p05">
+        <div class="popup popup-tall">
+          <div class="popup-hd-bar">
+            <span class="popup-hd-title">이용 안내</span>
+            <button class="popup-hd-close" onclick="closePopup('p05')">닫기</button>
+          </div>
+          <div class="popup-body popup-scroll">
+            <ul class="popup-notice-list">
+              <li>자동 충전은 언제든지 해지할 수 있으며, PC웹 / Mobile웹의 우측 상단 메뉴 &gt; 캐시 PASS VIP &gt; 해지하기를 선택하시면 됩니다.</li>
+              <li>이용 중인 자동 충전을 해지하더라도, 이미 결제된 내역이 취소되지 않습니다. 결제 취소를 원하실 경우 하단 취소 요건에 따라 고객센터로 문의하여 주시기 바랍니다.</li>
+              <li>자동 충전 이후 캐시를 사용한 경우, 보유한 유상 캐시의 전액 환불만 가능하며 환불 수수료(환불 금액의 10% or 1,000원 중 큰 금액)을 제외한 나머지 금액이 환불됩니다. 우측 상단 메뉴 &gt; 고객센터 &gt; 캐시 환불 접수를 통해 직접 환불 신청할 수 있습니다.</li>
+              <li>충전된 캐시의 소멸시효 기간은 캐시를 충전한 날로부터 5년입니다.</li>
+              <li>자동 충전을 통해 지급받은 이벤트 캐시는 지급일로부터 7일간 사용 가능하며, 기간 내 미사용 시 자동 만료됩니다.</li>
+              <li>충전한 캐시로 카카오페이지앱/PC에서 이용권을 구매할 수 있습니다.</li>
+              <li>캐시는 이벤트 캐시 먼저 사용되고, 유상 캐시가 사용됩니다. 이벤트 캐시는 유효 기간이 임박한 순으로 먼저 사용됩니다. 유효 기간은 캐시 충전 내역을 통해 확인하실 수 있습니다.</li>
+              <li>월 누적 결제액이 월 결제 한도를 초과한 경우 자동 충전이 이루어지지 않을 수 있습니다. 이 경우 다음 달부터 자동 충전이 활성화됩니다.</li>
+              <li>설정한 자동 충전 조건 및 상품을 변경하려면, 현재 가입 중인 자동 충전을 해지한 후 재가입을 통해 변경할 수 있습니다.</li>
+              <li>자동 충전 이후 캐시를 사용하지 않은 경우, 결제일로부터 7일 이내 고객센터로 문의하여 주시면 수수료 없이 결제 취소가 가능하니 고객센터로 문의해주세요. 결제일로부터 7일이 경과한 캐시는 결제 수단에 따라 취소 가능 여부가 다르므로 고객센터로 문의하여 주시기 바랍니다. 단, 자동 충전을 통해 지급받은 이벤트 캐시를 사용 시 충전 취소가 불가합니다.</li>
+              <li>결제 후 지급된 보너스 캐시 사용에 따라 실 환불 금액이 달라질 수 있습니다.</li>
+              <li>광고성 이벤트 캐시 등 회사가 무상으로 제공한 이벤트 캐시의 유효기간은 캐시마다 다르며, 환불되지 않습니다.</li>
+              <li>미성년자가 유료 서비스를 이용하는 경우, 법정대리인이 동의하지 않으면 미성년자 본인 또는 법정대리인이 이용 계약을 취소할 수 있습니다.</li>
+              <li>카카오페이지 서비스 탈퇴 시 이용 중인 자동 충전 상품은 자동으로 해지됩니다.</li>
+              <li>기타 문의 사항 및 궁금하신 점은 고객센터로 문의 또는 이용약관, 유료 서비스 이용약관에서 확인할 수 있습니다.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- POPUP: P06 해지 실패 -->
+      <div class="overlay" id="p06">
+        <div class="popup">
+          <div class="popup-body">
+            <div class="popup-title">해지 처리에 실패했습니다</div>
+            <div class="popup-sub">일시적인 오류가 발생했습니다.<br>잠시 후 다시 시도해 주세요.<br>문제가 지속될 경우 고객센터로 문의해 주세요.</div>
+          </div>
+          <div class="popup-btns">
+            <button class="popup-btn confirm" onclick="closePopup('p06')">확인</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /frame -->
+  </div><!-- /phone-col -->
+
+  <!-- ── 사이드 패널 ── -->
+  <div class="side-col">
+
+    <div class="side-card">
+      <div class="side-title"><span class="dot"></span> 화면 구성</div>
+      <div class="flow-item" onclick="showScreen('s01',null)"><div class="flow-num on" id="fn-s01">1</div><div class="flow-name"><strong>미가입</strong> — 지정금액 충전 탭<br><span style="font-size:10px;color:#aaa">보유 캐시 N 미만 시 자동충전 설정</span></div><span class="flow-arrow">›</span></div>
+      <div class="flow-item" onclick="showScreen('s02',null)"><div class="flow-num" id="fn-s02">2</div><div class="flow-name"><strong>미가입</strong> — 지정일 충전 탭<br><span style="font-size:10px;color:#aaa">매월 N일 자동충전 설정</span></div><span class="flow-arrow">›</span></div>
+      <div class="flow-item" onclick="showScreen('s03',null)"><div class="flow-num" id="fn-s03">3</div><div class="flow-name"><strong>가입 완료</strong><br><span style="font-size:10px;color:#aaa">결제 성공 시 노출 / 실패 시 미진입</span></div><span class="flow-arrow">›</span></div>
+      <div class="flow-item" onclick="showScreen('s04',null)"><div class="flow-num" id="fn-s04">4</div><div class="flow-name"><strong>이용중</strong> — 동일 서비스 가입<br><span style="font-size:10px;color:#aaa">조건 변경 / 해지 가능</span></div><span class="flow-arrow">›</span></div>
+      <div class="flow-item" onclick="showScreen('s05',null)"><div class="flow-num" id="fn-s05">5</div><div class="flow-name"><strong>이용중</strong> — 타 서비스 가입 (통합회원)<br><span style="font-size:10px;color:#aaa">타 서비스에서 가입한 캐시 PASS VIP 이용 중</span></div><span class="flow-arrow">›</span></div>
+      <div class="flow-item" onclick="showScreen('s06',null)"><div class="flow-num" id="fn-s06">6</div><div class="flow-name"><strong>이용중</strong> — 비활성화<br><span style="font-size:10px;color:#aaa">결제 최종 실패로 자동충전 중단 상태</span></div><span class="flow-arrow">›</span></div>
+      <div class="flow-item" onclick="showScreen('s07',null)"><div class="flow-num" id="fn-s07">7</div><div class="flow-name"><strong>해지 확인</strong><br><span style="font-size:10px;color:#aaa">해지 대상 정보 요약 후 최종 확인</span></div><span class="flow-arrow">›</span></div>
+      <div class="flow-item" onclick="showScreen('s08',null)"><div class="flow-num" id="fn-s08">8</div><div class="flow-name"><strong>해지 완료</strong><br><span style="font-size:10px;color:#aaa">해지 완료 안내 및 재가입 유도</span></div><span class="flow-arrow">›</span></div>
+    </div>
+
+    <div class="side-card">
+      <div class="side-title"><span class="dot"></span> 팝업 구성</div>
+      <div class="popup-flow">
+        <div class="pf-item">
+          <div class="pf-name"><span class="screen-badge">P01</span><strong>중복 가입 불가</strong><br><span style="font-size:10px;color:#aaa">이미 다른 자동충전 상품 이용 중인 경우</span></div>
+          <button class="pf-btn" onclick="openPopup('p01')">열기</button>
+        </div>
+        <div class="pf-item">
+          <div class="pf-name"><span class="screen-badge">P02</span><strong>조건 변경 확인</strong><br><span style="font-size:10px;color:#aaa">기존 상품 해지 후 신규 가입 진행 안내</span></div>
+          <button class="pf-btn" onclick="openPopup('p02')">열기</button>
+        </div>
+        <div class="pf-item">
+          <div class="pf-name"><span class="screen-badge">P03</span><strong>해지 확인</strong><br><span style="font-size:10px;color:#aaa">해지 즉시 적용 안내</span></div>
+          <button class="pf-btn" onclick="openPopup('p03')">열기</button>
+        </div>
+        <div class="pf-item">
+          <div class="pf-name"><span class="screen-badge">P04</span><strong>결제 실패 안내</strong><br><span style="font-size:10px;color:#aaa">자동충전 결제 실패 발생 시</span></div>
+          <button class="pf-btn" onclick="openPopup('p04')">열기</button>
+        </div>
+        <div class="pf-item">
+          <div class="pf-name"><span class="screen-badge">P05</span><strong>이용 안내</strong><br><span style="font-size:10px;color:#aaa">가입 전 이용안내 전문 확인</span></div>
+          <button class="pf-btn" onclick="openPopup('p05')">열기</button>
+        </div>
+        <div class="pf-item">
+          <div class="pf-name"><span class="screen-badge">P06</span><strong>해지 실패</strong><br><span style="font-size:10px;color:#aaa">해지 처리 중 오류 발생 시</span></div>
+          <button class="pf-btn" onclick="openPopup('p06')">열기</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-card">
+      <div class="side-title"><span class="dot"></span> 주요 정책</div>
+      <div class="hint-box">
+        <p>
+          <strong>가입 즉시 첫 결제 발생</strong><br>
+          · 가입 완료 화면은 결제 성공 시에만 노출<br>
+          · 결제 실패 시 가입 완료 화면 미진입<br><br>
+          <strong>조건 변경 = 해지 후 재가입</strong><br>
+          · 기존 상품 자동 해지 → 신규 가입 플로우 진행<br>
+          · 결제수단 변경도 동일하게 해지 후 재가입 필요<br><br>
+          <strong>비활성화 상태</strong><br>
+          · 결제 최종 실패 시 자동충전 중단<br>
+          · 활성화 직후 즉시 충전되지 않음<br>
+          · 다음 조건 충족 시 재개<br><br>
+          <strong>서비스 탈퇴 시 자동 해지</strong><br>
+          · 카카오페이지/카카오웹툰 탈퇴 시 가입된 캐시 PASS VIP 자동 해지
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const screens = ['s01','s02','s03','s04','s05','s06','s07','s08'];
+let currentScreen = 's01';
+
+function showScreen(id, btn) {
+  screens.forEach(s => {
+    document.getElementById(s).classList.remove('on');
+    const fn = document.getElementById('fn-'+s);
+    if (fn) fn.classList.remove('on');
+  });
+  document.querySelectorAll('.nbtn:not(.popup)').forEach(b => b.classList.remove('on'));
+
+  document.getElementById(id).classList.add('on');
+  const fn = document.getElementById('fn-'+id);
+  if (fn) fn.classList.add('on');
+
+  if (btn) btn.classList.add('on');
+  else {
+    const idx = screens.indexOf(id);
+    const allBtns = document.querySelectorAll('.nbtn:not(.popup)');
+    if (allBtns[idx]) allBtns[idx].classList.add('on');
+  }
+  currentScreen = id;
+}
+
+function openPopup(id) {
+  document.getElementById(id).classList.add('on');
+}
+function closePopup(id) {
+  document.getElementById(id).classList.remove('on');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.overlay.on').forEach(o => o.classList.remove('on'));
+  }
+});
+</script>
+</body>
+</html>

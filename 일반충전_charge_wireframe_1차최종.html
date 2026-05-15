@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>카카오페이지 일반 충전창 와이어프레임 v2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f0f0f0;padding:24px;color:#1a1a1a}
+h1{font-size:16px;font-weight:600;margin-bottom:20px;color:#444}
+.wrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.col-phone{width:360px;flex-shrink:0}
+.col-ann{flex:1;min-width:260px;background:#fff;border-radius:12px;padding:20px;border:1px solid #e0e0e0}
+.frame{border:1px solid #ccc;border-radius:12px;overflow:hidden;background:#fff;position:relative;box-shadow:0 4px 20px rgba(0,0,0,0.12)}
+
+/* header */
+.hd{background:#1a1a1a;padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
+.auto-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 10px;cursor:pointer;text-decoration:none}
+.auto-pill span{font-size:11px;color:#fff;font-weight:500}
+.auto-pill .icon{font-size:12px;color:#FFD700}
+.hd-title{font-size:16px;font-weight:500;color:#fff}
+.hd-close{color:rgba(255,255,255,0.65);cursor:pointer;font-size:18px;line-height:1}
+
+/* cash row */
+.cash-row{padding:11px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f0f0}
+.cash-lb{font-size:13px;color:#666}
+.cash-val{font-size:14px;font-weight:500;color:#1a1a1a}
+
+/* banner */
+.banner-wrap{padding:10px 16px 4px}
+.banner-vip{background:#12121f;border-radius:8px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid rgba(255,215,0,0.25)}
+.bv-title{font-size:12px;font-weight:600;color:#FFD700;margin-bottom:2px}
+.bv-sub{font-size:11px;color:rgba(255,255,255,0.55)}
+.bv-cta{display:flex;align-items:center;gap:3px;background:rgba(255,215,0,0.15);border-radius:20px;padding:5px 10px}
+.bv-cta span{font-size:11px;color:#FFD700;font-weight:500}
+.banner-using{background:#f7f7f7;border-radius:8px;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;border:1px solid #e5e5e5}
+.bu-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;margin-right:7px}
+.bu-txt{font-size:12px;color:#555;display:flex;align-items:center}
+.bu-txt strong{color:#1a1a1a;font-weight:500}
+.bu-link{font-size:11px;color:#4a7cdc;cursor:pointer;white-space:nowrap}
+
+/* section label */
+.sec-lb{padding:10px 16px 4px;font-size:11px;font-weight:600;color:#888;letter-spacing:0.04em;text-transform:uppercase}
+
+/* products */
+.prod-list{padding:0 16px}
+.prod{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background 0.1s}
+.prod:hover{background:#fafafa;margin:0 -16px;padding:12px 16px}
+.prod:last-child{border-bottom:none}
+.prod-l{display:flex;align-items:center;gap:10px}
+.radio{width:18px;height:18px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.radio.on{border-color:#FFD700;background:#FFD700}
+.radio.on::after{content:'';width:7px;height:7px;border-radius:50%;background:#1a1a1a}
+.pname{font-size:14px;color:#1a1a1a}
+.rec{font-size:10px;color:#e85c33;font-weight:600;margin-left:5px;vertical-align:middle}
+.pprice{font-size:14px;color:#666}
+
+/* summary */
+.summ{margin:8px 16px;padding:11px 13px;background:#f7f7f7;border-radius:8px;border:1px solid #e5e5e5}
+.sr{display:flex;justify-content:space-between;padding:3px 0}
+.sr .sl{font-size:12px;color:#666}
+.sr .sv{font-size:12px;font-weight:500;color:#1a1a1a}
+.sr.main .sl{font-size:13px;color:#1a1a1a;font-weight:500}
+.sr.main .sv{font-size:15px;font-weight:600}
+.sdiv{height:1px;background:#e5e5e5;margin:5px 0}
+
+/* notice */
+.notice-area{padding:10px 16px 6px}
+.notice-req{font-size:11px;color:#e85c33;line-height:1.6;margin-bottom:8px}
+.agree-row{display:flex;align-items:flex-start;gap:8px}
+.chk{width:17px;height:17px;border-radius:4px;border:1.5px solid #ccc;flex-shrink:0;margin-top:1px;cursor:pointer}
+.agree-txt{font-size:12px;color:#666;line-height:1.5}
+.agree-link{color:#4a7cdc;text-decoration:underline;cursor:pointer}
+.agree-link:hover{opacity:0.8}
+
+/* button */
+.next-btn{margin:8px 16px 12px;background:#FFD700;border:none;border-radius:8px;width:calc(100% - 32px);padding:14px;font-size:15px;font-weight:600;color:#1a1a1a;cursor:pointer;transition:opacity 0.15s}
+.next-btn:hover{opacity:0.9}
+
+/* footer */
+.company-info{padding:8px 16px 14px;font-size:10px;color:#aaa;line-height:1.6;border-top:1px solid #f0f0f0}
+
+/* ── popup overlay ── */
+.overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:10;align-items:flex-end;border-radius:12px}
+.overlay.show{display:flex}
+.popup{background:#fff;border-radius:14px 14px 0 0;width:100%;max-height:82%;overflow-y:auto}
+.popup-hd{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:1}
+.popup-hd-title{font-size:15px;font-weight:600;color:#1a1a1a}
+.popup-close{font-size:12px;color:#666;cursor:pointer;padding:5px 11px;border:1px solid #e0e0e0;border-radius:8px;background:#fff}
+.popup-close:hover{background:#f5f5f5}
+.popup-body{padding:16px 16px 24px}
+.psec{margin-bottom:14px}
+.psec-title{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:7px}
+.pitem{font-size:11px;color:#555;line-height:1.7;padding-left:12px;position:relative;margin-bottom:4px}
+.pitem::before{content:'·';position:absolute;left:0;color:#bbb}
+.pitem strong{color:#1a1a1a}
+.pdiv{height:1px;background:#eee;margin:12px 0}
+.company-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:6px 0;user-select:none}
+.company-toggle span{font-size:11px;color:#666}
+.company-toggle .arrow{font-size:12px;color:#aaa;transition:transform 0.2s;display:inline-block}
+.company-toggle.open .arrow{transform:rotate(180deg)}
+.company-detail{display:none;font-size:10px;color:#aaa;line-height:1.7;padding-top:6px}
+.company-detail.open{display:block}
+.copyright{font-size:10px;color:#bbb;padding-top:8px}
+
+/* ── annotation panel ── */
+.ann-title{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #eee}
+.ann-sec{margin-bottom:16px}
+.ann-sec-hd{font-size:12px;font-weight:600;color:#333;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.ann-sec-hd .dot{width:6px;height:6px;border-radius:50%;background:#4a7cdc;flex-shrink:0}
+.ann-item{font-size:11px;color:#666;line-height:1.6;padding:3px 8px 3px 10px;border-left:2px solid #d0dcf0;margin-bottom:4px}
+.tag{display:inline-flex;align-items:center;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:600;margin-right:3px;vertical-align:middle}
+.tag-n{background:#e8f5e9;color:#2e7d32}
+.tag-c{background:#fff8e1;color:#f57f17}
+.tag-r{background:#fce4e4;color:#c62828}
+.tag-b{background:#e3f0ff;color:#1a56ab}
+.bas-box{background:#f7f9ff;border:1px solid #d8e4f7;border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.bas-label{font-size:11px;font-weight:600;color:#4a7cdc;margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.ctrl-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ctrl-label{font-size:11px;color:#555;flex:1}
+.tog{width:38px;height:22px;border-radius:11px;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;border:none;outline:none}
+.tog.on{background:#22c55e}
+.tog.off{background:#ccc}
+.tog-thumb{position:absolute;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.tog.on .tog-thumb{left:19px}
+.tog.off .tog-thumb{left:3px}
+.rec-sel{font-size:11px;padding:4px 7px;border:1px solid #ccc;border-radius:6px;background:#fff;color:#333}
+.hint{font-size:11px;color:#4a7cdc;padding:7px 10px;background:#eef4ff;border-radius:6px;margin-top:8px;line-height:1.5}
+</style>
+</head>
+<body>
+<h1>카카오페이지 일반 충전창 — 와이어프레임 v2</h1>
+<div class="wrap">
+
+  <div class="col-phone">
+    <div class="frame" id="frame">
+
+      <div class="hd">
+        <a class="auto-pill" href="#">
+          <span class="icon">↺</span>
+          <span>자동충전</span>
+        </a>
+        <span class="hd-title">캐시 충전</span>
+        <span class="hd-close">✕</span>
+      </div>
+
+      <div class="cash-row">
+        <span class="cash-lb">보유 캐시</span>
+        <span class="cash-val">4,000 캐시</span>
+      </div>
+
+      <div class="banner-wrap" id="bannerWrap"></div>
+
+      <div class="sec-lb">충전 금액 선택</div>
+      <div class="prod-list" id="prodList"></div>
+
+      <div class="summ">
+        <div class="sr main"><span class="sl">결제 금액</span><span class="sv">10,000 원</span></div>
+        <div class="sdiv"></div>
+        <div class="sr"><span class="sl">충전 후 보유 캐시</span><span class="sv">14,000 캐시</span></div>
+      </div>
+
+      <div class="notice-area">
+        <div class="notice-req">· 캐시 충전 시 카카오 본인인증이 1회 실행될 수 있으며, 14세 미만인 경우 보호자 동의가 진행됩니다.</div>
+        <div class="agree-row">
+          <div class="chk"></div>
+          <span class="agree-txt">
+            <span class="agree-link" onclick="openPopup()">아래 이용안내 및 결제</span>에 동의합니다.
+          </span>
+        </div>
+      </div>
+
+      <button class="next-btn">다음</button>
+
+      <div class="company-info">
+        공동대표이사 고정희, 장윤중 &nbsp;|&nbsp; 사업자등록번호 220-88-02594 &nbsp;|&nbsp; 통신판매업 2018-성남분당B-0004<br>
+        대표전화 1644-4755 &nbsp;|&nbsp; © Kakao Entertainment Corp.
+      </div>
+
+      <!-- 이용안내 팝업 -->
+      <div class="overlay" id="overlay">
+        <div class="popup">
+          <div class="popup-hd">
+            <span class="popup-hd-title">이용 안내</span>
+            <button class="popup-close" onclick="closePopup()">닫기</button>
+          </div>
+          <div class="popup-body">
+            <div class="psec">
+              <div class="psec-title">취소 및 환불</div>
+              <div class="pitem">결제 이후 캐시를 사용하지 않은 경우, 결제일로부터 <strong>7일 이내</strong> 고객센터 문의 시 수수료 없이 취소 가능합니다.</div>
+              <div class="pitem">캐시를 사용한 경우 보유한 유상 캐시의 전액 환불만 가능하며 <strong>환불 수수료(환불금액의 10% or 1,000원 중 큰 금액)</strong>가 공제됩니다.</div>
+            </div>
+            <div class="pdiv"></div>
+            <div class="psec">
+              <div class="psec-title">유효기간 및 소멸</div>
+              <div class="pitem">충전된 캐시의 소멸시효 기간은 <strong>캐시를 충전한 날로부터 5년</strong>입니다.</div>
+              <div class="pitem">충전한 캐시로 카카오페이지앱/PC에서 이용권을 구매할 수 있습니다.</div>
+            </div>
+            <div class="pdiv"></div>
+            <div class="psec">
+              <div class="psec-title">이용 안내</div>
+              <div class="pitem">캐시는 이벤트 캐시 먼저 사용되며, 유효기간이 임박한 순으로 먼저 사용됩니다.</div>
+              <div class="pitem">결제일로부터 7일이 경과한 캐시는 결제 수단에 따라 취소 가능 여부가 다르므로 고객센터로 문의 바랍니다.</div>
+              <div class="pitem">미성년자가 유료 서비스를 이용하는 경우, 법정대리인이 동의하지 않으면 이용 계약을 취소할 수 있습니다.</div>
+            </div>
+            <div class="pdiv"></div>
+            <div class="company-toggle" id="ct" onclick="toggleCompany()">
+              <span>(주)카카오엔터테인먼트 사업자 정보</span>
+              <span class="arrow">∨</span>
+            </div>
+            <div class="company-detail" id="cd">
+              공동대표이사 고정희, 장윤중<br>
+              사업자등록번호 220-88-02594 | 통신판매업 신고번호 2018-성남분당B-0004<br>
+              대표전화 1644-4755 | contact@KakaoPage.com<br>
+              경기도 성남시 분당구 판교역로 235, 에이치스퀘어 N동 8, 9, 10층
+            </div>
+            <div class="copyright">© Kakao Entertainment Corp.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-ann">
+    <div class="ann-title">화면 구성 옵션</div>
+
+    <div class="ann-sec">
+      <div class="ann-sec-hd"><span class="dot"></span> 헤더</div>
+      <div class="ann-item">좌상단 <strong>자동충전 바로가기</strong> 버튼 상시 노출 — 캐시 PASS VIP 진입 유도</div>
+      <div class="ann-item">기존 탭 구조(충전 / 지정금액 충전 / 지정일 충전) 제거 — 일반충전 단일 화면으로 분리</div>
+    </div>
+
+    <div class="ann-sec">
+      <div class="ann-sec-hd"><span class="dot"></span> 캐시 PASS VIP 배너</div>
+      <div class="ann-item"><strong>미가입 유저</strong> → 캐시 PASS VIP 가입 유도 배너 노출</div>
+      <div class="ann-item"><strong>가입 유저</strong> → 이용중 상태 배너 노출 or 숨김 처리 (옵션)</div>
+      <div class="bas-box">
+        <div class="bas-label">⚙ 노출 옵션 미리보기</div>
+        <div class="ctrl-row">
+          <span class="ctrl-label">배너 전체 노출 여부</span>
+          <button class="tog on" id="t1" onclick="toggleBanner()"><div class="tog-thumb"></div></button>
+        </div>
+        <div class="ctrl-row" id="subRow">
+          <span class="ctrl-label" id="subLabel">가입 유저 — 이용중 배너 표시</span>
+          <button class="tog on" id="t2" onclick="toggleSubBanner()"><div class="tog-thumb"></div></button>
+        </div>
+      </div>
+      <div class="ann-item" style="color:#e85c33;font-size:10px">※ 배너 노출 설정 위치는 추후 확정 예정 (클라 개발 조율 필요)</div>
+    </div>
+
+    <div class="ann-sec">
+      <div class="ann-sec-hd"><span class="dot"></span> 상품 리스트</div>
+      <div class="ann-item">일반 충전 상품만 노출 — 캐시 PASS VIP 자동충전 상품 완전 분리</div>
+      <div class="ann-item">보너스 캐시 컬럼 없음 (캐시 PASS VIP 혜택은 배너로만 유도)</div>
+      <div class="ann-item"><strong>추천 라벨</strong> — 상품 1개에 노출, 설정 가능</div>
+      <div class="bas-box">
+        <div class="bas-label">⚙ 추천 라벨 상품 설정</div>
+        <div class="ctrl-row">
+          <span class="ctrl-label">추천 라벨 노출 상품</span>
+          <select class="rec-sel" id="recSel" onchange="updateRec()">
+            <option value="3">10,000캐시 (기본)</option>
+            <option value="2">5,000캐시</option>
+            <option value="4">30,000캐시</option>
+            <option value="-1">라벨 없음</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="ann-sec">
+      <div class="ann-sec-hd"><span class="dot"></span> 이용안내 팝업</div>
+      <div class="ann-item">"아래 이용안내 및 결제" 링크 클릭 → 바텀시트 팝업으로 상세 내용 노출</div>
+      <div class="ann-item">기존 하단 긴 텍스트 나열 방식 제거</div>
+      <div class="ann-item">팝업 내 (주)카카오엔터테인먼트 사업자 정보 접기/펼치기</div>
+      <div class="hint">
+        ✦ <strong>"아래 이용안내 및 결제"</strong> 링크 클릭 → 팝업 확인<br>
+        ✦ 팝업 내 <strong>사업자 정보 ∨</strong> 클릭 → 상세 펼치기<br>
+        ✦ 상단 토글로 배너 노출 옵션 미리보기 가능
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const products = [
+  {n:'1,000캐시', p:'₩ 1,000'},
+  {n:'3,000캐시', p:'₩ 3,000'},
+  {n:'5,000캐시', p:'₩ 5,000'},
+  {n:'10,000캐시', p:'₩ 10,000'},
+  {n:'30,000캐시', p:'₩ 30,000'},
+  {n:'50,000캐시', p:'₩ 50,000'},
+  {n:'100,000캐시', p:'₩ 100,000'},
+];
+let recIdx = 3, bannerOn = true, subOn = true, isSubscribed = false;
+
+function renderProducts() {
+  document.getElementById('prodList').innerHTML = products.map((p, i) => `
+    <div class="prod" onclick="selectProduct(${i})">
+      <div class="prod-l">
+        <div class="radio${i === 3 ? ' on' : ''}" id="radio${i}"></div>
+        <span class="pname">${p.n}${i === recIdx ? '<span class="rec">추천</span>' : ''}</span>
+      </div>
+      <span class="pprice">${p.p}</span>
+    </div>`).join('');
+}
+
+function selectProduct(idx) {
+  document.querySelectorAll('.radio').forEach((r, i) => {
+    r.className = 'radio' + (i === idx ? ' on' : '');
+  });
+}
+
+function renderBanner() {
+  const w = document.getElementById('bannerWrap');
+  if (!bannerOn) { w.innerHTML = ''; return; }
+  if (!isSubscribed) {
+    w.innerHTML = `<div class="banner-vip">
+      <div><div class="bv-title">CASH PASS VIP</div><div class="bv-sub">충전할 때마다 최대 10% 보너스 캐시</div></div>
+      <div class="bv-cta"><span>가입하기 ›</span></div>
+    </div>`;
+  } else if (subOn) {
+    w.innerHTML = `<div class="banner-using">
+      <div class="bu-txt"><div class="bu-dot"></div>&nbsp;<strong>CASH PASS VIP</strong>&nbsp;이용 중 · 지정금액 충전</div>
+      <span class="bu-link">관리 ›</span>
+    </div>`;
+  } else {
+    w.innerHTML = '';
+  }
+}
+
+function toggleBanner() {
+  bannerOn = !bannerOn;
+  const t = document.getElementById('t1');
+  t.className = 'tog ' + (bannerOn ? 'on' : 'off');
+  document.getElementById('subRow').style.opacity = bannerOn ? '1' : '0.4';
+  renderBanner();
+}
+
+function toggleSubBanner() {
+  isSubscribed = !isSubscribed;
+  const t = document.getElementById('t2');
+  const lb = document.getElementById('subLabel');
+  if (isSubscribed) {
+    t.className = 'tog on';
+    lb.textContent = '가입 유저 — 이용중 배너 표시';
+  } else {
+    t.className = 'tog off';
+    lb.textContent = '가입 유저 — 배너 숨김';
+  }
+  renderBanner();
+}
+
+function updateRec() {
+  recIdx = parseInt(document.getElementById('recSel').value);
+  renderProducts();
+}
+
+function openPopup() {
+  document.getElementById('overlay').classList.add('show');
+}
+function closePopup() {
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function toggleCompany() {
+  document.getElementById('ct').classList.toggle('open');
+  document.getElementById('cd').classList.toggle('open');
+}
+
+renderProducts();
+renderBanner();
+</script>
+</body>
+</html>

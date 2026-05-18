@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>현금영수증 발급 정보 Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --font: 'Noto Sans KR', sans-serif;
+    --c-bg: #f0f2f5;
+    --c-white: #ffffff;
+    --c-text: #111111;
+    --c-text-sub: #6f7680;
+    --c-text-light: #9aa1aa;
+    --c-border: #e2e5ea;
+    --c-border-light: #eceef1;
+    --c-btn-dark: #222222;
+    --c-gray-bg: #f5f6f8;
+    --c-gray-bg2: #f7f8fa;
+    --c-chip: #f3f4f6;
+    --c-input-border: #dfe3e8;
+    --c-input-active: #111111;
+    --c-notice-bg: #f5f6f8;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--c-bg);
+    min-height: 100vh;
+    padding: 32px 16px 60px;
+  }
+
+  /* 상단 레이블 */
+  .page-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .page-header h1 {
+    font-size: 18px; font-weight: 800; color: #111;
+    margin-bottom: 6px;
+  }
+  .page-header p { font-size: 13px; color: #888; }
+
+  /* 플로우 네비게이션 */
+  .flow-nav {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 28px;
+  }
+  .flow-btn {
+    font-family: var(--font); font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; border: 1.5px solid #ddd;
+    background: #fff; color: #666; cursor: pointer; transition: all 0.15s;
+  }
+  .flow-btn:hover { border-color: #aaa; color: #333; }
+  .flow-btn.active { background: #222; color: #fff; border-color: #222; }
+
+  /* 폰 프레임 */
+  .phone-wrap {
+    width: 390px; margin: 0 auto;
+    background: var(--c-white);
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+    position: relative;
+    min-height: 700px;
+  }
+
+  /* 화면 전환 */
+  .screen { display: none; flex-direction: column; min-height: 700px; }
+  .screen.active { display: flex; }
+
+  /* 공통 헤더 */
+  .s-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--c-border-light);
+  }
+  .s-title { font-size: 20px; font-weight: 700; color: var(--c-text); }
+  .s-close {
+    font-size: 26px; color: #777; cursor: pointer;
+    background: none; border: none; font-family: var(--font);
+    line-height: 1; padding: 0 4px;
+  }
+  .s-close-text {
+    font-size: 15px; color: var(--c-text-sub); cursor: pointer;
+    background: none; border: none; font-family: var(--font);
+  }
+
+  .s-body { flex: 1; padding: 24px; overflow-y: auto; }
+  .s-footer { padding: 16px 24px 28px; background: var(--c-white); }
+
+  /* 버튼 */
+  .btn-primary {
+    width: 100%; background: var(--c-btn-dark); color: #fff;
+    border: none; border-radius: 8px; padding: 16px;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    font-family: var(--font); transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-primary:disabled { background: #eff1f4; color: #b3b8bf; cursor: not-allowed; }
+  .btn-round {
+    flex: 1; background: #f2f3f5; color: #111;
+    border: none; border-radius: 26px; padding: 15px;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    font-family: var(--font); transition: opacity 0.15s;
+  }
+  .btn-round-dark {
+    flex: 1; background: #222; color: #fff;
+    border: none; border-radius: 26px; padding: 15px;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    font-family: var(--font); transition: opacity 0.15s;
+  }
+
+  /* ── SCREEN 1: 미등록 ── */
+  .empty-box {
+    background: var(--c-gray-bg2); border: 1px solid var(--c-border);
+    border-radius: 10px; padding: 36px 20px; text-align: center;
+    margin-bottom: 16px;
+  }
+  .empty-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 1.5px solid #d9dde3; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px; color: #9aa1aa; font-size: 22px; font-weight: 300;
+  }
+  .empty-title { font-size: 17px; font-weight: 700; color: #333; margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; color: #7a828c; }
+
+  .notice-box {
+    background: var(--c-notice-bg); border: 1px solid var(--c-border);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;
+  }
+  .notice-title { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 5px; }
+  .notice-text { font-size: 12px; color: #666f7a; line-height: 1.7; }
+
+  /* ── SCREEN 2: 등록 입력 ── */
+  .form-label {
+    font-size: 13px; font-weight: 700; color: #555b63;
+    margin-bottom: 8px; display: block;
+  }
+  .form-group { margin-bottom: 20px; }
+  .input-select {
+    width: 100%; padding: 16px 16px; border: 1.5px solid var(--c-input-border);
+    border-radius: 8px; font-size: 15px; font-weight: 600; color: var(--c-text);
+    font-family: var(--font); background: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; transition: border-color 0.15s;
+  }
+  .input-select:hover { border-color: #aaa; }
+  .input-field {
+    width: 100%; padding: 16px; border: 1.5px solid var(--c-input-border);
+    border-radius: 8px; font-size: 17px; font-weight: 700; color: var(--c-text);
+    font-family: var(--font); outline: none; transition: border-color 0.15s;
+  }
+  .input-field:focus { border-color: var(--c-input-active); }
+  .input-field::placeholder { color: #b3b8bf; font-weight: 400; font-size: 15px; }
+  .input-field.filled { border-color: var(--c-input-active); }
+
+  .info-box {
+    background: var(--c-gray-bg2); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 20px;
+  }
+  .info-text { font-size: 12px; color: #6f7680; line-height: 1.8; }
+
+  .consent-bar {
+    background: var(--c-gray-bg); padding: 16px 24px;
+    display: flex; align-items: center; gap: 12px;
+    border-top: 1px solid var(--c-border-light);
+  }
+  .consent-check {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1.5px solid #b8bec6; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  }
+  .consent-check.checked { background: #333; border-color: #333; }
+  .consent-check svg { display: none; }
+  .consent-check.checked svg { display: block; }
+  .consent-label {
+    font-size: 14px; color: #555b63; flex: 1; cursor: pointer;
+  }
+  .consent-arrow { font-size: 20px; color: #a5abb3; cursor: pointer; }
+
+  /* ── SCREEN 3: 유형 시트 ── */
+  .screen-dim {
+    flex: 1; background: rgba(0,0,0,0.42);
+    display: flex; flex-direction: column; justify-content: flex-end;
+  }
+  .bottom-sheet {
+    background: #fff; border-radius: 24px 24px 0 0;
+    padding: 16px 24px 32px;
+  }
+  .sheet-handle {
+    width: 54px; height: 5px; background: #d6d9de; border-radius: 3px;
+    margin: 0 auto 20px;
+  }
+  .sheet-title { font-size: 19px; font-weight: 700; color: #111; margin-bottom: 16px; }
+  .type-option {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0; cursor: pointer; border-bottom: 1px solid var(--c-border-light);
+  }
+  .type-option:last-of-type { border-bottom: none; margin-bottom: 16px; }
+  .type-option-text { font-size: 15px; color: #555b63; }
+  .type-option.selected .type-option-text { font-weight: 700; color: #111; }
+  .type-check {
+    width: 26px; height: 26px; border-radius: 50%; background: #333;
+    display: none; align-items: center; justify-content: center;
+  }
+  .type-option.selected .type-check { display: flex; }
+  .type-option-bg { background: var(--c-chip); border-radius: 8px; padding: 14px 16px; }
+
+  /* ── SCREEN 4: 등록 완료 ── */
+  .registered-box {
+    border: 1px solid var(--c-border); border-radius: 12px;
+    overflow: hidden; margin-bottom: 16px;
+  }
+  .reg-top { padding: 18px 20px 14px; }
+  .reg-badge {
+    display: inline-block; background: var(--c-chip); border-radius: 13px;
+    padding: 4px 12px; font-size: 12px; font-weight: 700; color: #333;
+    margin-bottom: 10px;
+  }
+  .reg-type { font-size: 13px; font-weight: 700; color: #6f7680; margin-bottom: 8px; }
+  .reg-number { font-size: 24px; font-weight: 800; color: #111; }
+  .reg-actions {
+    display: flex; border-top: 1px solid var(--c-border-light);
+  }
+  .reg-btn {
+    flex: 1; padding: 14px; text-align: center;
+    font-size: 15px; font-weight: 700; color: #111;
+    cursor: pointer; background: none; border: none; font-family: var(--font);
+    transition: background 0.1s;
+  }
+  .reg-btn:hover { background: var(--c-gray-bg); }
+  .reg-divider { width: 1px; background: var(--c-border-light); }
+  .reg-notice { background: var(--c-gray-bg2); border-radius: 8px; padding: 14px 16px; }
+  .reg-notice p { font-size: 12px; color: #555b63; line-height: 1.9; }
+
+  /* ── SCREEN 5: 변경 ── */
+  .change-info-box {
+    background: var(--c-gray-bg); border: 1px solid var(--c-border);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;
+  }
+
+  /* ── SCREEN 6: 삭제 시트 ── */
+  .delete-sheet-content { padding: 20px 24px 0; text-align: center; }
+  .delete-title { font-size: 21px; font-weight: 800; color: #111; margin-bottom: 12px; }
+  .delete-sub { font-size: 13px; color: #6f7680; line-height: 1.7; margin-bottom: 24px; }
+  .delete-btns { display: flex; gap: 10px; padding: 0 24px 32px; }
+
+  /* ── SCREEN 7: 개인정보 동의 ── */
+  .privacy-body { padding: 24px; flex: 1; overflow-y: auto; }
+  .privacy-intro { font-size: 14px; color: #111; line-height: 1.7; margin-bottom: 28px; }
+  .privacy-section { margin-bottom: 24px; }
+  .privacy-section-title { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 10px; }
+  .privacy-section-text { font-size: 14px; color: #111; line-height: 1.7; }
+  .privacy-note { font-size: 13px; color: #333; line-height: 1.7; margin-top: 20px; }
+
+  /* ── SCREEN 8~11: 현금영수증 상세 ── */
+  .detail-summary {
+    background: var(--c-gray-bg2); border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 16px;
+  }
+  .detail-summary-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .detail-summary-label { font-size: 13px; font-weight: 700; color: #6f7680; }
+  .detail-status-badge {
+    background: #e9ebef; border-radius: 14px; padding: 4px 12px;
+    font-size: 12px; font-weight: 700; color: #333;
+  }
+  .detail-amount { font-size: 26px; font-weight: 800; color: #111; }
+  .detail-rows {
+    border: 1px solid var(--c-border); border-radius: 12px;
+    overflow: hidden; margin-bottom: 16px;
+  }
+  .detail-row {
+    display: flex; align-items: flex-start; padding: 14px 18px;
+    border-bottom: 1px solid var(--c-border-light);
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-key { font-size: 13px; font-weight: 700; color: #6f7680; min-width: 110px; flex-shrink: 0; }
+  .detail-val { font-size: 13px; color: #111; line-height: 1.6; }
+  .detail-notice {
+    background: var(--c-gray-bg2); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 20px;
+  }
+  .detail-notice-title { font-size: 13px; font-weight: 700; color: #555b63; margin-bottom: 5px; }
+  .detail-notice-text { font-size: 12px; color: #6f7680; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>현금영수증 발급 정보 Flow</h1>
+  <p>각 화면을 클릭하거나 버튼을 눌러 플로우를 탐색하세요</p>
+</div>
+
+<div class="flow-nav">
+  <button class="flow-btn active" onclick="goTo('s1')">① 미등록</button>
+  <button class="flow-btn" onclick="goTo('s2')">② 등록 입력</button>
+  <button class="flow-btn" onclick="goTo('s3')">③ 유형 선택</button>
+  <button class="flow-btn" onclick="goTo('s4')">④ 등록 완료</button>
+  <button class="flow-btn" onclick="goTo('s5')">⑤ 변경</button>
+  <button class="flow-btn" onclick="goTo('s6')">⑥ 삭제 확인</button>
+  <button class="flow-btn" onclick="goTo('s7')">⑦ 개인정보 동의</button>
+  <button class="flow-btn" onclick="goTo('s8')">⑧ 상세 - 소득공제 발급</button>
+  <button class="flow-btn" onclick="goTo('s9')">⑨ 상세 - 소득공제 취소</button>
+  <button class="flow-btn" onclick="goTo('s10')">⑩ 상세 - 자진발급</button>
+  <button class="flow-btn" onclick="goTo('s11')">⑪ 상세 - 자진발급 취소</button>
+  <button class="flow-btn" onclick="goTo('s12')">⑫ 상세 - 지출증빙 발급</button>
+  <button class="flow-btn" onclick="goTo('s13')">⑬ 상세 - 지출증빙 취소</button>
+</div>
+
+<div class="phone-wrap">
+
+  <!-- ① 미등록 -->
+  <div class="screen active" id="s1">
+    <div class="s-header">
+      <div class="s-title">현금영수증 발급 정보</div>
+      <button class="s-close">×</button>
+    </div>
+    <div class="s-body">
+      <div class="empty-box">
+        <div class="empty-icon">＋</div>
+        <div class="empty-title">등록된 정보가 없습니다</div>
+        <div class="empty-sub">발급정보 등록 후 현금영수증 자동 발행</div>
+      </div>
+      <div class="notice-box">
+        <div class="notice-title">안내</div>
+        <div class="notice-text">미등록 시 이후 결제 건은 무기명 자진발급 처리</div>
+      </div>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary" onclick="goTo('s2')">등록하기</button>
+    </div>
+  </div>
+
+  <!-- ② 등록 입력 (번호 미입력) -->
+  <div class="screen" id="s2">
+    <div class="s-header">
+      <div class="s-title">현금영수증 발급 정보</div>
+      <button class="s-close" onclick="goTo('s1')">×</button>
+    </div>
+    <div class="s-body">
+      <div class="form-group">
+        <label class="form-label">발급 유형</label>
+        <div class="input-select" onclick="goTo('s3')">
+          <span>개인 - 소득공제 (휴대폰)</span>
+          <span style="font-size:18px;color:#555">⌄</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">발급정보</label>
+        <input class="input-field" type="tel" placeholder="휴대폰 번호 입력 (-제외)" id="phone-input"
+          oninput="checkInput()" />
+      </div>
+      <div class="info-box">
+        <div class="info-text">
+          등록하신 발급정보 기준으로 현금영수증 자동 발행<br>
+          발급정보 미등록 시 무기명 자진발급 처리
+        </div>
+      </div>
+    </div>
+    <div class="consent-bar">
+      <div class="consent-check" id="consent-check" onclick="toggleConsent()">
+        <svg width="14" height="11" viewBox="0 0 14 11" fill="none">
+          <path d="M1 5L5.5 9.5L13 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="consent-label" onclick="toggleConsent()">현금영수증 발급을 위한 정보수집에 동의</span>
+      <span class="consent-arrow" onclick="goTo('s7')">›</span>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary" id="confirm-btn" disabled onclick="goTo('s4')">확인</button>
+    </div>
+  </div>
+
+  <!-- ③ 유형 선택 시트 -->
+  <div class="screen" id="s3" style="background:rgba(0,0,0,0.42);">
+    <div class="screen-dim" onclick="goTo('s2')">
+      <div class="bottom-sheet" onclick="event.stopPropagation()">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title">발급 유형 선택</div>
+        <div class="type-option selected type-option-bg" onclick="selectType(this, '개인 - 소득공제 (휴대폰)')">
+          <span class="type-option-text">개인 - 소득공제 (휴대폰)</span>
+          <div class="type-check">
+            <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+              <path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="type-option" onclick="selectType(this, '개인 - 소득공제 (현금영수증 카드)')">
+          <span class="type-option-text">개인 - 소득공제 (현금영수증 카드)</span>
+          <div class="type-check">
+            <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+              <path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="type-option" onclick="selectType(this, '지출증빙 (사업자 번호)')">
+          <span class="type-option-text">지출증빙 (사업자 번호)</span>
+          <div class="type-check">
+            <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+              <path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="type-option" onclick="selectType(this, '지출증빙 (현금영수증 카드)')">
+          <span class="type-option-text">지출증빙 (현금영수증 카드)</span>
+          <div class="type-check">
+            <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+              <path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <button class="btn-round" onclick="goTo('s2')">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 등록 완료 -->
+  <div class="screen" id="s4">
+    <div class="s-header">
+      <div class="s-title">현금영수증 발급 정보</div>
+      <button class="s-close">×</button>
+    </div>
+    <div class="s-body">
+      <div class="registered-box">
+        <div class="reg-top">
+          <div class="reg-badge">등록 완료</div>
+          <div class="reg-type">개인 - 소득공제 (휴대폰)</div>
+          <div class="reg-number">010-1234-5678</div>
+        </div>
+        <div class="reg-actions">
+          <button class="reg-btn" onclick="goTo('s5')">변경</button>
+          <div class="reg-divider"></div>
+          <button class="reg-btn" onclick="goTo('s6')">삭제</button>
+        </div>
+      </div>
+      <div class="reg-notice">
+        <p>
+          등록된 정보로 현금영수증 자동 발행<br>
+          발행된 현금영수증은 국세청 홈택스에서 확인 가능<br>
+          삭제 전 발행 건 영향 없음
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 변경 -->
+  <div class="screen" id="s5">
+    <div class="s-header">
+      <div class="s-title">현금영수증 발급 정보 변경</div>
+      <button class="s-close" onclick="goTo('s4')">×</button>
+    </div>
+    <div class="s-body">
+      <div class="change-info-box">
+        <div class="notice-text">변경 진입 시 기존 정보 입력 유지</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">발급 유형</label>
+        <div class="input-select" onclick="goTo('s3')">
+          <span>개인 - 소득공제 (휴대폰)</span>
+          <span style="font-size:18px;color:#555">⌄</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">발급정보</label>
+        <input class="input-field filled" type="tel" value="01012345678" />
+      </div>
+      <div class="info-box">
+        <div class="info-text">
+          저장 전 취소/X 선택 시 기존 등록 정보 유지<br>
+          변경 시마다 정보수집 동의 필수
+        </div>
+      </div>
+    </div>
+    <div class="consent-bar">
+      <div class="consent-check checked">
+        <svg width="14" height="11" viewBox="0 0 14 11" fill="none">
+          <path d="M1 5L5.5 9.5L13 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="consent-label">현금영수증 발급을 위한 정보수집에 동의</span>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary" onclick="goTo('s4')">변경하기</button>
+    </div>
+  </div>
+
+  <!-- ⑥ 삭제 확인 시트 -->
+  <div class="screen" id="s6" style="background:rgba(0,0,0,0.42);">
+    <div class="screen-dim" onclick="goTo('s4')">
+      <div class="bottom-sheet" onclick="event.stopPropagation()">
+        <div class="sheet-handle"></div>
+        <div class="delete-sheet-content">
+          <div class="delete-title">발급정보를 삭제할까요?</div>
+          <div class="delete-sub">
+            삭제 후 이후 결제 건부터 무기명 자진발급 처리<br>
+            이미 발행된 현금영수증 영향 없음
+          </div>
+        </div>
+        <div class="delete-btns">
+          <button class="btn-round" onclick="goTo('s4')">취소</button>
+          <button class="btn-round-dark" onclick="goTo('s1')">삭제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑦ 개인정보 동의 -->
+  <div class="screen" id="s7">
+    <div class="s-header" style="border-bottom:1px solid var(--c-border);">
+      <div class="s-title" style="font-size:17px;">개인정보 수집 및 이용에 대한 동의</div>
+      <button class="s-close" onclick="goTo('s2')">×</button>
+    </div>
+    <div class="privacy-body">
+      <p class="privacy-intro">
+        (주) 카카오엔터테인먼트는 현금영수증 발급을 위해<br>아래와 같이 개인정보를 수집합니다.
+      </p>
+      <div class="privacy-section">
+        <div class="privacy-section-title">1. 수집목적</div>
+        <div class="privacy-section-text">카카오페이지 서비스 이용에 따른 현금영수증 발급</div>
+      </div>
+      <div class="privacy-section">
+        <div class="privacy-section-title">2. 수집항목</div>
+        <div class="privacy-section-text">
+          휴대폰 번호, 현금영수증 카드번호, 사업자 번호<br>
+          (현금영수증 발급 시 등록하신 정보만 수집됩니다.)
+        </div>
+      </div>
+      <div class="privacy-section">
+        <div class="privacy-section-title">3. 보유기간</div>
+        <div class="privacy-section-text">
+          <strong>회원 탈퇴 후 즉시 파기</strong><br>
+          (단, 법령에 의해 별도 보존이 필요한 경우<br>해당 법령에서 요구하는 기간까지 보관)
+        </div>
+      </div>
+      <div class="privacy-note">
+        ※ 회원님께서는 개인정보 수집에 거부하실 수 있습니다.<br>
+        단, 거부 시 현금영수증 발급이 불가하오니 양해 부탁드립니다.<br><br>
+        더 자세한 내용에 대해서는 개인정보처리방침을 참고하시기 바랍니다.
+      </div>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary" onclick="goTo('s2')">확인</button>
+    </div>
+  </div>
+
+  <!-- ⑧ 현금영수증 상세 - 소득공제 발급완료 -->
+  <div class="screen" id="s8">
+    <div class="s-header">
+      <div class="s-title">현금영수증 상세</div>
+      <button class="s-close-text">닫기</button>
+    </div>
+    <div class="s-body">
+      <div class="detail-summary">
+        <div class="detail-summary-top">
+          <div class="detail-summary-label">발급정보</div>
+          <div class="detail-status-badge">발급완료</div>
+        </div>
+        <div class="detail-amount">1,000원</div>
+      </div>
+      <div class="detail-rows">
+        <div class="detail-row">
+          <div class="detail-key">발급일자</div>
+          <div class="detail-val">2026-04-02 11:05:55</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">현금영수증 종류</div>
+          <div class="detail-val">소득공제</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">발급정보</div>
+          <div class="detail-val">010-1234-5678</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">승인번호</div>
+          <div class="detail-val">730634493</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">가맹점 정보</div>
+          <div class="detail-val">카카오엔터테인먼트<br>220-88-02594</div>
+        </div>
+      </div>
+      <div class="detail-notice">
+        <div class="detail-notice-title">안내사항</div>
+        <div class="detail-notice-text">발급된 현금영수증은 국세청 홈택스에서 확인 가능</div>
+      </div>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary">확인</button>
+    </div>
+  </div>
+
+  <!-- ⑨ 현금영수증 상세 - 소득공제 취소완료 -->
+  <div class="screen" id="s9">
+    <div class="s-header">
+      <div class="s-title">현금영수증 상세</div>
+      <button class="s-close-text">닫기</button>
+    </div>
+    <div class="s-body">
+      <div class="detail-summary">
+        <div class="detail-summary-top">
+          <div class="detail-summary-label">발급정보</div>
+          <div class="detail-status-badge">취소완료</div>
+        </div>
+        <div class="detail-amount">1,000원</div>
+      </div>
+      <div class="detail-rows">
+        <div class="detail-row">
+          <div class="detail-key">발급일자</div>
+          <div class="detail-val">2026-04-02 11:05:55</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">현금영수증 종류</div>
+          <div class="detail-val">소득공제</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">발급정보</div>
+          <div class="detail-val">010-1234-5678</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">승인번호</div>
+          <div class="detail-val">730634493</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">취소 승인번호</div>
+          <div class="detail-val">730648983</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">가맹점 정보</div>
+          <div class="detail-val">카카오엔터테인먼트<br>220-88-02594</div>
+        </div>
+      </div>
+      <div class="detail-notice">
+        <div class="detail-notice-title">안내사항</div>
+        <div class="detail-notice-text">발급된 현금영수증은 국세청 홈택스에서 확인 가능</div>
+      </div>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary">확인</button>
+    </div>
+  </div>
+
+  <!-- ⑩ 현금영수증 상세 - 자진발급 발급완료 -->
+  <div class="screen" id="s10">
+    <div class="s-header">
+      <div class="s-title">현금영수증 상세</div>
+      <button class="s-close-text">닫기</button>
+    </div>
+    <div class="s-body">
+      <div class="detail-summary">
+        <div class="detail-summary-top">
+          <div class="detail-summary-label">발급정보</div>
+          <div class="detail-status-badge">발급완료</div>
+        </div>
+        <div class="detail-amount">1,000원</div>
+      </div>
+      <div class="detail-rows">
+        <div class="detail-row">
+          <div class="detail-key">발급일자</div>
+          <div class="detail-val">2026-04-02 11:05:55</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">현금영수증 종류</div>
+          <div class="detail-val">자진발급</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">발급정보</div>
+          <div class="detail-val">0100001234</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">승인번호</div>
+          <div class="detail-val">730634493</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">가맹점 정보</div>
+          <div class="detail-val">카카오엔터테인먼트<br>220-88-02594</div>
+        </div>
+      </div>
+      <div class="detail-notice">
+        <div class="detail-notice-title">안내사항</div>
+        <div class="detail-notice-text">발급된 현금영수증은 국세청 홈택스에서 확인 가능</div>
+      </div>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary">확인</button>
+    </div>
+  </div>
+
+  <!-- ⑪ 현금영수증 상세 - 자진발급 취소완료 -->
+  <div class="screen" id="s11">
+    <div class="s-header">
+      <div class="s-title">현금영수증 상세</div>
+      <button class="s-close-text">닫기</button>
+    </div>
+    <div class="s-body">
+      <div class="detail-summary">
+        <div class="detail-summary-top">
+          <div class="detail-summary-label">발급정보</div>
+          <div class="detail-status-badge">취소완료</div>
+        </div>
+        <div class="detail-amount">1,000원</div>
+      </div>
+      <div class="detail-rows">
+        <div class="detail-row">
+          <div class="detail-key">발급일자</div>
+          <div class="detail-val">2026-04-02 11:05:55</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">현금영수증 종류</div>
+          <div class="detail-val">자진발급</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">발급정보</div>
+          <div class="detail-val">0100001234</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">승인번호</div>
+          <div class="detail-val">730634493</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">취소 승인번호</div>
+          <div class="detail-val">730648983</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">가맹점 정보</div>
+          <div class="detail-val">카카오엔터테인먼트<br>220-88-02594</div>
+        </div>
+      </div>
+      <div class="detail-notice">
+        <div class="detail-notice-title">안내사항</div>
+        <div class="detail-notice-text">발급된 현금영수증은 국세청 홈택스에서 확인 가능</div>
+      </div>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary">확인</button>
+    </div>
+  </div>
+
+  <!-- ⑫ 현금영수증 상세 - 지출증빙 발급완료 -->
+  <div class="screen" id="s12">
+    <div class="s-header">
+      <div class="s-title">현금영수증 상세</div>
+      <button class="s-close-text">닫기</button>
+    </div>
+    <div class="s-body">
+      <div class="detail-summary">
+        <div class="detail-summary-top">
+          <div class="detail-summary-label">발급정보</div>
+          <div class="detail-status-badge">발급완료</div>
+        </div>
+        <div class="detail-amount">1,000원</div>
+      </div>
+      <div class="detail-rows">
+        <div class="detail-row">
+          <div class="detail-key">발급일자</div>
+          <div class="detail-val">2026-04-02 11:05:55</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">현금영수증 종류</div>
+          <div class="detail-val">지출증빙</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">발급정보</div>
+          <div class="detail-val">123-45-67890</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">승인번호</div>
+          <div class="detail-val">730634493</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">가맹점 정보</div>
+          <div class="detail-val">카카오엔터테인먼트<br>220-88-02594</div>
+        </div>
+      </div>
+      <div class="detail-notice">
+        <div class="detail-notice-title">안내사항</div>
+        <div class="detail-notice-text">발급된 현금영수증은 국세청 홈택스에서 확인 가능</div>
+      </div>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary">확인</button>
+    </div>
+  </div>
+
+  <!-- ⑬ 현금영수증 상세 - 지출증빙 취소완료 -->
+  <div class="screen" id="s13">
+    <div class="s-header">
+      <div class="s-title">현금영수증 상세</div>
+      <button class="s-close-text">닫기</button>
+    </div>
+    <div class="s-body">
+      <div class="detail-summary">
+        <div class="detail-summary-top">
+          <div class="detail-summary-label">발급정보</div>
+          <div class="detail-status-badge">취소완료</div>
+        </div>
+        <div class="detail-amount">1,000원</div>
+      </div>
+      <div class="detail-rows">
+        <div class="detail-row">
+          <div class="detail-key">발급일자</div>
+          <div class="detail-val">2026-04-02 11:05:55</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">현금영수증 종류</div>
+          <div class="detail-val">지출증빙</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">발급정보</div>
+          <div class="detail-val">123-45-67890</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">승인번호</div>
+          <div class="detail-val">730634493</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">취소 승인번호</div>
+          <div class="detail-val">730648983</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-key">가맹점 정보</div>
+          <div class="detail-val">카카오엔터테인먼트<br>220-88-02594</div>
+        </div>
+      </div>
+      <div class="detail-notice">
+        <div class="detail-notice-title">안내사항</div>
+        <div class="detail-notice-text">발급된 현금영수증은 국세청 홈택스에서 확인 가능</div>
+      </div>
+    </div>
+    <div class="s-footer">
+      <button class="btn-primary">확인</button>
+    </div>
+  </div>
+
+</div><!-- /phone-wrap -->
+
+<script>
+  const screenIds = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13'];
+
+  function goTo(id) {
+    screenIds.forEach(sid => {
+      document.getElementById(sid).classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+
+    // 네비게이션 버튼 active 업데이트
+    const btns = document.querySelectorAll('.flow-btn');
+    const idx = screenIds.indexOf(id);
+    btns.forEach((btn, i) => {
+      btn.classList.toggle('active', i === idx);
+    });
+
+    // 화면 맨 위로 스크롤
+    document.querySelector('.phone-wrap').scrollTop = 0;
+  }
+
+  // 번호 입력 + 동의 체크 → 확인 버튼 활성화
+  let consentChecked = false;
+
+  function toggleConsent() {
+    consentChecked = !consentChecked;
+    const el = document.getElementById('consent-check');
+    el.classList.toggle('checked', consentChecked);
+    checkInput();
+  }
+
+  function checkInput() {
+    const phone = document.getElementById('phone-input').value.trim();
+    const btn = document.getElementById('confirm-btn');
+    btn.disabled = !(phone.length >= 10 && consentChecked);
+  }
+
+  // 유형 선택 시트
+  function selectType(el, typeName) {
+    document.querySelectorAll('#s3 .type-option').forEach(opt => opt.classList.remove('selected'));
+    el.classList.add('selected');
+    setTimeout(() => goTo('s2'), 200);
+  }
+</script>
+</body>
+</html>

@@ -382,8 +382,74 @@
   .pc-tab-content { display: none; }
   .pc-tab-content.active { display: block; }
   .empty-state { text-align: center; padding: 60px 0; color: var(--c-text-sub); font-size: 14px; }
+
+  /* 등록 입력 폼 */
+  .form-label { font-size: 13px; font-weight: 700; color: #555b63; margin-bottom: 8px; display: block; }
+  .form-group { margin-bottom: 18px; }
+  .input-select {
+    width: 100%; padding: 14px 16px; border: 1.5px solid #dfe3e8; border-radius: 8px;
+    font-size: 15px; font-weight: 600; color: #111; font-family: 'Noto Sans KR', sans-serif;
+    background: #fff; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+  }
+  .input-field {
+    width: 100%; padding: 14px 16px; border: 1.5px solid #dfe3e8; border-radius: 8px;
+    font-size: 17px; font-weight: 700; color: #111; font-family: 'Noto Sans KR', sans-serif; outline: none;
+  }
+  .input-field:focus { border-color: #111; }
+  .input-field::placeholder { color: #b3b8bf; font-weight: 400; font-size: 14px; }
+  .info-box { background: #f7f8fa; border-radius: 8px; padding: 13px 15px; margin-bottom: 14px; }
+  .info-text { font-size: 12px; color: #6f7680; line-height: 1.8; }
+  .consent-bar {
+    background: #f5f6f8; padding: 13px 15px; border-radius: 8px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .consent-check {
+    width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #b8bec6;
+    background: #fff; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  }
+  .consent-check.checked { background: #333; border-color: #333; }
+  .consent-check svg { display: none; }
+  .consent-check.checked svg { display: block; }
+  .consent-label { font-size: 13px; color: #555b63; flex: 1; cursor: pointer; }
+  .consent-arrow { font-size: 18px; color: #a5abb3; cursor: pointer; }
+  .change-info-box {
+    background: #f5f6f8; border: 1px solid #e4e7eb; border-radius: 8px;
+    padding: 13px 15px; margin-bottom: 18px; font-size: 12px; color: #555b63;
+  }
+  .type-sheet-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.42);
+    z-index: 9100; flex-direction: column; justify-content: flex-end;
+  }
+  .type-sheet-overlay.open { display: flex; }
+  .type-sheet { background: #fff; border-radius: 24px 24px 0 0; padding: 16px 24px 32px; }
+  .type-sheet-handle { width: 54px; height: 5px; background: #d6d9de; border-radius: 3px; margin: 0 auto 20px; }
+  .type-sheet-title { font-size: 19px; font-weight: 700; color: #111; margin-bottom: 12px; }
+  .type-opt {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0; cursor: pointer; border-bottom: 1px solid #eceef1; font-size: 15px; color: #555b63;
+  }
+  .type-opt:last-of-type { border-bottom: none; margin-bottom: 12px; }
+  .type-opt.selected { font-weight: 700; color: #111; background: #f3f4f6; border-radius: 8px; padding: 14px 12px; margin: 0 -12px; }
+  .type-opt-check { width: 24px; height: 24px; border-radius: 50%; background: #333; display: none; align-items: center; justify-content: center; flex-shrink: 0; }
+  .type-opt.selected .type-opt-check { display: flex; }
+  .delete-sheet-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.42);
+    z-index: 9100; flex-direction: column; justify-content: flex-end;
+  }
+  .delete-sheet-overlay.open { display: flex; }
+  .delete-sheet { background: #fff; border-radius: 24px 24px 0 0; padding: 16px 24px 32px; }
+  .delete-sheet-handle { width: 54px; height: 5px; background: #d6d9de; border-radius: 3px; margin: 0 auto 20px; }
+  .delete-sheet-title { font-size: 20px; font-weight: 800; color: #111; text-align: center; margin-bottom: 10px; }
+  .delete-sheet-sub { font-size: 13px; color: #6f7680; text-align: center; line-height: 1.7; margin-bottom: 24px; }
+  .delete-sheet-btns { display: flex; gap: 10px; }
+  .btn-sheet-cancel { flex: 1; background: #f2f3f5; color: #111; border: none; border-radius: 26px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+  .btn-sheet-delete { flex: 1; background: #222; color: #fff; border: none; border-radius: 26px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+  .privacy-body { font-size: 14px; color: #111; line-height: 1.7; }
+  .privacy-section { margin-bottom: 20px; }
+  .privacy-section-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .privacy-note { font-size: 13px; color: #333; line-height: 1.7; margin-top: 16px; }
 </style>
-</head>
 <body>
 
 <div class="view-toggle">
@@ -881,17 +947,17 @@
 </div>
 
 <!-- ══════════════════════════════════
-     현금영수증 발행정보 모달 (미등록/등록)
+     현금영수증 발급 정보 모달 - 미등록 상태
 ══════════════════════════════════ -->
-<div class="modal-overlay" id="modal-receipt-info" onclick="closeModalOutside(event, 'modal-receipt-info')">
+<div class="modal-overlay" id="modal-receipt-info" onclick="closeModalOutside(event,'modal-receipt-info')">
   <div class="modal-sheet">
-    <div class="modal-header">
-      <div class="modal-title">현금영수증 발행정보</div>
-      <button class="modal-close" onclick="closeModalById('modal-receipt-info')">×</button>
-    </div>
 
-    <!-- 미등록 상태 -->
-    <div id="receipt-info-empty">
+    <!-- STEP: 미등록 -->
+    <div id="ri-empty">
+      <div class="modal-header">
+        <div class="modal-title">현금영수증 발급 정보</div>
+        <button class="modal-close" onclick="closeModalById('modal-receipt-info')">×</button>
+      </div>
       <div class="receipt-empty-box">
         <div class="receipt-empty-icon">＋</div>
         <div class="receipt-empty-title">등록된 정보가 없습니다</div>
@@ -901,34 +967,174 @@
         <div class="receipt-notice-title">안내</div>
         <div class="receipt-notice-text">미등록 시 이후 결제 건은 무기명 자진발급 처리</div>
       </div>
-      <button class="modal-primary-btn" onclick="showRegisteredState()">등록하기</button>
+      <button class="modal-primary-btn" onclick="riShowInput(false)">등록하기</button>
     </div>
 
-    <!-- 등록 상태 (기본 숨김) -->
-    <div id="receipt-info-registered" style="display:none;">
+    <!-- STEP: 등록 입력 -->
+    <div id="ri-input" style="display:none;">
+      <div class="modal-header">
+        <div class="modal-title">현금영수증 발급 정보</div>
+        <button class="modal-close" onclick="closeModalById('modal-receipt-info')">×</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">발급 유형</label>
+        <div class="input-select" onclick="document.getElementById('type-sheet').classList.add('open')">
+          <span id="ri-type-label">개인 - 소득공제 (휴대폰)</span>
+          <span style="font-size:18px;color:#555">⌄</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">발급정보</label>
+        <input class="input-field" type="tel" id="ri-number-input" placeholder="휴대폰 번호 입력 (-제외)" oninput="riCheckBtn()" />
+      </div>
+      <div class="info-box">
+        <div class="info-text">
+          등록하신 발급정보 기준으로 현금영수증 자동 발행<br>
+          발급정보 미등록 시 무기명 자진발급 처리
+        </div>
+      </div>
+      <div class="consent-bar">
+        <div class="consent-check" id="ri-consent-check" onclick="riToggleConsent()">
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <span class="consent-label" onclick="riToggleConsent()">현금영수증 발급을 위한 정보수집에 동의</span>
+        <span class="consent-arrow" onclick="riShowPrivacy()">›</span>
+      </div>
+      <button class="modal-primary-btn" id="ri-confirm-btn" disabled style="opacity:0.4;cursor:not-allowed;" onclick="riShowRegistered()">확인</button>
+    </div>
+
+    <!-- STEP: 등록 완료 -->
+    <div id="ri-registered" style="display:none;">
+      <div class="modal-header">
+        <div class="modal-title">현금영수증 발급 정보</div>
+        <button class="modal-close" onclick="closeModalById('modal-receipt-info')">×</button>
+      </div>
       <div class="receipt-registered-box">
         <div class="receipt-reg-top">
           <div class="receipt-reg-badge">등록 완료</div>
-          <div class="receipt-reg-type">개인 - 소득공제 (휴대폰)</div>
-          <div class="receipt-reg-number">01012345678</div>
+          <div class="receipt-reg-type" id="ri-reg-type-label">개인 - 소득공제 (휴대폰)</div>
+          <div class="receipt-reg-number" id="ri-reg-number-display">010-1234-5678</div>
         </div>
         <div class="receipt-reg-actions">
-          <button class="receipt-reg-btn" onclick="showEmptyState()">변경</button>
+          <button class="receipt-reg-btn" onclick="riShowChange()">변경</button>
           <div class="receipt-reg-divider"></div>
-          <button class="receipt-reg-btn" onclick="showEmptyState()">삭제</button>
+          <button class="receipt-reg-btn" onclick="document.getElementById('delete-sheet').classList.add('open')">삭제</button>
         </div>
       </div>
       <div class="receipt-notice-box">
-        <div class="receipt-notice-text">등록된 정보로 현금영수증 자동 발행</div>
-        <div class="receipt-notice-text">발행된 현금영수증은 국세청 홈택스에서 확인 가능</div>
-        <div class="receipt-notice-text">삭제 전 발행 건 영향 없음</div>
+        <div class="receipt-notice-text">결제 시, 등록된 현금영수증 발급 정보로 현금영수증 자동 발행됩니다.</div>
+        <div class="receipt-notice-text" style="margin-top:4px;">발급된 현금영수증은 국세청 홈택스에서 확인이 가능합니다.</div>
+        <div class="receipt-notice-text" style="margin-top:4px;">삭제 전 발행 건 영향 없음</div>
       </div>
+    </div>
+
+    <!-- STEP: 변경 입력 -->
+    <div id="ri-change" style="display:none;">
+      <div class="modal-header">
+        <div class="modal-title">현금영수증 발급 정보 변경</div>
+        <button class="modal-close" onclick="riShowRegistered()">×</button>
+      </div>
+      <div class="change-info-box">변경 진입 시 기존 정보 입력 유지</div>
+      <div class="form-group">
+        <label class="form-label">발급 유형</label>
+        <div class="input-select" onclick="document.getElementById('type-sheet').classList.add('open')">
+          <span id="ri-change-type-label">개인 - 소득공제 (휴대폰)</span>
+          <span style="font-size:18px;color:#555">⌄</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">발급정보</label>
+        <input class="input-field" type="tel" id="ri-change-input" value="01012345678" style="border-color:#111;" oninput="riCheckChangeBtn()" />
+      </div>
+      <div class="info-box">
+        <div class="info-text">
+          저장 전 취소/X 선택 시 기존 등록 정보 유지<br>
+          변경 시마다 정보수집 동의 필수
+        </div>
+      </div>
+      <div class="consent-bar">
+        <div class="consent-check checked" id="ri-change-consent">
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <span class="consent-label">현금영수증 발급을 위한 정보수집에 동의</span>
+      </div>
+      <button class="modal-primary-btn" onclick="riShowRegistered()">변경하기</button>
+    </div>
+
+    <!-- STEP: 개인정보 동의 -->
+    <div id="ri-privacy" style="display:none;">
+      <div class="modal-header" style="border-bottom:1px solid #eceef1;padding-bottom:16px;margin-bottom:20px;">
+        <div class="modal-title" style="font-size:17px;">개인정보 수집 및 이용에 대한 동의</div>
+        <button class="modal-close" onclick="riHidePrivacy()">×</button>
+      </div>
+      <div class="privacy-body">
+        <p style="margin-bottom:24px;">(주) 카카오엔터테인먼트는 현금영수증 발급을 위해 아래와 같이 개인정보를 수집합니다.</p>
+        <div class="privacy-section">
+          <div class="privacy-section-title">1. 수집목적</div>
+          <div>카카오페이지 서비스 이용에 따른 현금영수증 발급</div>
+        </div>
+        <div class="privacy-section">
+          <div class="privacy-section-title">2. 수집항목</div>
+          <div>휴대폰 번호, 현금영수증 카드번호, 사업자 번호<br>(현금영수증 발급 시 등록하신 정보만 수집됩니다.)</div>
+        </div>
+        <div class="privacy-section">
+          <div class="privacy-section-title">3. 보유기간</div>
+          <div><strong>회원 탈퇴 후 즉시 파기</strong><br>(단, 법령에 의해 별도 보존이 필요한 경우 해당 법령에서 요구하는 기간까지 보관)</div>
+        </div>
+        <div class="privacy-note">
+          ※ 회원님께서는 개인정보 수집에 거부하실 수 있습니다.<br>
+          단, 거부 시 현금영수증 발급이 불가하오니 양해 부탁드립니다.<br><br>
+          더 자세한 내용에 대해서는 개인정보처리방침을 참고하시기 바랍니다.
+        </div>
+      </div>
+      <button class="modal-primary-btn" style="margin-top:24px;" onclick="riHidePrivacy()">확인</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 발급 유형 선택 바텀시트 -->
+<div class="type-sheet-overlay" id="type-sheet" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="type-sheet">
+    <div class="type-sheet-handle"></div>
+    <div class="type-sheet-title">발급 유형 선택</div>
+    <div class="type-opt selected" onclick="riSelectType(this,'개인 - 소득공제 (휴대폰)','휴대폰 번호 입력 (-제외)')">
+      <span>개인 - 소득공제 (휴대폰)</span>
+      <div class="type-opt-check"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="type-opt" onclick="riSelectType(this,'개인 - 소득공제 (현금영수증 카드)','카드번호 입력')">
+      <span>개인 - 소득공제 (현금영수증 카드)</span>
+      <div class="type-opt-check"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="type-opt" onclick="riSelectType(this,'지출증빙 (사업자 번호)','사업자 번호 입력')">
+      <span>지출증빙 (사업자 번호)</span>
+      <div class="type-opt-check"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="type-opt" onclick="riSelectType(this,'지출증빙 (현금영수증 카드)','카드번호 입력')">
+      <span>지출증빙 (현금영수증 카드)</span>
+      <div class="type-opt-check"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+    </div>
+    <button class="btn-sheet-cancel" onclick="document.getElementById('type-sheet').classList.remove('open')">취소</button>
+  </div>
+</div>
+
+<!-- 삭제 확인 바텀시트 -->
+<div class="delete-sheet-overlay" id="delete-sheet" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="delete-sheet">
+    <div class="delete-sheet-handle"></div>
+    <div class="delete-sheet-title">발급정보를 삭제할까요?</div>
+    <div class="delete-sheet-sub">
+      현금영수증 발급정보를 삭제하여도<br>이미 발행된 현금영수증에 영향은 없습니다.
+    </div>
+    <div class="delete-sheet-btns">
+      <button class="btn-sheet-cancel" onclick="document.getElementById('delete-sheet').classList.remove('open')">취소</button>
+      <button class="btn-sheet-delete" onclick="riDeleteConfirm()">삭제</button>
     </div>
   </div>
 </div>
 
 <!-- 현금영수증 상세 모달 (충전내역 버튼용) -->
-<div class="modal-overlay" id="modal-receipt-detail" onclick="closeModalOutside(event, 'modal-receipt-detail')">
+<div class="modal-overlay" id="modal-receipt-detail" onclick="closeModalOutside(event,'modal-receipt-detail')">
   <div class="modal-sheet">
     <div class="modal-header">
       <div class="modal-title">현금영수증 상세</div>
@@ -993,19 +1199,13 @@
     const fromInput = document.getElementById('date-from-' + tab);
     const toInput = document.getElementById('date-to-' + tab);
     const months = parseInt(select.value);
-    if (months === 0) {
-      fromInput.removeAttribute('disabled');
-      toInput.removeAttribute('disabled');
-      return;
-    }
+    if (months === 0) { fromInput.removeAttribute('disabled'); toInput.removeAttribute('disabled'); return; }
     const today = new Date(2026, 4, 14);
     const from = new Date(today);
     from.setMonth(from.getMonth() - months);
     const fmt = d => d.toISOString().split('T')[0];
-    fromInput.value = fmt(from);
-    toInput.value = fmt(today);
-    fromInput.setAttribute('disabled', true);
-    toInput.setAttribute('disabled', true);
+    fromInput.value = fmt(from); toInput.value = fmt(today);
+    fromInput.setAttribute('disabled', true); toInput.setAttribute('disabled', true);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -1016,33 +1216,98 @@
     });
   });
 
-  /* ── 현금영수증 발행정보 모달 (미등록/등록 상태) ── */
-  // 기본: 미등록 상태로 열림
+  /* ══════════════════════════════════
+     현금영수증 발급 정보 모달 제어
+  ══════════════════════════════════ */
+  const riSteps = ['ri-empty','ri-input','ri-registered','ri-change','ri-privacy'];
+  function riShow(id) {
+    riSteps.forEach(s => document.getElementById(s).style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+  }
+
+  let riConsentChecked = false;
+
   function openReceiptInfo() {
-    showEmptyState();
+    riConsentChecked = false;
+    document.getElementById('ri-consent-check').classList.remove('checked');
+    const inp = document.getElementById('ri-number-input');
+    if (inp) inp.value = '';
+    riShow('ri-empty');
     document.getElementById('modal-receipt-info').classList.add('open');
   }
 
-  function showEmptyState() {
-    document.getElementById('receipt-info-empty').style.display = 'block';
-    document.getElementById('receipt-info-registered').style.display = 'none';
+  function riShowInput(isChange) {
+    riShow('ri-input');
   }
 
-  function showRegisteredState() {
-    document.getElementById('receipt-info-empty').style.display = 'none';
-    document.getElementById('receipt-info-registered').style.display = 'block';
+  function riShowRegistered() {
+    const typeLabel = document.getElementById('ri-type-label').textContent;
+    const num = document.getElementById('ri-number-input').value || '010-1234-5678';
+    document.getElementById('ri-reg-type-label').textContent = typeLabel;
+    document.getElementById('ri-reg-number-display').textContent = num || '010-1234-5678';
+    document.getElementById('ri-change-type-label').textContent = typeLabel;
+    document.getElementById('ri-change-input').value = (num || '01012345678').replace(/-/g,'');
+    document.getElementById('delete-sheet').classList.remove('open');
+    riShow('ri-registered');
   }
 
-  /* ── 현금영수증 상세 모달 (충전내역 버튼용) ── */
+  function riShowChange() {
+    riShow('ri-change');
+  }
+
+  function riShowPrivacy() {
+    riShow('ri-privacy');
+  }
+
+  function riHidePrivacy() {
+    riShow('ri-input');
+  }
+
+  function riToggleConsent() {
+    riConsentChecked = !riConsentChecked;
+    document.getElementById('ri-consent-check').classList.toggle('checked', riConsentChecked);
+    riCheckBtn();
+  }
+
+  function riCheckBtn() {
+    const inp = document.getElementById('ri-number-input');
+    const btn = document.getElementById('ri-confirm-btn');
+    const valid = inp && inp.value.trim().length >= 9 && riConsentChecked;
+    btn.disabled = !valid;
+    btn.style.opacity = valid ? '1' : '0.4';
+    btn.style.cursor = valid ? 'pointer' : 'not-allowed';
+  }
+
+  function riCheckChangeBtn() { /* 변경 입력은 기본 활성 */ }
+
+  function riSelectType(el, typeName, placeholder) {
+    document.querySelectorAll('#type-sheet .type-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('ri-type-label').textContent = typeName;
+    const inp = document.getElementById('ri-number-input');
+    if (inp) { inp.placeholder = placeholder; inp.value = ''; }
+    setTimeout(() => document.getElementById('type-sheet').classList.remove('open'), 150);
+  }
+
+  function riDeleteConfirm() {
+    document.getElementById('delete-sheet').classList.remove('open');
+    riConsentChecked = false;
+    document.getElementById('ri-consent-check').classList.remove('checked');
+    const inp = document.getElementById('ri-number-input');
+    if (inp) inp.value = '';
+    riShow('ri-empty');
+  }
+
+  /* ── 현금영수증 상세 모달 ── */
   const detailData = {
     income_issued: {
       status: '발급완료',
       rows: [
         { key: '발급일자', val: '2026-04-02 11:05:55' },
         { key: '현금영수증 종류', val: '소득공제' },
-        { key: '발급정보', val: '01012345678' },
+        { key: '발급정보', val: '010-1234-5678' },
         { key: '승인번호', val: '730634493' },
-        { key: '가맹점 정보', val: '<span style="display:flex;flex-direction:column;gap:3px;"><span>카카오엔터테인먼트</span><span>220-88-02594</span></span>' },
+        { key: '가맹점 정보', val: '카카오엔터테인먼트<br>220-88-02594' },
       ]
     },
     income_canceled: {
@@ -1050,10 +1315,10 @@
       rows: [
         { key: '발급일자', val: '2026-04-02 11:05:55' },
         { key: '현금영수증 종류', val: '소득공제' },
-        { key: '발급정보', val: '01012345678' },
+        { key: '발급정보', val: '010-1234-5678' },
         { key: '승인번호', val: '730634493' },
         { key: '취소 승인번호', val: '730648983' },
-        { key: '가맹점 정보', val: '<span style="display:flex;flex-direction:column;gap:3px;"><span>카카오엔터테인먼트</span><span>220-88-02594</span></span>' },
+        { key: '가맹점 정보', val: '카카오엔터테인먼트<br>220-88-02594' },
       ]
     }
   };
@@ -1065,16 +1330,14 @@
       <div class="receipt-detail-row">
         <div class="receipt-detail-key">${r.key}</div>
         <div class="receipt-detail-val">${r.val}</div>
-      </div>
-    `).join('');
+      </div>`).join('');
     document.getElementById('modal-receipt-detail').classList.add('open');
   }
 
-  /* ── 모달 닫기 ── */
+  /* ── 공통 모달 닫기 ── */
   function closeModalById(id) {
     document.getElementById(id).classList.remove('open');
   }
-
   function closeModalOutside(e, id) {
     if (e.target === document.getElementById(id)) closeModalById(id);
   }

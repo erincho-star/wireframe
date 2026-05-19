@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>캐시통합_일반 충전창 와이어프레임_1차</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── SHELL ─── */
+:root {
+  --font:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;
+  --bg:#e8e8e8; --white:#fff; --text:#1a1a1a; --text-sub:#666; --text-lt:#999;
+  --border:#e0e0e0; --border-lt:#eee; --accent:#FFD700; --dark:#1a1a1a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--text)}
+.page-title{font-size:12px;font-weight:700;color:#666;margin-bottom:14px;letter-spacing:.02em}
+.page-wrap{display:flex;gap:20px;align-items:flex-start}
+.phone-col{flex-shrink:0}
+.side-col{width:252px;flex-shrink:0;display:flex;flex-direction:column;gap:10px}
+.side-card{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:14px}
+.sc-title{font-size:10.5px;font-weight:700;color:#555;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border-lt);display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.05em}
+.sc-title::before{content:'';width:5px;height:5px;border-radius:50%;background:#4a7cdc;flex-shrink:0}
+.ctrl-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ctrl-row:last-child{margin-bottom:0}
+.ctrl-label{font-size:11px;color:#555;flex:1;line-height:1.4}
+.tog{width:36px;height:20px;border-radius:10px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;border:none;outline:none}
+.tog.on{background:#22c55e}
+.tog.off{background:#ccc}
+.tog-thumb{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tog.on .tog-thumb{left:18px}
+.tog.off .tog-thumb{left:2px}
+.sc-sel{font-size:11px;padding:4px 7px;border:1px solid #ccc;border-radius:5px;background:#fff;color:#333;font-family:var(--font)}
+.ann-item{font-size:11px;color:#666;line-height:1.6;padding:2px 0 2px 8px;border-left:2px solid #d8e2f7;margin-bottom:4px}
+.ann-item:last-child{margin-bottom:0}
+.ann-item strong{color:var(--text)}
+
+/* ─── FRAME (screen-specific CSS, unchanged) ─── */
+.frame{border:1px solid #ccc;border-radius:12px;overflow:hidden;background:#fff;position:relative;box-shadow:0 4px 20px rgba(0,0,0,.12);width:360px}
+.hd{background:#1a1a1a;padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
+.auto-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;cursor:pointer;text-decoration:none}
+.auto-pill span{font-size:11px;color:#fff;font-weight:500}
+.auto-pill .icon{font-size:12px;color:#FFD700}
+.hd-title{font-size:16px;font-weight:500;color:#fff}
+.hd-close{color:rgba(255,255,255,.65);cursor:pointer;font-size:18px;line-height:1}
+.cash-row{padding:11px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f0f0}
+.cash-lb{font-size:13px;color:#666}
+.cash-val{font-size:14px;font-weight:500;color:#1a1a1a}
+.banner-wrap{padding:10px 16px 4px}
+.banner-vip{background:#12121f;border-radius:8px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid rgba(255,215,0,.25)}
+.bv-title{font-size:12px;font-weight:600;color:#FFD700;margin-bottom:2px}
+.bv-sub{font-size:11px;color:rgba(255,255,255,.55)}
+.bv-cta{display:flex;align-items:center;gap:3px;background:rgba(255,215,0,.15);border-radius:20px;padding:5px 10px}
+.bv-cta span{font-size:11px;color:#FFD700;font-weight:500}
+.banner-using{background:#f7f7f7;border-radius:8px;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;border:1px solid #e5e5e5}
+.bu-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;margin-right:7px}
+.bu-txt{font-size:12px;color:#555;display:flex;align-items:center}
+.bu-txt strong{color:#1a1a1a;font-weight:500}
+.bu-link{font-size:11px;color:#4a7cdc;cursor:pointer;white-space:nowrap}
+.sec-lb{padding:10px 16px 4px;font-size:11px;font-weight:600;color:#888;letter-spacing:.04em;text-transform:uppercase}
+.prod-list{padding:0 16px}
+.prod{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background .1s}
+.prod:hover{background:#fafafa;margin:0 -16px;padding:12px 16px}
+.prod:last-child{border-bottom:none}
+.prod-l{display:flex;align-items:center;gap:10px}
+.radio{width:18px;height:18px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.radio.on{border-color:#FFD700;background:#FFD700}
+.radio.on::after{content:'';width:7px;height:7px;border-radius:50%;background:#1a1a1a}
+.pname{font-size:14px;color:#1a1a1a}
+.rec{font-size:10px;color:#e85c33;font-weight:600;margin-left:5px;vertical-align:middle}
+.pprice{font-size:14px;color:#666}
+.summ{margin:8px 16px;padding:11px 13px;background:#f7f7f7;border-radius:8px;border:1px solid #e5e5e5}
+.sr{display:flex;justify-content:space-between;padding:3px 0}
+.sr .sl{font-size:12px;color:#666}
+.sr .sv{font-size:12px;font-weight:500;color:#1a1a1a}
+.sr.main .sl{font-size:13px;color:#1a1a1a;font-weight:500}
+.sr.main .sv{font-size:15px;font-weight:600}
+.sdiv{height:1px;background:#e5e5e5;margin:5px 0}
+.notice-area{padding:10px 16px 6px}
+.notice-req{font-size:11px;color:#e85c33;line-height:1.6;margin-bottom:8px}
+.agree-row{display:flex;align-items:flex-start;gap:8px}
+.chk{width:17px;height:17px;border-radius:4px;border:1.5px solid #ccc;flex-shrink:0;margin-top:1px;cursor:pointer}
+.agree-txt{font-size:12px;color:#666;line-height:1.5}
+.agree-link{color:#4a7cdc;text-decoration:underline;cursor:pointer}
+.next-btn{margin:8px 16px 12px;background:#FFD700;border:none;border-radius:8px;width:calc(100% - 32px);padding:14px;font-size:15px;font-weight:600;color:#1a1a1a;cursor:pointer;transition:opacity .15s}
+.next-btn:hover{opacity:.9}
+.company-info{padding:8px 16px 14px;font-size:10px;color:#aaa;line-height:1.6;border-top:1px solid #f0f0f0}
+.overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:10;align-items:flex-end;border-radius:12px}
+.overlay.show{display:flex}
+.popup{background:#fff;border-radius:14px 14px 0 0;width:100%;max-height:82%;overflow-y:auto}
+.popup-hd{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:1}
+.popup-hd-title{font-size:15px;font-weight:600;color:#1a1a1a}
+.popup-close{font-size:12px;color:#666;cursor:pointer;padding:5px 11px;border:1px solid #e0e0e0;border-radius:8px;background:#fff}
+.popup-body{padding:16px 16px 24px}
+.psec{margin-bottom:14px}
+.psec-title{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:7px}
+.pitem{font-size:11px;color:#555;line-height:1.7;padding-left:12px;position:relative;margin-bottom:4px}
+.pitem::before{content:'·';position:absolute;left:0;color:#bbb}
+.pitem strong{color:#1a1a1a}
+.pdiv{height:1px;background:#eee;margin:12px 0}
+.company-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:6px 0;user-select:none}
+.company-toggle span{font-size:11px;color:#666}
+.company-toggle .arrow{font-size:12px;color:#aaa;transition:transform .2s;display:inline-block}
+.company-toggle.open .arrow{transform:rotate(180deg)}
+.company-detail{display:none;font-size:10px;color:#aaa;line-height:1.7;padding-top:6px}
+.company-detail.open{display:block}
+.copyright{font-size:10px;color:#bbb;padding-top:8px}
+</style>
+</head>
+<body>
+
+<div class="page-title">캐시통합_일반 충전창 와이어프레임_1차</div>
+
+<div class="page-wrap">
+
+  <!-- ── 폰 프레임 ── -->
+  <div class="phone-col">
+    <div class="frame" id="frame">
+
+      <div class="hd">
+        <a class="auto-pill" href="#">
+          <span class="icon">↺</span>
+          <span>자동충전</span>
+        </a>
+        <span class="hd-title">캐시 충전</span>
+        <span class="hd-close">✕</span>
+      </div>
+
+      <div class="cash-row">
+        <span class="cash-lb">보유 캐시</span>
+        <span class="cash-val">4,000 캐시</span>
+      </div>
+
+      <div class="banner-wrap" id="bannerWrap"></div>
+
+      <div class="sec-lb">충전 금액 선택</div>
+      <div class="prod-list" id="prodList"></div>
+
+      <div class="summ">
+        <div class="sr main"><span class="sl">결제 금액</span><span class="sv">10,000 원</span></div>
+        <div class="sdiv"></div>
+        <div class="sr"><span class="sl">충전 후 보유 캐시</span><span class="sv">14,000 캐시</span></div>
+      </div>
+
+      <div class="notice-area">
+        <div class="notice-req">· 캐시 충전 시 카카오 본인인증이 1회 실행될 수 있으며, 14세 미만인 경우 보호자 동의가 진행됩니다.</div>
+        <div class="agree-row">
+          <div class="chk"></div>
+          <span class="agree-txt">
+            <span class="agree-link" onclick="openPopup()">이용안내 및 결제</span>에 동의합니다.
+          </span>
+        </div>
+      </div>
+
+      <button class="next-btn">다음</button>
+
+      <div class="company-info">
+        공동대표이사 고정희, 장윤중 &nbsp;|&nbsp; 사업자등록번호 220-88-02594 &nbsp;|&nbsp; 통신판매업 2018-성남분당B-0004<br>
+        대표전화 1644-4755 &nbsp;|&nbsp; © Kakao Entertainment Corp.
+      </div>
+
+      <!-- 이용안내 팝업 -->
+      <div class="overlay" id="overlay">
+        <div class="popup">
+          <div class="popup-hd">
+            <span class="popup-hd-title">이용 안내</span>
+            <button class="popup-close" onclick="closePopup()">닫기</button>
+          </div>
+          <div class="popup-body">
+            <div class="psec">
+              <div class="psec-title">취소 및 환불</div>
+              <div class="pitem">결제 이후 캐시를 사용하지 않은 경우, 결제일로부터 <strong>7일 이내</strong> 고객센터 문의 시 수수료 없이 취소 가능합니다.</div>
+              <div class="pitem">캐시를 사용한 경우 보유한 유상 캐시의 전액 환불만 가능하며 <strong>환불 수수료(환불금액의 10% or 1,000원 중 큰 금액)</strong>가 공제됩니다.</div>
+            </div>
+            <div class="pdiv"></div>
+            <div class="psec">
+              <div class="psec-title">유효기간 및 소멸</div>
+              <div class="pitem">충전된 캐시의 소멸시효 기간은 <strong>캐시를 충전한 날로부터 5년</strong>입니다.</div>
+              <div class="pitem">충전한 캐시로 카카오페이지앱/PC에서 이용권을 구매할 수 있습니다.</div>
+            </div>
+            <div class="pdiv"></div>
+            <div class="psec">
+              <div class="psec-title">이용 안내</div>
+              <div class="pitem">캐시는 이벤트 캐시 먼저 사용되며, 유효기간이 임박한 순으로 먼저 사용됩니다.</div>
+              <div class="pitem">결제일로부터 7일이 경과한 캐시는 결제 수단에 따라 취소 가능 여부가 다르므로 고객센터로 문의 바랍니다.</div>
+              <div class="pitem">미성년자가 유료 서비스를 이용하는 경우, 법정대리인이 동의하지 않으면 이용 계약을 취소할 수 있습니다.</div>
+            </div>
+            <div class="pdiv"></div>
+            <div class="company-toggle" id="ct" onclick="toggleCompany()">
+              <span>(주)카카오엔터테인먼트 사업자 정보</span>
+              <span class="arrow">∨</span>
+            </div>
+            <div class="company-detail" id="cd">
+              공동대표이사 고정희, 장윤중<br>
+              사업자등록번호 220-88-02594 | 통신판매업 신고번호 2018-성남분당B-0004<br>
+              대표전화 1644-4755 | contact@KakaoPage.com<br>
+              경기도 성남시 분당구 판교역로 235, 에이치스퀘어 N동 8, 9, 10층
+            </div>
+            <div class="copyright">© Kakao Entertainment Corp.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 우측 패널 ── -->
+  <div class="side-col">
+
+    <!-- 배너 옵션 -->
+    <div class="side-card">
+      <div class="sc-title">배너 옵션</div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">배너 노출</span>
+        <button class="tog on" id="t1" onclick="toggleBanner()"><div class="tog-thumb"></div></button>
+      </div>
+      <div class="ctrl-row" id="subRow">
+        <span class="ctrl-label" id="subLabel">가입 유저 — 이용중 배너</span>
+        <button class="tog on" id="t2" onclick="toggleSubBanner()"><div class="tog-thumb"></div></button>
+      </div>
+    </div>
+
+    <!-- 추천 라벨 -->
+    <div class="side-card">
+      <div class="sc-title">추천 라벨</div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">노출 상품</span>
+        <select class="sc-sel" id="recSel" onchange="updateRec()">
+          <option value="3">10,000캐시 (기본)</option>
+          <option value="2">5,000캐시</option>
+          <option value="4">30,000캐시</option>
+          <option value="-1">라벨 없음</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 화면 구성 메모 -->
+    <div class="side-card">
+      <div class="sc-title">화면 구성</div>
+      <div class="ann-item">좌상단 <strong>자동충전 바로가기</strong> 버튼 상시 노출</div>
+      <div class="ann-item">충전 / 지정금액 / 지정일 탭 구조 제거 — 단일 화면</div>
+      <div class="ann-item">보너스 캐시 컬럼 미노출 (PASS VIP 배너로만 유도)</div>
+      <div class="ann-item">"이용안내 및 결제" 링크 → 바텀시트 팝업</div>
+      <div class="ann-item">팝업 내 사업자 정보 접기/펼치기</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const products = [
+  {n:'1,000캐시', p:'₩ 1,000'},
+  {n:'3,000캐시', p:'₩ 3,000'},
+  {n:'5,000캐시', p:'₩ 5,000'},
+  {n:'10,000캐시', p:'₩ 10,000'},
+  {n:'30,000캐시', p:'₩ 30,000'},
+  {n:'50,000캐시', p:'₩ 50,000'},
+  {n:'100,000캐시', p:'₩ 100,000'},
+];
+let recIdx = 3, bannerOn = true, subOn = true, isSubscribed = false;
+
+function renderProducts() {
+  document.getElementById('prodList').innerHTML = products.map((p, i) => `
+    <div class="prod" onclick="selectProduct(${i})">
+      <div class="prod-l">
+        <div class="radio${i === 3 ? ' on' : ''}" id="radio${i}"></div>
+        <span class="pname">${p.n}${i === recIdx ? '<span class="rec">추천</span>' : ''}</span>
+      </div>
+      <span class="pprice">${p.p}</span>
+    </div>`).join('');
+}
+
+function selectProduct(idx) {
+  document.querySelectorAll('.radio').forEach((r, i) => {
+    r.className = 'radio' + (i === idx ? ' on' : '');
+  });
+}
+
+function renderBanner() {
+  const w = document.getElementById('bannerWrap');
+  if (!bannerOn) { w.innerHTML = ''; return; }
+  if (!isSubscribed) {
+    w.innerHTML = `<div class="banner-vip">
+      <div><div class="bv-title">CASH PASS VIP</div><div class="bv-sub">충전할 때마다 최대 10% 보너스 캐시</div></div>
+      <div class="bv-cta"><span>가입하기 ›</span></div>
+    </div>`;
+  } else if (subOn) {
+    w.innerHTML = `<div class="banner-using">
+      <div class="bu-txt"><div class="bu-dot"></div>&nbsp;<strong>CASH PASS VIP</strong>&nbsp;이용 중 · 지정금액 충전</div>
+      <span class="bu-link">관리 ›</span>
+    </div>`;
+  } else {
+    w.innerHTML = '';
+  }
+}
+
+function toggleBanner() {
+  bannerOn = !bannerOn;
+  const t = document.getElementById('t1');
+  t.className = 'tog ' + (bannerOn ? 'on' : 'off');
+  document.getElementById('subRow').style.opacity = bannerOn ? '1' : '0.4';
+  renderBanner();
+}
+
+function toggleSubBanner() {
+  isSubscribed = !isSubscribed;
+  const t = document.getElementById('t2');
+  const lb = document.getElementById('subLabel');
+  if (isSubscribed) {
+    t.className = 'tog on';
+    lb.textContent = '가입 유저 — 이용중 배너 표시';
+  } else {
+    t.className = 'tog off';
+    lb.textContent = '가입 유저 — 배너 숨김';
+  }
+  renderBanner();
+}
+
+function updateRec() {
+  recIdx = parseInt(document.getElementById('recSel').value);
+  renderProducts();
+}
+
+function openPopup() {
+  document.getElementById('overlay').classList.add('show');
+}
+function closePopup() {
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function toggleCompany() {
+  document.getElementById('ct').classList.toggle('open');
+  document.getElementById('cd').classList.toggle('open');
+}
+
+renderProducts();
+renderBanner();
+</script>
+</body>
+</html>

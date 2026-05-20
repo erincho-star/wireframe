@@ -3,169 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>캐시내역 와이어프레임_1차</title>
+<title>캐시내역 와이어프레임_2차 (회원유형별)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-
-  /* ─── SHELL ─── */
-  body { padding: 20px 24px !important; }
+  :root {
+    --font: 'Noto Sans KR', sans-serif;
+    --c-bg: #e8e8e8; --c-white: #FFFFFF; --c-text: #111111;
+    --c-text-sub: #6F7680; --c-text-light: #9CA3AF;
+    --c-border: #E2E5EA; --c-border-light: #E8E8E8;
+    --c-badge-bg: #F0F0F0; --c-badge-border: #D8D8D8;
+    --c-plus: #111111; --c-minus: #D11A1A; --c-link: #3366AA;
+    --c-btn-dark: #1A1A1A; --c-kakao: #FFCD00;
+    --c-chip-active-bg: #1A1A1A; --c-chip-active-text: #FFFFFF;
+    --c-receipt-btn: #2255AA; --c-receipt-btn-border: #88AACC;
+    --c-state-gray: #999999;
+    --c-notice-bg: #FFF0F0; --c-notice-border: #FFD0D0;
+    --c-notice-text: #C2410C; --c-notice-dot: #E0463E;
+    --c-banner-bg: #F2F4F7; --c-filter-bg: #FAFAFA;
+    --c-modal-overlay: rgba(0,0,0,0.5);
+    --c-table-header: #F5F6F8; --c-pc-border: #DDDFE3;
+  }
+  body { font-family: var(--font); background: #e0e0e0; color: var(--c-text); padding: 20px 24px; }
   .page-title { font-size: 12px; font-weight: 700; color: #666; margin-bottom: 10px; letter-spacing: .02em; }
-
-  /* view tab bar */
   .view-tabs-wrap { margin-bottom: 16px; }
   .view-tabs { display: inline-flex; gap: 2px; background: #1a1a1a; border-radius: 8px; padding: 3px; }
   .vt-btn { font-size: 12px; font-weight: 600; padding: 6px 18px; border-radius: 6px; border: none; cursor: pointer; color: rgba(255,255,255,.5); background: transparent; font-family: var(--font); transition: all .15s; }
   .vt-btn.active { background: #fff; color: #1a1a1a; }
 
-  /* PC table: ALL cells black by default */
-  .pc-table td { color: #111111 !important; }
-  /* Expired row: entire row gray */
-  .pc-table tr.row-expired td { color: var(--c-state-gray) !important; opacity: 0.75; }
-  /* Cancel row: ONLY status-cell and amount-cell red */
-  .pc-table tr.row-cancel td.status-cell { color: var(--c-minus) !important; font-weight: 600; }
-  .pc-table tr.row-cancel td.amount-cell { color: var(--c-minus) !important; font-weight: 700; }
-  /* Column headers: all center */
-  .pc-table th { text-align: center !important; padding-left: 0 !important; }
+  /* ── 레이아웃 ── */
+  .layout { display: block; }
+  .view-area { display: inline-block; }
 
-  :root {
-    --font: 'Noto Sans KR', sans-serif;
-    --c-bg: #e8e8e8;
-    --c-white: #FFFFFF;
-    --c-text: #111111;
-    --c-text-sub: #6F7680;
-    --c-text-light: #9CA3AF;
-    --c-border: #E2E5EA;
-    --c-border-light: #E8E8E8;
-    --c-badge-bg: #F0F0F0;
-    --c-badge-border: #D8D8D8;
-    --c-plus: #111111;
-    --c-minus: #D11A1A;
-    --c-link: #3366AA;
-    --c-btn-dark: #1A1A1A;
-    --c-kakao: #FFCD00;
-    --c-chip-active-bg: #1A1A1A;
-    --c-chip-active-text: #FFFFFF;
-    --c-receipt-btn: #2255AA;
-    --c-receipt-btn-border: #88AACC;
-    --c-state-gray: #999999;
-    --c-row-alt: #FAFAFA;
-    --c-notice-bg: #FFF0F0;
-    --c-notice-border: #FFD0D0;
-    --c-notice-text: #C2410C;
-    --c-notice-dot: #E0463E;
-    --c-banner-bg: #F2F4F7;
-    --c-filter-bg: #FAFAFA;
-    --c-modal-overlay: rgba(0,0,0,0.5);
-    --c-table-header: #F5F6F8;
-    --c-pc-border: #DDDFE3;
-  }
+  /* ── 상단 탭바 ── */
+  .top-bar-wrap { display: inline-flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+  .top-bar { display: inline-flex; align-items: center; background: #2a2a2a; border-radius: 7px; padding: 3px; gap: 1px; }
+  .top-bar-sep { width: 1px; height: 14px; background: rgba(255,255,255,.12); margin: 0 2px; flex-shrink: 0; }
+  .vt-btn2 { font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 5px; border: none; cursor: pointer; color: rgba(255,255,255,.4); background: transparent; font-family: var(--font); transition: all .15s; white-space: nowrap; letter-spacing: -.01em; }
+  .vt-btn2.active { background: #fff; color: #111; }
+  .ut-btn2 { font-size: 12px; font-weight: 500; padding: 5px 13px; border-radius: 5px; border: none; cursor: pointer; color: rgba(255,255,255,.4); background: transparent; font-family: var(--font); transition: all .15s; white-space: nowrap; }
+  .ut-btn2.active { background: rgba(255,255,255,.12); color: rgba(255,255,255,.9); font-weight: 600; }
 
-  body { font-family: var(--font); background: #e8e8e8; color: var(--c-text); }
-
+  /* ── MOBILE ── */
   .view { display: none; }
   .view.active { display: block; }
-
-  .mobile-wrap {
-    width: 480px; margin: 12px 0; background: var(--c-bg);
-    border-radius: 20px; overflow: hidden;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.15); min-height: 700px;
-    padding-bottom: 40px;
-  }
-
-  .balance-card {
-    background: var(--c-white); margin: 14px; border-radius: 12px;
-    padding: 18px 20px; border: 0.5px solid var(--c-border);
-    display: flex; align-items: center; gap: 16px;
-  }
+  .mobile-wrap { width: 480px; margin: 12px 0; background: var(--c-bg); border-radius: 20px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.15); min-height: 700px; padding-bottom: 40px; }
+  .balance-card { background: var(--c-white); margin: 14px; border-radius: 12px; padding: 18px 20px; border: 0.5px solid var(--c-border); display: flex; align-items: center; gap: 16px; }
   .balance-card-left { flex: 1; min-width: 0; }
   .balance-label { font-size: 11px; color: var(--c-text-sub); margin-bottom: 5px; }
   .balance-amount { font-size: 22px; font-weight: 800; color: var(--c-text); margin-bottom: 10px; }
-  .balance-row {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 12px; margin-bottom: 3px;
-  }
+  .balance-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 3px; }
   .balance-row .label { color: var(--c-text-sub); }
   .balance-row .value { color: var(--c-text); font-weight: 500; }
   .balance-row a { color: var(--c-link); font-size: 11px; text-decoration: underline; cursor: pointer; }
-  .charge-btn {
-    flex-shrink: 0; align-self: center;
-    display: flex; align-items: center; gap: 7px;
-    background: var(--c-btn-dark); color: var(--c-white);
-    border: none; border-radius: 22px; padding: 10px 16px;
-    font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer;
-  }
-  .charge-btn .c-icon {
-    width: 20px; height: 20px; background: var(--c-kakao); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 800; color: var(--c-btn-dark);
-  }
-  .notice-bar {
-    margin-top: 10px; background: var(--c-notice-bg); border: 0.5px solid var(--c-notice-border);
-    border-radius: 6px; padding: 7px 10px; font-size: 11px; color: var(--c-notice-text);
-    display: flex; align-items: center; gap: 6px;
-  }
+  .charge-btn { flex-shrink: 0; align-self: center; display: flex; align-items: center; gap: 7px; background: var(--c-btn-dark); color: var(--c-white); border: none; border-radius: 22px; padding: 10px 16px; font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; }
+  .charge-btn .c-icon { width: 20px; height: 20px; background: var(--c-kakao); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: var(--c-btn-dark); }
+  .notice-bar { margin-top: 10px; background: var(--c-notice-bg); border: 0.5px solid var(--c-notice-border); border-radius: 6px; padding: 7px 10px; font-size: 11px; color: var(--c-notice-text); display: flex; align-items: center; gap: 6px; }
   .notice-dot { width: 5px; height: 5px; background: var(--c-notice-dot); border-radius: 50%; flex-shrink: 0; }
-
-  .banner {
-    margin: 0 14px 10px; background: var(--c-banner-bg); border-radius: 10px;
-    padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
-    border: 0.5px solid var(--c-border);
-  }
+  .global-charge-info { flex-shrink: 0; align-self: center; font-size: 11px; color: var(--c-text-sub); text-align: center; line-height: 1.5; padding: 8px 12px; background: #f5f6f8; border-radius: 8px; border: 0.5px solid var(--c-border); }
+  .banner { margin: 0 14px 10px; background: var(--c-banner-bg); border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; border: 0.5px solid var(--c-border); }
   .banner-text .title { font-size: 13px; font-weight: 700; color: var(--c-text); }
   .banner-text .sub { font-size: 10px; color: var(--c-text-sub); margin-top: 2px; }
   .banner-right { display: flex; align-items: center; gap: 8px; }
   .banner-arrow { font-size: 16px; color: var(--c-text-sub); }
   .banner-img { width: 44px; height: 32px; background: var(--c-white); border-radius: 4px; border: 0.5px solid var(--c-border); display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--c-text-light); }
-
-  .tab-bar { display: flex; border-bottom: 1px solid var(--c-border-light); padding: 0 14px; position: relative; }
-  .tab-item {
-    font-size: 13px; font-weight: 500; padding: 10px 0; margin-right: 22px;
-    color: var(--c-text-sub); cursor: pointer; position: relative; border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-  }
+  .tab-bar { display: flex; border-bottom: 1px solid var(--c-border-light); padding: 0 14px; }
+  .tab-item { font-size: 13px; font-weight: 500; padding: 10px 0; margin-right: 22px; color: var(--c-text-sub); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
   .tab-item.active { color: var(--c-text); font-weight: 700; border-bottom-color: var(--c-text); }
-
-  .filter-chips {
-    display: flex; gap: 5px; padding: 8px 14px; background: var(--c-filter-bg);
-    border-bottom: 0.5px solid var(--c-border-light);
-  }
-  .chip {
-    font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 12px;
-    cursor: pointer; transition: all 0.15s; border: 0.8px solid var(--c-badge-border);
-    background: var(--c-white); color: #555;
-  }
+  .filter-chips { display: flex; gap: 5px; padding: 8px 14px; background: var(--c-filter-bg); border-bottom: 0.5px solid var(--c-border-light); }
+  .chip { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 12px; cursor: pointer; border: 0.8px solid var(--c-badge-border); background: var(--c-white); color: #555; }
   .chip.active { background: var(--c-chip-active-bg); color: var(--c-chip-active-text); border-color: var(--c-chip-active-bg); }
-
   .list-wrap { background: var(--c-white); }
-
-  .card-row {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 13px 14px; border-bottom: 0.5px solid var(--c-border-light);
-    background: var(--c-white);
-  }
-  .card-row.expired .card-title,
-  .card-row.expired .card-date,
-  .card-row.expired .card-validity,
-  .card-row.expired .card-cash,
-  .card-row.expired .card-state,
-  .card-row.expired .svc-badge { color: var(--c-state-gray) !important; opacity: 0.7; }
-
-  .svc-badge {
-    font-size: 9px; font-weight: 600; background: var(--c-badge-bg);
-    border: 0.5px solid var(--c-badge-border); border-radius: 3px;
-    padding: 2px 5px; color: #555; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
-    min-width: 86px; text-align: center;
-  }
+  .card-row { display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px; border-bottom: 0.5px solid var(--c-border-light); background: var(--c-white); }
+  .card-row.expired .card-title, .card-row.expired .card-date, .card-row.expired .card-validity,
+  .card-row.expired .card-cash, .card-row.expired .card-state, .card-row.expired .svc-badge { color: var(--c-state-gray) !important; opacity: 0.7; }
+  .svc-badge { font-size: 9px; font-weight: 600; background: var(--c-badge-bg); border: 0.5px solid var(--c-badge-border); border-radius: 3px; padding: 2px 5px; color: #555; white-space: nowrap; flex-shrink: 0; margin-top: 2px; min-width: 86px; text-align: center; }
   .svc-badge.empty { visibility: hidden; }
-
   .card-info { flex: 1; min-width: 0; }
   .card-title { font-size: 13px; font-weight: 600; color: var(--c-text); margin-bottom: 3px; }
   .card-date { font-size: 10px; color: var(--c-text-sub); }
   .card-validity { font-size: 10px; color: var(--c-text-sub); margin-top: 2px; }
-
   .card-right { text-align: right; flex-shrink: 0; }
   .card-cash { font-size: 13px; font-weight: 700; color: var(--c-text); margin-bottom: 3px; }
   .card-cash.plus { color: var(--c-plus); }
@@ -173,28 +91,15 @@
   .card-cash.use-minus { color: var(--c-minus); }
   .card-amount { font-size: 10px; color: var(--c-state-gray); margin-bottom: 3px; }
   .card-state { font-size: 10px; color: var(--c-state-gray); }
-  .receipt-btn {
-    display: inline-block; font-size: 10px; color: var(--c-receipt-btn);
-    border: 0.8px solid var(--c-receipt-btn-border); border-radius: 3px;
-    padding: 2px 6px; cursor: pointer; margin-top: 3px;
-    background: var(--c-white); font-family: var(--font);
-  }
-  .receipt-btn:hover { background: #EEF3FA; }
+  .receipt-btn { display: inline-block; font-size: 10px; color: var(--c-receipt-btn); border: 0.8px solid var(--c-receipt-btn-border); border-radius: 3px; padding: 2px 6px; cursor: pointer; margin-top: 3px; background: var(--c-white); font-family: var(--font); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
 
-  /* PC */
-  .pc-wrap {
-    max-width: 1200px; margin: 20px 0; background: var(--c-white);
-    border-radius: 16px; overflow: hidden;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.08); padding-bottom: 40px;
-  }
+  /* ── PC ── */
+  .pc-wrap { max-width: 1060px; margin: 12px 0; background: var(--c-white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 30px rgba(0,0,0,0.08); padding-bottom: 40px; }
   .pc-inner { padding: 32px 40px; }
   .pc-title { font-size: 22px; font-weight: 700; color: var(--c-text); margin-bottom: 20px; }
-
-  .pc-balance-card {
-    background: var(--c-white); border: 0.5px solid var(--c-border);
-    border-radius: 10px; padding: 20px 24px; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 20px;
-  }
+  .pc-balance-card { background: var(--c-white); border: 0.5px solid var(--c-border); border-radius: 10px; padding: 20px 24px; margin-bottom: 16px; display: flex; align-items: center; gap: 20px; }
   .pc-balance-main { flex: 1; min-width: 0; }
   .pc-balance-label { font-size: 12px; color: var(--c-text-sub); margin-bottom: 4px; }
   .pc-balance-amount { font-size: 24px; font-weight: 800; color: var(--c-text); margin-bottom: 10px; }
@@ -204,1186 +109,462 @@
   .pc-balance-item .val { color: var(--c-text); font-weight: 500; margin-left: auto; }
   .pc-balance-item a { color: var(--c-link); text-decoration: underline; cursor: pointer; font-size: 12px; }
   .pc-balance-card .charge-btn { align-self: center; flex-shrink: 0; }
-  .pc-notice {
-    background: var(--c-notice-bg); border: 0.5px solid var(--c-notice-border);
-    border-radius: 4px; padding: 6px 12px; font-size: 12px; color: var(--c-notice-text);
-    display: flex; align-items: center; gap: 6px; margin-top: 10px;
-  }
-
-  .pc-banner {
-    background: var(--c-banner-bg); border: 0.5px solid var(--c-border);
-    border-radius: 8px; padding: 14px 20px; margin-bottom: 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
+  .pc-notice { background: var(--c-notice-bg); border: 0.5px solid var(--c-notice-border); border-radius: 4px; padding: 6px 12px; font-size: 12px; color: var(--c-notice-text); display: flex; align-items: center; gap: 6px; margin-top: 10px; }
+  .pc-banner { background: var(--c-banner-bg); border: 0.5px solid var(--c-border); border-radius: 8px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
   .pc-banner .banner-text .title { font-size: 14px; font-weight: 700; }
   .pc-banner .banner-text .sub { font-size: 12px; color: var(--c-text-sub); margin-top: 2px; }
   .pc-banner-img { width: 60px; height: 40px; background: var(--c-white); border-radius: 4px; border: 0.5px solid var(--c-border); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--c-text-light); }
-
   .pc-tab-bar { display: flex; border-bottom: 1px solid var(--c-border); margin-bottom: 20px; }
-  .pc-tab {
-    font-size: 15px; font-weight: 500; padding: 10px 0; margin-right: 28px;
-    color: var(--c-text-sub); cursor: pointer; border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-  }
+  .pc-tab { font-size: 15px; font-weight: 500; padding: 10px 0; margin-right: 28px; color: var(--c-text-sub); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
   .pc-tab.active { color: var(--c-text); font-weight: 700; border-bottom-color: var(--c-text); }
-
-  .pc-filters { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-  .pc-filter-group { display: flex; align-items: center; gap: 6px; }
+  .pc-filters { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
+  .pc-filter-group { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
   .pc-filter-label { font-size: 13px; color: var(--c-text-sub); font-weight: 500; }
-  .pc-select {
-    font-family: var(--font); font-size: 13px; color: var(--c-text);
-    border: 0.8px solid var(--c-pc-border); border-radius: 6px;
-    padding: 6px 28px 6px 10px; appearance: none; cursor: pointer;
-    background: var(--c-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 10px center;
-    min-width: 110px;
-  }
-  .pc-date-input {
-    font-family: var(--font); font-size: 13px; color: var(--c-text);
-    border: 0.8px solid var(--c-pc-border); border-radius: 6px;
-    padding: 6px 10px; width: 110px;
-  }
+  .pc-select { font-family: var(--font); font-size: 13px; color: var(--c-text); border: 0.8px solid var(--c-pc-border); border-radius: 6px; padding: 6px 28px 6px 10px; appearance: none; cursor: pointer; background: var(--c-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 10px center; min-width: 110px; }
+  .pc-date-input { font-family: var(--font); font-size: 13px; color: var(--c-text); border: 0.8px solid var(--c-pc-border); border-radius: 6px; padding: 6px 10px; width: 110px; }
   .pc-filter-sep { color: var(--c-text-sub); font-size: 13px; }
-  .pc-btn-search {
-    font-family: var(--font); font-size: 13px; font-weight: 600;
-    background: var(--c-btn-dark); color: var(--c-white);
-    border: none; border-radius: 6px; padding: 7px 18px; cursor: pointer;
-  }
-  .pc-btn-reset {
-    font-family: var(--font); font-size: 13px; color: var(--c-text-sub);
-    background: none; border: none; cursor: pointer; text-decoration: underline;
-  }
-
+  .pc-btn-search { font-family: var(--font); font-size: 13px; font-weight: 600; background: var(--c-btn-dark); color: var(--c-white); border: none; border-radius: 6px; padding: 7px 18px; cursor: pointer; }
+  .pc-btn-reset { font-family: var(--font); font-size: 13px; color: var(--c-text-sub); background: none; border: none; cursor: pointer; text-decoration: underline; }
   .pc-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .pc-table th {
-    background: var(--c-table-header); text-align: center;
-    font-size: 12px; font-weight: 600; color: #555;
-    padding: 10px 8px; border: 0.5px solid var(--c-pc-border);
-  }
-  /* th all centered via .pc-table th override above */
-  .pc-table td {
-    padding: 10px 8px; border-bottom: 0.5px solid var(--c-border-light);
-    color: var(--c-text); vertical-align: middle; text-align: center;
-  }
+  .pc-table th { background: var(--c-table-header); text-align: center; font-size: 12px; font-weight: 600; color: #555; padding: 10px 8px; border: 0.5px solid var(--c-pc-border); }
+  .pc-table td { padding: 10px 8px; border-bottom: 0.5px solid var(--c-border-light); color: var(--c-text); vertical-align: middle; text-align: center; }
   .pc-table td:nth-child(3) { text-align: left; padding-left: 12px; }
   .pc-table td:nth-child(4) { text-align: left; padding-left: 12px; }
   .pc-table td.cash-plus { font-weight: 700; color: #111111; text-align: right; padding-right: 12px; }
-  .pc-table td.cash-minus { font-weight: 700; color: #111111; text-align: right; padding-right: 12px; }
-
+  .pc-table td.cash-minus { font-weight: 700; color: var(--c-minus); text-align: right; padding-right: 12px; }
   .pc-table tr:hover td { background: #FAFBFC; }
-  .pc-table .svc-badge-sm {
-    font-size: 10px; font-weight: 600; background: var(--c-badge-bg);
-    border: 0.5px solid var(--c-badge-border); border-radius: 3px;
-    padding: 2px 6px; color: #555; white-space: nowrap;
-  }
-  .pc-receipt-btn {
-    display: inline-block; font-size: 11px; color: var(--c-receipt-btn);
-    border: 0.8px solid var(--c-receipt-btn-border); border-radius: 3px;
-    padding: 2px 7px; cursor: pointer; background: var(--c-white); font-family: var(--font);
-  }
-  .pc-receipt-btn:hover { background: #EEF3FA; }
-
+  .pc-table .svc-badge-sm { font-size: 10px; font-weight: 600; background: var(--c-badge-bg); border: 0.5px solid var(--c-badge-border); border-radius: 3px; padding: 2px 6px; color: #555; white-space: nowrap; }
+  .pc-receipt-btn { display: inline-block; font-size: 11px; color: var(--c-receipt-btn); border: 0.8px solid var(--c-receipt-btn-border); border-radius: 3px; padding: 2px 7px; cursor: pointer; background: var(--c-white); font-family: var(--font); }
   .pc-pagination { display: flex; justify-content: center; align-items: center; gap: 4px; margin-top: 20px; }
-  .pc-page-btn {
-    font-family: var(--font); font-size: 13px; width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
-    border: 0.5px solid var(--c-pc-border); border-radius: 4px;
-    cursor: pointer; background: var(--c-white); color: var(--c-text-sub);
-  }
+  .pc-page-btn { font-family: var(--font); font-size: 13px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 0.5px solid var(--c-pc-border); border-radius: 4px; cursor: pointer; background: var(--c-white); color: var(--c-text-sub); }
   .pc-page-btn.active { background: var(--c-btn-dark); color: var(--c-white); border-color: var(--c-btn-dark); font-weight: 600; }
+  .pc-table tr.row-cancel td.status-cell { color: var(--c-minus) !important; font-weight: 600; }
+  .pc-table tr.row-cancel td.amount-cell { color: var(--c-minus) !important; font-weight: 700; }
+  .pc-table tr.row-expired td { color: var(--c-state-gray) !important; opacity: 0.75; }
+  .sub-text { color: var(--c-text-sub) !important; font-size: 12px; }
+  .pc-tab-content { display: none; }
+  .pc-tab-content.active { display: block; }
+  .pc-footer-notice { margin-top: 28px; padding: 20px 24px; background: var(--c-filter-bg); border-top: 1px solid var(--c-border-light); font-size: 12px; color: var(--c-text-sub); line-height: 1.8; }
+  .pc-footer-notice ul { padding-left: 16px; }
+  .pc-footer-notice li { margin-bottom: 3px; }
 
-  /* ══════════════════════════════════
-     현금영수증 발행정보 모달 (신규)
-  ══════════════════════════════════ */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; background: var(--c-modal-overlay);
-    z-index: 9000; justify-content: center; align-items: center;
-  }
+  /* ── 모달 ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: var(--c-modal-overlay); z-index: 9000; justify-content: center; align-items: center; }
   .modal-overlay.open { display: flex; }
-
-  /* 발행정보 모달 */
-  .modal-sheet {
-    background: var(--c-white); border-radius: 16px; width: 390px;
-    padding: 28px 24px 24px; max-height: 90vh; overflow-y: auto;
-    position: relative; box-shadow: 0 8px 40px rgba(0,0,0,0.2);
-  }
+  .modal-sheet { background: var(--c-white); border-radius: 16px; width: 390px; padding: 28px 24px 24px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 8px 40px rgba(0,0,0,0.2); }
   .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
   .modal-title { font-size: 20px; font-weight: 700; color: var(--c-text); }
   .modal-close { font-size: 22px; color: #777; cursor: pointer; background: none; border: none; line-height: 1; }
-
-  /* 미등록 상태 */
-  .receipt-empty-box {
-    background: #f7f8fa; border: 1px solid #e4e7eb; border-radius: 10px;
-    padding: 32px 20px; text-align: center; margin-bottom: 16px;
-  }
-  .receipt-empty-icon {
-    width: 44px; height: 44px; border-radius: 50%; border: 1px solid #d9dde3;
-    background: #fff; display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px; font-size: 20px; color: #9aa1aa;
-  }
-  .receipt-empty-title { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 6px; }
-  .receipt-empty-sub { font-size: 13px; color: #7a828c; }
-
-  .receipt-notice-box {
-    background: #f5f6f8; border: 1px solid #e4e7eb; border-radius: 8px;
-    padding: 14px 16px; margin-bottom: 24px;
-  }
-  .receipt-notice-title { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 6px; }
-  .receipt-notice-text { font-size: 12px; color: #666f7a; line-height: 1.6; }
-
-  .modal-primary-btn {
-    width: 100%; background: #222; color: #fff; border: none;
-    border-radius: 8px; padding: 15px; font-size: 16px; font-weight: 700;
-    cursor: pointer; font-family: var(--font);
-  }
-  .modal-primary-btn:hover { background: #333; }
-
-  /* 등록 상태 */
-  .receipt-registered-box {
-    border: 1px solid var(--c-border); border-radius: 12px;
-    overflow: hidden; margin-bottom: 16px;
-  }
-  .receipt-reg-top { padding: 18px 20px 14px; }
-  .receipt-reg-badge {
-    display: inline-block; background: #f3f4f6; border-radius: 13px;
-    padding: 4px 12px; font-size: 12px; font-weight: 700; color: #333; margin-bottom: 10px;
-  }
-  .receipt-reg-type { font-size: 13px; font-weight: 700; color: #6f7680; margin-bottom: 8px; }
-  .receipt-reg-number { font-size: 24px; font-weight: 800; color: #111; }
-  .receipt-reg-actions {
-    display: flex; border-top: 1px solid #eceef1;
-  }
-  .receipt-reg-btn {
-    flex: 1; padding: 14px; text-align: center; font-size: 14px; font-weight: 700;
-    color: #111; cursor: pointer; background: none; border: none; font-family: var(--font);
-  }
-  .receipt-reg-btn:hover { background: #f7f8fa; }
-  .receipt-reg-divider { width: 1px; background: #eceef1; }
-
-  /* 현금영수증 상세 모달 (기존 충전내역 버튼용) */
-  .receipt-summary {
-    background: #F7F8FA; border-radius: 12px; padding: 16px 18px; margin-bottom: 16px;
-  }
+  .receipt-summary { background: #F7F8FA; border-radius: 12px; padding: 16px 18px; margin-bottom: 16px; }
   .receipt-summary-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
   .receipt-summary-label { font-size: 13px; font-weight: 700; color: var(--c-text-sub); }
-  .receipt-status {
-    font-size: 12px; font-weight: 700; background: #E9EBEF;
-    border-radius: 14px; padding: 3px 10px; color: #333;
-  }
+  .receipt-status { font-size: 12px; font-weight: 700; background: #E9EBEF; border-radius: 14px; padding: 3px 10px; color: #333; }
   .receipt-summary-amount { font-size: 26px; font-weight: 800; color: var(--c-text); }
   .receipt-detail { border: 0.5px solid var(--c-border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
   .receipt-detail-row { display: flex; align-items: flex-start; padding: 14px 18px; border-bottom: 0.5px solid var(--c-border-light); }
   .receipt-detail-row:last-child { border-bottom: none; }
   .receipt-detail-key { font-size: 13px; font-weight: 700; color: var(--c-text-sub); min-width: 120px; }
   .receipt-detail-val { font-size: 13px; color: var(--c-text); }
-  .receipt-detail-val.two-line { display: flex; flex-direction: column; gap: 3px; }
   .receipt-notice { background: #F7F8FA; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; }
   .receipt-notice-title2 { font-size: 13px; font-weight: 700; color: var(--c-text-sub); margin-bottom: 4px; }
   .receipt-notice-text2 { font-size: 12px; color: var(--c-text-sub); }
-  .modal-confirm-btn {
-    width: 100%; background: #222; color: var(--c-white); border: none;
-    border-radius: 8px; padding: 15px; font-size: 16px; font-weight: 700;
-    cursor: pointer; font-family: var(--font);
-  }
-
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-  .pc-tab-content { display: none; }
-  .pc-tab-content.active { display: block; }
-  .empty-state { text-align: center; padding: 60px 0; color: var(--c-text-sub); font-size: 14px; }
-
-  /* 등록 입력 폼 */
-  .form-label { font-size: 13px; font-weight: 700; color: #555b63; margin-bottom: 8px; display: block; }
-  .form-group { margin-bottom: 18px; }
-  .input-select {
-    width: 100%; padding: 14px 16px; border: 1.5px solid #dfe3e8; border-radius: 8px;
-    font-size: 15px; font-weight: 600; color: #111; font-family: 'Noto Sans KR', sans-serif;
-    background: #fff; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
-  }
-  .input-field {
-    width: 100%; padding: 14px 16px; border: 1.5px solid #dfe3e8; border-radius: 8px;
-    font-size: 17px; font-weight: 700; color: #111; font-family: 'Noto Sans KR', sans-serif; outline: none;
-  }
-  .input-field:focus { border-color: #111; }
-  .input-field::placeholder { color: #b3b8bf; font-weight: 400; font-size: 14px; }
-  .info-box { background: #f7f8fa; border-radius: 8px; padding: 13px 15px; margin-bottom: 14px; }
-  .info-text { font-size: 12px; color: #6f7680; line-height: 1.8; }
-  .consent-bar {
-    background: #f5f6f8; padding: 13px 15px; border-radius: 8px; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .consent-check {
-    width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #b8bec6;
-    background: #fff; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0; transition: all 0.15s;
-  }
-  .consent-check.checked { background: #333; border-color: #333; }
-  .consent-check svg { display: none; }
-  .consent-check.checked svg { display: block; }
-  .consent-label { font-size: 13px; color: #555b63; flex: 1; cursor: pointer; }
-  .consent-arrow { font-size: 18px; color: #a5abb3; cursor: pointer; }
-  .change-info-box {
-    background: #f5f6f8; border: 1px solid #e4e7eb; border-radius: 8px;
-    padding: 13px 15px; margin-bottom: 18px; font-size: 12px; color: #555b63;
-  }
-  .type-sheet-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.42);
-    z-index: 9100; flex-direction: column; justify-content: flex-end;
-  }
-  .type-sheet-overlay.open { display: flex; }
-  .type-sheet { background: #fff; border-radius: 24px 24px 0 0; padding: 16px 24px 32px; }
-  .type-sheet-handle { width: 54px; height: 5px; background: #d6d9de; border-radius: 3px; margin: 0 auto 20px; }
-  .type-sheet-title { font-size: 19px; font-weight: 700; color: #111; margin-bottom: 12px; }
-  .type-opt {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 0; cursor: pointer; border-bottom: 1px solid #eceef1; font-size: 15px; color: #555b63;
-  }
-  .type-opt:last-of-type { border-bottom: none; margin-bottom: 12px; }
-  .type-opt.selected { font-weight: 700; color: #111; background: #f3f4f6; border-radius: 8px; padding: 14px 12px; margin: 0 -12px; }
-  .type-opt-check { width: 24px; height: 24px; border-radius: 50%; background: #333; display: none; align-items: center; justify-content: center; flex-shrink: 0; }
-  .type-opt.selected .type-opt-check { display: flex; }
-  .delete-sheet-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.42);
-    z-index: 9100; flex-direction: column; justify-content: flex-end;
-  }
-  .delete-sheet-overlay.open { display: flex; }
-  .delete-sheet { background: #fff; border-radius: 24px 24px 0 0; padding: 16px 24px 32px; }
-  .delete-sheet-handle { width: 54px; height: 5px; background: #d6d9de; border-radius: 3px; margin: 0 auto 20px; }
-  .delete-sheet-title { font-size: 20px; font-weight: 800; color: #111; text-align: center; margin-bottom: 10px; }
-  .delete-sheet-sub { font-size: 13px; color: #6f7680; text-align: center; line-height: 1.7; margin-bottom: 24px; }
-  .delete-sheet-btns { display: flex; gap: 10px; }
-  .btn-sheet-cancel { flex: 1; background: #f2f3f5; color: #111; border: none; border-radius: 26px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
-  .btn-sheet-delete { flex: 1; background: #222; color: #fff; border: none; border-radius: 26px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
-  .privacy-body { font-size: 14px; color: #111; line-height: 1.7; }
-  .privacy-section { margin-bottom: 20px; }
-  .privacy-section-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-  .privacy-note { font-size: 13px; color: #333; line-height: 1.7; margin-top: 16px; }
+  .modal-confirm-btn { width: 100%; background: #222; color: var(--c-white); border: none; border-radius: 8px; padding: 15px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: var(--font); }
 </style>
+</head>
 <body>
 
-<div class="page-title">캐시내역 와이어프레임_1차</div>
-<div class="view-tabs-wrap"><div class="view-tabs">
-  <button class="vt-btn active" id="vsm" onclick="switchView('mobile',this)">📱 Mobile</button>
-  <button class="vt-btn" id="vsp" onclick="switchView('pc',this)">🖥️ PC Web</button>
-</div></div>
-
-<!-- MOBILE VIEW -->
-<div class="view active" id="view-mobile">
-  <div class="mobile-wrap">
-    <div class="balance-card">
-      <div class="balance-card-left">
-        <div class="balance-label">내 캐시</div>
-        <div class="balance-amount">65,000 캐시</div>
-        <div class="balance-row">
-          <span class="label">↳ 충전 캐시 &nbsp;<a onclick="openReceiptInfo()">현금영수증 발급 정보</a></span>
-          <span class="value">65,000</span>
-        </div>
-        <div class="balance-row">
-          <span class="label">↳ 이벤트 캐시</span>
-          <span class="value">100</span>
-        </div>
-        <div class="notice-bar">
-          <div class="notice-dot"></div>
-          이벤트 캐시 100캐시가 05월 04일 만료될 예정입니다.
-        </div>
-      </div>
-      <button class="charge-btn">
-        <div class="c-icon">C</div>캐시 충전
-      </button>
-    </div>
-
-    <div class="banner">
-      <div class="banner-text">
-        <div class="title">최근 본 작품을 이어서 감상해 보세요!</div>
-        <div class="sub">최근 본 작품 페이지로 이동합니다.</div>
-      </div>
-      <div class="banner-right">
-        <div class="banner-arrow">›</div>
-        <div class="banner-img">img</div>
-      </div>
-    </div>
-
-    <div class="tab-bar">
-      <div class="tab-item active" onclick="switchTab('mobile','charge')">충전내역</div>
-      <div class="tab-item" onclick="switchTab('mobile','use')">사용내역</div>
-    </div>
-
-    <div class="tab-content active" id="mobile-charge">
-      <div class="filter-chips" id="charge-chips">
-        <div class="chip active" onclick="filterChip('charge','all')">전체</div>
-        <div class="chip" onclick="filterChip('charge','kp')">kakao page</div>
-        <div class="chip" onclick="filterChip('charge','kw')">kakao webtoon</div>
-      </div>
-      <div class="list-wrap" id="charge-list">
-        <div class="card-row" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">카카오페이(머니) · 자동</div>
-            <div class="card-date">26.04.27 16:15:09</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash plus">+3,000 캐시</div>
-            <div class="card-amount">₩3,000</div>
-            <button class="receipt-btn" onclick="openReceiptDetail('income_issued')">현금영수증</button>
-          </div>
-        </div>
-        <div class="card-row" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">자동충전 이벤트 캐시</div>
-            <div class="card-date">26.04.27 16:15:10</div>
-            <div class="card-validity">유효기간 26.05.04 23:59:59</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash plus">+100 캐시</div>
-          </div>
-        </div>
-        <div class="card-row" data-svc="kw">
-          <div class="svc-badge">kakao webtoon</div>
-          <div class="card-info">
-            <div class="card-title">카카오페이(머니) · 자동</div>
-            <div class="card-date">26.04.15 15:04:44</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash plus">+10,000 캐시</div>
-            <div class="card-amount">₩10,000</div>
-            <button class="receipt-btn" onclick="openReceiptDetail('income_issued')">현금영수증</button>
-          </div>
-        </div>
-        <div class="card-row" data-svc="kw">
-          <div class="svc-badge">kakao webtoon</div>
-          <div class="card-info">
-            <div class="card-title">자동충전 이벤트 캐시</div>
-            <div class="card-date">26.04.15 15:04:44</div>
-            <div class="card-validity">유효기간 26.04.22 23:59:59</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash plus">+500 캐시</div>
-          </div>
-        </div>
-        <div class="card-row" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">카카오페이(머니)</div>
-            <div class="card-date">26.04.01 10:00:00</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash plus">+5,000 캐시</div>
-            <div class="card-amount">₩5,000</div>
-          </div>
-        </div>
-        <div class="card-row" data-svc="common">
-          <div class="svc-badge empty">-</div>
-          <div class="card-info">
-            <div class="card-title">캐시 회수</div>
-            <div class="card-date">26.04.27 16:24:34</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash minus">-3,000 캐시</div>
-            <div class="card-state">캐시회수</div>
-          </div>
-        </div>
-        <div class="card-row" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">도서문화상품권</div>
-            <div class="card-date">26.03.26 16:36:00</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash minus">-1,000 캐시</div>
-            <div class="card-amount">₩-1,000</div>
-            <div class="card-state">충전취소</div>
-          </div>
-        </div>
-        <div class="card-row" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">카카오페이(머니)</div>
-            <div class="card-date">26.03.26 16:22:43</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash minus">-3,000 캐시</div>
-            <div class="card-amount">₩-3,000</div>
-            <div class="card-state">충전취소</div>
-            <button class="receipt-btn" onclick="openReceiptDetail('income_canceled')">현금영수증</button>
-          </div>
-        </div>
-        <div class="card-row expired" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">이벤트 캐시명</div>
-            <div class="card-date">26.02.27 00:00:00</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash minus">-50 캐시</div>
-            <div class="card-state">기간만료</div>
-          </div>
-        </div>
-        <div class="card-row" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">이벤트 캐시명</div>
-            <div class="card-date">26.02.25 11:33:28</div>
-            <div class="card-validity">유효기간 26.02.26 23:59:59</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash plus">+100 캐시</div>
-          </div>
-        </div>
-        <div class="card-row" data-svc="common">
-          <div class="svc-badge empty">-</div>
-          <div class="card-info">
-            <div class="card-title">캐시 환불</div>
-            <div class="card-date">26.04.15 00:00:00</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash minus">-5,000 캐시</div>
-            <div class="card-state">환불완료</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="tab-content" id="mobile-use">
-      <div class="filter-chips" id="use-chips">
-        <div class="chip active" onclick="filterChip('use','all')">전체</div>
-        <div class="chip" onclick="filterChip('use','kp')">kakao page</div>
-        <div class="chip" onclick="filterChip('use','kw')">kakao webtoon</div>
-      </div>
-      <div class="list-wrap" id="use-list">
-        <div class="card-row" data-svc="kw">
-          <div class="svc-badge">kakao webtoon</div>
-          <div class="card-info">
-            <div class="card-title">SSS급 죽어야 사는 헌터</div>
-            <div class="card-date">대여권 1장 구매취소</div>
-            <div class="card-date">26.01.17 09:00:00</div>
-          </div>
-          <div class="card-right">
-            <div class="card-cash use-minus">-200 캐시</div>
-            <div class="card-state" style="color:var(--c-minus)">구매취소</div>
-          </div>
-        </div>
-        <div class="card-row" data-svc="kw">
-          <div class="svc-badge">kakao webtoon</div>
-          <div class="card-info">
-            <div class="card-title">SSS급 죽어야 사는 헌터</div>
-            <div class="card-date">대여권 1장 구매</div>
-            <div class="card-date">26.01.16 11:36:36</div>
-          </div>
-          <div class="card-right"><div class="card-cash">200 캐시</div></div>
-        </div>
-        <div class="card-row" data-svc="kw">
-          <div class="svc-badge">kakao webtoon</div>
-          <div class="card-info">
-            <div class="card-title">1캐시 작품</div>
-            <div class="card-date">대여권 1장 구매</div>
-            <div class="card-date">26.01.16 11:36:04</div>
-          </div>
-          <div class="card-right"><div class="card-cash">1 캐시</div></div>
-        </div>
-        <div class="card-row" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">강철의 연금술사 컬러웹툰</div>
-            <div class="card-date">소장권 패키지 30장 구매</div>
-            <div class="card-date">24.03.07 11:44:53</div>
-          </div>
-          <div class="card-right"><div class="card-cash">800 캐시</div></div>
-        </div>
-        <div class="card-row" data-svc="kp">
-          <div class="svc-badge">kakao page</div>
-          <div class="card-info">
-            <div class="card-title">나 혼자만 레벨업</div>
-            <div class="card-date">대여권 1장 구매</div>
-            <div class="card-date">23.10.25 09:56:14</div>
-          </div>
-          <div class="card-right"><div class="card-cash">100 캐시</div></div>
-        </div>
-      </div>
-    </div>
+<div class="top-bar-wrap">
+  <div class="top-bar">
+    <button class="vt-btn2 active" id="vsm" onclick="switchView('mobile',this)">📱 Mobile</button>
+    <div class="top-bar-sep"></div>
+    <button class="ut-btn2 active" data-type="integrated" onclick="switchUserType('integrated',this)">통합 회원</button>
+    <button class="ut-btn2" data-type="undecided" onclick="switchUserType('undecided',this)">미동의 유저</button>
+    <button class="ut-btn2" data-type="global" onclick="switchUserType('global',this)">글로벌 회원 (KP)</button>
+  </div>
+  <div class="top-bar">
+    <button class="vt-btn2" id="vsp" onclick="switchView('pc',this)">🖥️ PC</button>
+    <div class="top-bar-sep"></div>
+    <button class="ut-btn2 active" data-type="integrated" onclick="switchUserType('integrated',this)">통합 회원</button>
+    <button class="ut-btn2" data-type="undecided" onclick="switchUserType('undecided',this)">미동의 유저</button>
+    <button class="ut-btn2" data-type="global" onclick="switchUserType('global',this)">글로벌 회원 (KP)</button>
   </div>
 </div>
 
-<!-- PC VIEW -->
-<div class="view" id="view-pc">
-  <div class="pc-wrap">
-    <div class="pc-inner">
-      <div class="pc-title">캐시 내역</div>
-      <div class="pc-balance-card">
-        <div class="pc-balance-main">
-          <div class="pc-balance-label">내 캐시</div>
-          <div class="pc-balance-amount">65,000 캐시</div>
-          <div class="pc-balance-rows">
-            <div class="pc-balance-item">
-              <span class="lbl">↳ 충전 캐시</span>
-              <a onclick="openReceiptInfo()">현금영수증 발급 정보</a>
-              <span class="val">65,000</span>
+<div class="layout">
+  <div class="view-area">
+
+    <!-- MOBILE -->
+    <div class="view active" id="view-mobile">
+      <div class="mobile-wrap">
+
+        <div class="balance-card">
+          <div class="balance-card-left">
+            <div class="balance-label">내 캐시</div>
+            <div class="balance-amount" id="m-balance-amount">65,000 캐시</div>
+            <div class="balance-row">
+              <span class="label">↳ 충전 캐시&nbsp;<a id="m-receipt-link" onclick="openReceiptDetail('income_issued')">현금영수증 발급 정보</a></span>
+              <span class="value">65,000</span>
             </div>
-            <div class="pc-balance-item">
-              <span class="lbl">↳ 이벤트 캐시</span>
-              <span class="val">100</span>
+            <div class="balance-row">
+              <span class="label">↳ 이벤트 캐시</span><span class="value">100</span>
+            </div>
+            <div class="notice-bar"><div class="notice-dot"></div>이벤트 캐시 100캐시가 05월 04일 만료될 예정입니다.</div>
+          </div>
+          <button class="charge-btn" id="m-charge-btn"><div class="c-icon">C</div>캐시 충전</button>
+        </div>
+
+        <div class="banner">
+          <div class="banner-text"><div class="title">최근 본 작품을 이어서 감상해 보세요!</div><div class="sub">최근 본 작품 페이지로 이동합니다.</div></div>
+          <div class="banner-right"><div class="banner-arrow">›</div><div class="banner-img">img</div></div>
+        </div>
+
+        <div class="tab-bar">
+          <div class="tab-item active" onclick="switchTab('mobile','charge')">충전내역</div>
+          <div class="tab-item" onclick="switchTab('mobile','use')">사용내역</div>
+        </div>
+
+        <!-- 충전내역 -->
+        <div class="tab-content active" id="mobile-charge">
+          <div class="filter-chips" id="m-charge-chips">
+            <div class="chip active" onclick="filterChip('charge','all')">전체</div>
+            <div class="chip" onclick="filterChip('charge','kp')">kakao page</div>
+            <div class="chip" onclick="filterChip('charge','kw')">kakao webtoon</div>
+          </div>
+          <div class="list-wrap" id="charge-list">
+            <div class="card-row" data-svc="kp">
+              <div class="svc-badge m-badge">kakao page</div>
+              <div class="card-info"><div class="card-title">카카오페이(머니) · 자동</div><div class="card-date">26.04.27 16:15:09</div></div>
+              <div class="card-right"><div class="card-cash plus">+3,000 캐시</div><div class="card-amount">₩3,000</div><button class="receipt-btn m-rcpt-btns" onclick="openReceiptDetail('income_issued')">현금영수증</button></div>
+            </div>
+            <div class="card-row" data-svc="kp">
+              <div class="svc-badge m-badge">kakao page</div>
+              <div class="card-info"><div class="card-title">자동충전 이벤트 캐시</div><div class="card-date">26.04.27 16:15:10</div><div class="card-validity">유효기간 26.05.04 23:59:59</div></div>
+              <div class="card-right"><div class="card-cash plus">+100 캐시</div></div>
+            </div>
+            <div class="card-row kw-only" data-svc="kw">
+              <div class="svc-badge">kakao webtoon</div>
+              <div class="card-info"><div class="card-title">카카오페이(머니) · 자동</div><div class="card-date">26.04.15 15:04:44</div></div>
+              <div class="card-right"><div class="card-cash plus">+10,000 캐시</div><div class="card-amount">₩10,000</div><button class="receipt-btn m-rcpt-btns" onclick="openReceiptDetail('income_issued')">현금영수증</button></div>
+            </div>
+            <div class="card-row kw-only" data-svc="kw">
+              <div class="svc-badge">kakao webtoon</div>
+              <div class="card-info"><div class="card-title">자동충전 이벤트 캐시</div><div class="card-date">26.04.15 15:04:44</div><div class="card-validity">유효기간 26.04.22 23:59:59</div></div>
+              <div class="card-right"><div class="card-cash plus">+500 캐시</div></div>
+            </div>
+            <div class="card-row" data-svc="kp">
+              <div class="svc-badge m-badge">kakao page</div>
+              <div class="card-info"><div class="card-title">카카오페이(머니)</div><div class="card-date">26.04.01 10:00:00</div></div>
+              <div class="card-right"><div class="card-cash plus">+5,000 캐시</div><div class="card-amount">₩5,000</div></div>
+            </div>
+            <div class="card-row" data-svc="common">
+              <div class="svc-badge empty">-</div>
+              <div class="card-info"><div class="card-title">캐시 회수</div><div class="card-date">26.04.27 16:24:34</div></div>
+              <div class="card-right"><div class="card-cash minus">-3,000 캐시</div><div class="card-state">캐시회수</div></div>
+            </div>
+            <div class="card-row" data-svc="kp">
+              <div class="svc-badge m-badge">kakao page</div>
+              <div class="card-info"><div class="card-title">카카오페이(머니)</div><div class="card-date">26.03.26 16:22:43</div></div>
+              <div class="card-right"><div class="card-cash minus">-3,000 캐시</div><div class="card-amount">₩-3,000</div><div class="card-state">충전취소</div><button class="receipt-btn m-rcpt-btns" onclick="openReceiptDetail('income_canceled')">현금영수증</button></div>
+            </div>
+            <div class="card-row expired" data-svc="kp">
+              <div class="svc-badge m-badge">kakao page</div>
+              <div class="card-info"><div class="card-title">이벤트 캐시명</div><div class="card-date">26.02.27 00:00:00</div></div>
+              <div class="card-right"><div class="card-cash minus">-50 캐시</div><div class="card-state">기간만료</div></div>
+            </div>
+            <div class="card-row" data-svc="common">
+              <div class="svc-badge empty">-</div>
+              <div class="card-info"><div class="card-title">캐시 환불</div><div class="card-date">26.04.15 00:00:00</div></div>
+              <div class="card-right"><div class="card-cash minus">-5,000 캐시</div><div class="card-state">환불완료</div></div>
             </div>
           </div>
-          <div class="pc-notice">
-            <div class="notice-dot"></div>
-            이벤트 캐시 100캐시가 05월 04일 만료될 예정입니다.
+        </div>
+
+        <!-- 사용내역 -->
+        <div class="tab-content" id="mobile-use">
+          <div class="filter-chips" id="m-use-chips">
+            <div class="chip active" onclick="filterChip('use','all')">전체</div>
+            <div class="chip" onclick="filterChip('use','kp')">kakao page</div>
+            <div class="chip" onclick="filterChip('use','kw')">kakao webtoon</div>
+          </div>
+          <div class="list-wrap" id="use-list">
+            <div class="card-row kw-only" data-svc="kw">
+              <div class="svc-badge">kakao webtoon</div>
+              <div class="card-info"><div class="card-title">SSS급 죽어야 사는 헌터</div><div class="card-date">대여권 1장 구매취소</div><div class="card-date">26.01.17 09:00:00</div></div>
+              <div class="card-right"><div class="card-cash use-minus">-200 캐시</div><div class="card-state" style="color:var(--c-minus)">구매취소</div></div>
+            </div>
+            <div class="card-row kw-only" data-svc="kw">
+              <div class="svc-badge">kakao webtoon</div>
+              <div class="card-info"><div class="card-title">SSS급 죽어야 사는 헌터</div><div class="card-date">대여권 1장 구매</div><div class="card-date">26.01.16 11:36:36</div></div>
+              <div class="card-right"><div class="card-cash">200 캐시</div></div>
+            </div>
+            <div class="card-row" data-svc="kp">
+              <div class="svc-badge m-badge">kakao page</div>
+              <div class="card-info"><div class="card-title">강철의 연금술사 컬러웹툰</div><div class="card-date">소장권 패키지 30장 구매</div><div class="card-date">24.03.07 11:44:53</div></div>
+              <div class="card-right"><div class="card-cash">800 캐시</div></div>
+            </div>
+            <div class="card-row" data-svc="kp">
+              <div class="svc-badge m-badge">kakao page</div>
+              <div class="card-info"><div class="card-title">나 혼자만 레벨업</div><div class="card-date">대여권 1장 구매</div><div class="card-date">23.10.25 09:56:14</div></div>
+              <div class="card-right"><div class="card-cash">100 캐시</div></div>
+            </div>
           </div>
         </div>
-        <button class="charge-btn">
-          <div class="c-icon">C</div>캐시 충전
-        </button>
-      </div>
 
-      <div class="pc-banner">
-        <div class="banner-text">
-          <div class="title">최근 본 작품을 이어서 감상해 보세요!</div>
-          <div class="sub">최근 본 작품 페이지로 이동합니다.</div>
-        </div>
-        <div class="banner-right" style="display:flex;align-items:center;gap:10px;">
-          <div class="banner-arrow">›</div>
-          <div class="pc-banner-img">img</div>
-        </div>
       </div>
+    </div><!-- /view-mobile -->
 
-      <div class="pc-tab-bar">
-        <div class="pc-tab active" onclick="switchTab('pc','charge')">충전내역</div>
-        <div class="pc-tab" onclick="switchTab('pc','use')">사용내역</div>
-      </div>
-
-      <div class="pc-tab-content active" id="pc-charge">
-        <div class="pc-filters">
-          <div class="pc-filter-group">
-            <span class="pc-filter-label">서비스</span>
-            <select class="pc-select" id="pc-svc-charge"><option value="all">전체</option><option value="kp">카카오페이지</option><option value="kw">카카오웹툰</option></select>
+    <!-- PC -->
+    <div class="view" id="view-pc">
+      <div class="pc-wrap">
+        <div class="pc-inner">
+          <div class="pc-title">캐시 내역</div>
+          <div class="pc-balance-card">
+            <div class="pc-balance-main">
+              <div class="pc-balance-label">내 캐시</div>
+              <div class="pc-balance-amount" id="pc-balance-amount">65,000 캐시</div>
+              <div class="pc-balance-rows">
+                <div class="pc-balance-item"><span class="lbl">↳ 충전 캐시</span><a id="pc-receipt-link" onclick="openReceiptDetail('income_issued')">현금영수증 발급 정보</a><span class="val">65,000</span></div>
+                <div class="pc-balance-item"><span class="lbl">↳ 이벤트 캐시</span><span class="val">100</span></div>
+              </div>
+              <div class="pc-notice"><div class="notice-dot"></div>이벤트 캐시 100캐시가 05월 04일 만료될 예정입니다.</div>
+            </div>
+            <button class="charge-btn" id="pc-charge-btn"><div class="c-icon">C</div>캐시 충전</button>
           </div>
-          <div class="pc-filter-group">
-            <span class="pc-filter-label">기간</span>
-            <select class="pc-select" id="period-select-charge" onchange="updateDateRange('charge')">
-              <option value="1">최근 1개월</option><option value="3">최근 3개월</option>
-              <option value="6">최근 6개월</option><option value="0">직접입력</option>
-            </select>
-            <input type="date" class="pc-date-input" id="date-from-charge" value="2026-04-01">
-            <span class="pc-filter-sep">~</span>
-            <input type="date" class="pc-date-input" id="date-to-charge" value="2026-04-30">
+          <div class="pc-banner">
+            <div class="banner-text"><div class="title">최근 본 작품을 이어서 감상해 보세요!</div><div class="sub">최근 본 작품 페이지로 이동합니다.</div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div class="banner-arrow">›</div><div class="pc-banner-img">img</div></div>
           </div>
-          <div class="pc-filter-group">
-            <span class="pc-filter-label">캐시 종류</span>
-            <select class="pc-select" id="pc-cashtype-charge"><option value="all">전체</option><option value="charge">충전 캐시</option><option value="event">이벤트 캐시</option></select>
+          <div class="pc-tab-bar">
+            <div class="pc-tab active" onclick="switchTab('pc','charge')">충전내역</div>
+            <div class="pc-tab" onclick="switchTab('pc','use')">사용내역</div>
           </div>
-          <div class="pc-filter-group">
-            <span class="pc-filter-label">상태</span>
-            <select class="pc-select" id="pc-status-charge"><option value="all">전체</option><option value="충전">충전</option><option value="충전취소">충전취소</option><option value="기간만료">기간만료</option><option value="캐시회수">캐시회수</option><option value="환불완료">환불완료</option></select>
+
+          <!-- PC 충전내역 -->
+          <div class="pc-tab-content active" id="pc-charge">
+            <div class="pc-filters">
+              <div class="pc-filter-group" id="pc-svc-filter-charge"><span class="pc-filter-label">서비스</span><select class="pc-select" id="pc-svc-charge"><option value="all">전체</option><option value="kp">카카오페이지</option><option value="kw">카카오웹툰</option></select></div>
+              <div class="pc-filter-group"><span class="pc-filter-label">기간</span><select class="pc-select" id="period-select-charge" onchange="updateDateRange('charge')"><option value="1">최근 1개월</option><option value="3">최근 3개월</option><option value="6">최근 6개월</option><option value="0">직접입력</option></select><input type="date" class="pc-date-input" id="date-from-charge"><span class="pc-filter-sep">~</span><input type="date" class="pc-date-input" id="date-to-charge"></div>
+              <div class="pc-filter-group"><span class="pc-filter-label">캐시 종류</span><select class="pc-select" id="pc-cashtype-charge"><option value="all">전체</option><option value="charge">충전 캐시</option><option value="event">이벤트 캐시</option></select></div>
+              <div class="pc-filter-group"><span class="pc-filter-label">상태</span><select class="pc-select" id="pc-status-charge"><option value="all">전체</option><option>충전취소</option><option>기간만료</option><option>캐시회수</option><option>환불완료</option></select></div>
+              <div style="display:flex;gap:6px;flex-shrink:0;margin-left:2px;"><button class="pc-btn-search" onclick="filterPC('charge')">조회</button><button class="pc-btn-reset" onclick="resetPC('charge')">초기화</button></div>
+            </div>
+            <table class="pc-table" id="tbl-charge">
+              <thead><tr><th id="pc-th-svc-c">서비스</th><th>일시</th><th>구분</th><th>캐시 아이디</th><th style="text-align:right;padding-right:12px;">캐시</th><th style="text-align:right;padding-right:12px;">결제금액</th><th>유효기간</th><th>상태</th><th id="pc-th-receipt">현금영수증</th></tr></thead>
+              <tbody>
+                <tr data-svc="kp" data-cashtype="charge" data-status="충전"><td class="pc-svc-c"><span class="svc-badge-sm">kakao page</span></td><td class="sub-text">26.04.27 16:15:09</td><td>카카오페이(머니) · 자동</td><td class="sub-text">PAY-20260427-001</td><td class="cash-plus">+3,000</td><td class="amount-cell" style="text-align:right;padding-right:12px;">₩3,000</td><td class="sub-text">-</td><td class="sub-text">-</td><td><button class="pc-receipt-btn pc-rcpt-btns" onclick="openReceiptDetail('income_issued')">발급완료</button></td></tr>
+                <tr data-svc="kp" data-cashtype="event" data-status="충전"><td class="pc-svc-c"><span class="svc-badge-sm">kakao page</span></td><td class="sub-text">26.04.27 16:15:10</td><td>자동충전 이벤트 캐시</td><td class="sub-text">EVT-20260427-001</td><td class="cash-plus">+100</td><td class="sub-text" style="text-align:right;padding-right:12px;">-</td><td class="sub-text">26.05.04 23:59</td><td class="sub-text">-</td><td class="sub-text">-</td></tr>
+                <tr data-svc="kw" data-cashtype="charge" data-status="충전" class="kw-only"><td class="pc-svc-c"><span class="svc-badge-sm">kakao webtoon</span></td><td class="sub-text">26.04.15 15:04:44</td><td>카카오페이(머니) · 자동</td><td class="sub-text">PAY-20260415-001</td><td class="cash-plus">+10,000</td><td class="amount-cell" style="text-align:right;padding-right:12px;">₩10,000</td><td class="sub-text">-</td><td class="sub-text">-</td><td><button class="pc-receipt-btn pc-rcpt-btns" onclick="openReceiptDetail('income_issued')">발급완료</button></td></tr>
+                <tr data-svc="kw" data-cashtype="event" data-status="충전" class="kw-only"><td class="pc-svc-c"><span class="svc-badge-sm">kakao webtoon</span></td><td class="sub-text">26.04.15 15:04:44</td><td>자동충전 이벤트 캐시</td><td class="sub-text">EVT-20260415-001</td><td class="cash-plus">+500</td><td class="sub-text" style="text-align:right;padding-right:12px;">-</td><td class="sub-text">26.04.22 23:59</td><td class="sub-text">-</td><td class="sub-text">-</td></tr>
+                <tr data-svc="kp" data-cashtype="charge" data-status="충전"><td class="pc-svc-c"><span class="svc-badge-sm">kakao page</span></td><td class="sub-text">26.04.01 10:00:00</td><td>카카오페이(머니)</td><td class="sub-text">PAY-20260401-001</td><td class="cash-plus">+5,000</td><td class="amount-cell" style="text-align:right;padding-right:12px;">₩5,000</td><td class="sub-text">-</td><td class="sub-text">-</td><td class="sub-text">-</td></tr>
+                <tr data-svc="common" data-cashtype="charge" data-status="캐시회수" class="row-cancel"><td class="sub-text">-</td><td class="sub-text">26.04.27 16:24:34</td><td>캐시 회수</td><td class="sub-text">-</td><td class="cash-minus">-3,000</td><td class="sub-text" style="text-align:right;padding-right:12px;">-</td><td class="sub-text">-</td><td class="status-cell">캐시회수</td><td class="sub-text">-</td></tr>
+                <tr data-svc="kp" data-cashtype="charge" data-status="충전취소" class="row-cancel"><td class="pc-svc-c"><span class="svc-badge-sm">kakao page</span></td><td class="sub-text">26.03.26 16:22:43</td><td>카카오페이(머니)</td><td class="sub-text">PAY-20260326-002</td><td class="cash-minus">-3,000</td><td class="amount-cell" style="text-align:right;padding-right:12px;">₩-3,000</td><td class="sub-text">-</td><td class="status-cell">충전취소</td><td><button class="pc-receipt-btn pc-rcpt-btns" onclick="openReceiptDetail('income_canceled')">취소완료</button></td></tr>
+                <tr data-svc="kp" data-cashtype="event" data-status="기간만료" class="row-expired"><td class="pc-svc-c"><span class="svc-badge-sm" style="opacity:.5">kakao page</span></td><td class="sub-text">26.02.27 00:00:00</td><td>이벤트 캐시명</td><td class="sub-text">EVT-20260227-001</td><td class="cash-minus">-50</td><td class="sub-text" style="text-align:right;padding-right:12px;">-</td><td class="sub-text">-</td><td class="status-cell">기간만료</td><td class="sub-text">-</td></tr>
+                <tr data-svc="common" data-cashtype="charge" data-status="환불완료" class="row-cancel"><td class="sub-text">-</td><td class="sub-text">26.04.15 00:00:00</td><td>캐시 환불</td><td class="sub-text">-</td><td class="cash-minus">-5,000</td><td class="sub-text" style="text-align:right;padding-right:12px;">-</td><td class="sub-text">-</td><td class="status-cell">환불완료</td><td class="sub-text">-</td></tr>
+              </tbody>
+            </table>
+            <div class="pc-pagination"><div class="pc-page-btn">‹</div><div class="pc-page-btn active">1</div><div class="pc-page-btn">2</div><div class="pc-page-btn">3</div><div class="pc-page-btn">›</div></div>
           </div>
-          <button class="pc-btn-search" onclick="filterPC('charge')">조회</button>
-          <button class="pc-btn-reset" onclick="resetPC('charge')">초기화</button>
-        </div>
-        <table class="pc-table" id="tbl-charge">
-          <thead>
-            <tr>
-              <th>서비스</th><th>일시</th><th>구분</th><th>캐시 아이디</th>
-              <th style="text-align:right;padding-right:12px;">캐시</th>
-              <th style="text-align:right;padding-right:12px;">결제금액</th>
-              <th>유효기간</th><th>상태</th><th>현금영수증</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr data-svc="kp" data-cashtype="charge" data-status="충전">
-              <td><span class="svc-badge-sm">kakao page</span></td>
-              <td class="sub-text">26.04.27 16:15:09</td><td>카카오페이(머니) · 자동</td>
-              <td class="sub-text">PAY-20260427-001</td><td class="cash-plus">+3,000</td>
-              <td class="amount-cell" style="text-align:right;padding-right:12px;">₩3,000</td>
-              <td class="sub-text">-</td><td class="sub-text">-</td>
-              <td><button class="pc-receipt-btn" onclick="openReceiptDetail('income_issued')">발급완료</button></td>
-            </tr>
-            <tr data-svc="kp" data-cashtype="event" data-status="충전">
-              <td><span class="svc-badge-sm">kakao page</span></td>
-              <td class="sub-text">26.04.27 16:15:10</td><td>자동충전 이벤트 캐시</td>
-              <td class="sub-text">EVT-20260427-001</td><td class="cash-plus">+100</td>
-              <td class="sub-text" style="text-align:right;padding-right:12px;">-</td>
-              <td class="sub-text" style="font-size:11px;">26.05.04 23:59</td><td class="sub-text">-</td><td class="sub-text">-</td>
-            </tr>
-            <tr data-svc="kw" data-cashtype="charge" data-status="충전">
-              <td><span class="svc-badge-sm">kakao webtoon</span></td>
-              <td class="sub-text">26.04.15 15:04:44</td><td>카카오페이(머니) · 자동</td>
-              <td class="sub-text">PAY-20260415-001</td><td class="cash-plus">+10,000</td>
-              <td class="amount-cell" style="text-align:right;padding-right:12px;">₩10,000</td>
-              <td class="sub-text">-</td><td class="sub-text">-</td>
-              <td><button class="pc-receipt-btn" onclick="openReceiptDetail('income_issued')">발급완료</button></td>
-            </tr>
-            <tr data-svc="kw" data-cashtype="event" data-status="충전">
-              <td><span class="svc-badge-sm">kakao webtoon</span></td>
-              <td class="sub-text">26.04.15 15:04:44</td><td>자동충전 이벤트 캐시</td>
-              <td class="sub-text">EVT-20260415-001</td><td class="cash-plus">+500</td>
-              <td class="sub-text" style="text-align:right;padding-right:12px;">-</td>
-              <td class="sub-text" style="font-size:11px;">26.04.22 23:59</td><td class="sub-text">-</td><td class="sub-text">-</td>
-            </tr>
-            <tr data-svc="kp" data-cashtype="charge" data-status="충전">
-              <td><span class="svc-badge-sm">kakao page</span></td>
-              <td class="sub-text">26.04.01 10:00:00</td><td>카카오페이(머니)</td>
-              <td class="sub-text">PAY-20260401-001</td><td class="cash-plus">+5,000</td>
-              <td class="amount-cell" style="text-align:right;padding-right:12px;">₩5,000</td>
-              <td class="sub-text">-</td><td class="sub-text">-</td><td class="sub-text">-</td>
-            </tr>
-            <tr data-svc="common" data-cashtype="charge" data-status="캐시회수" class="row-cancel">
-              <td class="sub-text">-</td><td class="sub-text">26.04.27 16:24:34</td><td>캐시 회수</td>
-              <td class="sub-text">-</td><td class="cash-minus">-3,000</td>
-              <td class="sub-text" style="text-align:right;padding-right:12px;">-</td>
-              <td class="sub-text">-</td><td class="status-cell">캐시회수</td><td class="sub-text">-</td>
-            </tr>
-            <tr data-svc="kp" data-cashtype="charge" data-status="충전취소" class="row-cancel">
-              <td><span class="svc-badge-sm">kakao page</span></td>
-              <td class="sub-text">26.03.26 16:36:00</td><td>도서문화상품권</td>
-              <td class="sub-text">PAY-20260326-001</td><td class="cash-minus">-1,000</td>
-              <td class="amount-cell" style="text-align:right;padding-right:12px;">₩-1,000</td>
-              <td class="sub-text">-</td><td class="status-cell">충전취소</td><td class="sub-text">-</td>
-            </tr>
-            <tr data-svc="kp" data-cashtype="charge" data-status="충전취소" class="row-cancel">
-              <td><span class="svc-badge-sm">kakao page</span></td>
-              <td class="sub-text">26.03.26 16:22:43</td><td>카카오페이(머니)</td>
-              <td class="sub-text">PAY-20260326-002</td><td class="cash-minus">-3,000</td>
-              <td class="amount-cell" style="text-align:right;padding-right:12px;">₩-3,000</td>
-              <td class="sub-text">-</td><td class="status-cell">충전취소</td>
-              <td><button class="pc-receipt-btn" onclick="openReceiptDetail('income_canceled')">취소완료</button></td>
-            </tr>
-            <tr data-svc="kp" data-cashtype="event" data-status="기간만료" class="row-expired">
-              <td><span class="svc-badge-sm" style="opacity:.5">kakao page</span></td>
-              <td class="sub-text">26.02.27 00:00:00</td><td>이벤트 캐시명</td>
-              <td class="sub-text">-</td>
-              <td class="cash-minus" style="text-align:right;padding-right:12px;">-50</td>
-              <td class="sub-text" style="text-align:right;padding-right:12px;">-</td>
-              <td class="sub-text">-</td><td class="status-cell">기간만료</td><td class="sub-text">-</td>
-            </tr>
-            <tr data-svc="kp" data-cashtype="event" data-status="충전">
-              <td><span class="svc-badge-sm">kakao page</span></td>
-              <td class="sub-text">26.02.25 11:33:28</td><td>이벤트 캐시명</td>
-              <td class="sub-text">EVT-20260225-001</td><td class="cash-plus">+100</td>
-              <td class="sub-text" style="text-align:right;padding-right:12px;">-</td>
-              <td class="sub-text" style="font-size:11px;">26.02.26 23:59</td><td class="sub-text">-</td><td class="sub-text">-</td>
-            </tr>
-            <tr data-svc="common" data-cashtype="charge" data-status="환불완료" class="row-cancel">
-              <td class="sub-text">-</td><td class="sub-text">26.04.15 00:00:00</td><td>캐시 환불</td>
-              <td class="sub-text">-</td><td class="cash-minus">-5,000</td>
-              <td class="sub-text" style="text-align:right;padding-right:12px;">-</td>
-              <td class="sub-text">-</td><td class="status-cell">환불완료</td><td class="sub-text">-</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="pc-pagination">
-          <div class="pc-page-btn">‹</div>
-          <div class="pc-page-btn active">1</div>
-          <div class="pc-page-btn">2</div>
-          <div class="pc-page-btn">3</div>
-          <div class="pc-page-btn">›</div>
-        </div>
-      </div>
 
-      <div class="pc-tab-content" id="pc-use">
-        <div class="pc-filters">
-          <div class="pc-filter-group">
-            <span class="pc-filter-label">서비스</span>
-            <select class="pc-select" id="pc-svc-use"><option value="all">전체</option><option value="kp">카카오페이지</option><option value="kw">카카오웹툰</option></select>
+          <!-- PC 사용내역 -->
+          <div class="pc-tab-content" id="pc-use">
+            <div class="pc-filters">
+              <div class="pc-filter-group" id="pc-svc-filter-use"><span class="pc-filter-label">서비스</span><select class="pc-select" id="pc-svc-use"><option value="all">전체</option><option value="kp">카카오페이지</option><option value="kw">카카오웹툰</option></select></div>
+              <div class="pc-filter-group"><span class="pc-filter-label">기간</span><select class="pc-select" id="period-select-use" onchange="updateDateRange('use')"><option value="1">최근 1개월</option><option value="3">최근 3개월</option><option value="6">최근 6개월</option><option value="0">직접입력</option></select><input type="date" class="pc-date-input" id="date-from-use"><span class="pc-filter-sep">~</span><input type="date" class="pc-date-input" id="date-to-use"></div>
+              <div class="pc-filter-group"><span class="pc-filter-label">상태</span><select class="pc-select" id="pc-status-use"><option value="all">전체</option><option>구매</option><option>구매취소</option></select></div>
+              <div style="display:flex;gap:6px;flex-shrink:0;margin-left:2px;"><button class="pc-btn-search" onclick="filterPC('use')">조회</button><button class="pc-btn-reset" onclick="resetPC('use')">초기화</button></div>
+            </div>
+            <table class="pc-table" id="tbl-use">
+              <thead><tr><th id="pc-th-svc-u">서비스</th><th>일시</th><th>작품명</th><th>구매 내용</th><th style="text-align:right;padding-right:12px;">사용 캐시</th><th>상태</th></tr></thead>
+              <tbody>
+                <tr data-svc="kw" data-status="구매취소" class="row-cancel kw-only"><td><span class="svc-badge-sm">kakao webtoon</span></td><td class="sub-text">26.01.17 09:00:00</td><td>SSS급 죽어야 사는 헌터</td><td>대여권 1장 구매취소</td><td class="cash-minus">-200</td><td class="status-cell" style="color:var(--c-minus);font-weight:600;">구매취소</td></tr>
+                <tr data-svc="kw" data-status="구매" class="kw-only"><td><span class="svc-badge-sm">kakao webtoon</span></td><td class="sub-text">26.01.16 11:36:36</td><td>SSS급 죽어야 사는 헌터</td><td>대여권 1장 구매</td><td style="text-align:right;padding-right:12px;font-weight:700;">200</td><td class="sub-text">구매</td></tr>
+                <tr data-svc="kp" data-status="구매"><td class="pc-svc-u"><span class="svc-badge-sm">kakao page</span></td><td class="sub-text">24.03.07 11:44:53</td><td>강철의 연금술사 컬러웹툰</td><td>소장권 패키지 30장 구매</td><td style="text-align:right;padding-right:12px;font-weight:700;">800</td><td class="sub-text">구매</td></tr>
+                <tr data-svc="kp" data-status="구매"><td class="pc-svc-u"><span class="svc-badge-sm">kakao page</span></td><td class="sub-text">23.10.25 09:56:14</td><td>나 혼자만 레벨업</td><td>대여권 1장 구매</td><td style="text-align:right;padding-right:12px;font-weight:700;">100</td><td class="sub-text">구매</td></tr>
+              </tbody>
+            </table>
+            <div class="pc-pagination"><div class="pc-page-btn">‹</div><div class="pc-page-btn active">1</div><div class="pc-page-btn">2</div><div class="pc-page-btn">›</div></div>
           </div>
-          <div class="pc-filter-group">
-            <span class="pc-filter-label">기간</span>
-            <select class="pc-select" id="period-select-use" onchange="updateDateRange('use')">
-              <option value="1">최근 1개월</option><option value="3">최근 3개월</option>
-              <option value="6">최근 6개월</option><option value="0">직접입력</option>
-            </select>
-            <input type="date" class="pc-date-input" id="date-from-use" value="2026-04-01">
-            <span class="pc-filter-sep">~</span>
-            <input type="date" class="pc-date-input" id="date-to-use" value="2026-04-30">
-          </div>
-          <div class="pc-filter-group">
-            <span class="pc-filter-label">상태</span>
-            <select class="pc-select" id="pc-status-use"><option value="all">전체</option><option value="구매">구매</option><option value="구매취소">구매취소</option></select>
-          </div>
-          <button class="pc-btn-search" onclick="filterPC('use')">조회</button>
-          <button class="pc-btn-reset" onclick="resetPC('use')">초기화</button>
-        </div>
-        <table class="pc-table" id="tbl-use">
-          <thead>
-            <tr>
-              <th>서비스</th><th>일시</th><th>작품명</th><th>구매 내용</th>
-              <th style="text-align:right;padding-right:12px;">사용 캐시</th><th>상태</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr data-svc="kw" data-status="구매취소" class="row-cancel">
-              <td><span class="svc-badge-sm">kakao webtoon</span></td>
-              <td class="sub-text">26.01.17 09:00:00</td>
-              <td>SSS급 죽어야 사는 헌터</td><td>대여권 1장 구매취소</td>
-              <td class="cash-minus">-200</td>
-              <td class="status-cell" style="color:var(--c-minus);font-weight:600;">구매취소</td>
-            </tr>
-            <tr data-svc="kw" data-status="구매">
-              <td><span class="svc-badge-sm">kakao webtoon</span></td>
-              <td class="sub-text">26.01.16 11:36:36</td>
-              <td>SSS급 죽어야 사는 헌터</td><td>대여권 1장 구매</td>
-              <td style="text-align:right;padding-right:12px;font-weight:700;">200</td>
-              <td class="sub-text">구매</td>
-            </tr>
-            <tr data-svc="kw" data-status="구매">
-              <td><span class="svc-badge-sm">kakao webtoon</span></td>
-              <td class="sub-text">26.01.16 11:36:04</td>
-              <td>1캐시 작품</td><td>대여권 1장 구매</td>
-              <td style="text-align:right;padding-right:12px;font-weight:700;">1</td>
-              <td class="sub-text">구매</td>
-            </tr>
-            <tr data-svc="kp" data-status="구매">
-              <td><span class="svc-badge-sm">kakao page</span></td>
-              <td class="sub-text">24.03.07 11:44:53</td>
-              <td>강철의 연금술사 컬러웹툰</td><td>소장권 패키지 30장 구매</td>
-              <td style="text-align:right;padding-right:12px;font-weight:700;">800</td>
-              <td class="sub-text">구매</td>
-            </tr>
-            <tr data-svc="kp" data-status="구매">
-              <td><span class="svc-badge-sm">kakao page</span></td>
-              <td class="sub-text">23.10.25 09:56:14</td>
-              <td>나 혼자만 레벨업</td><td>대여권 1장 구매</td>
-              <td style="text-align:right;padding-right:12px;font-weight:700;">100</td>
-              <td class="sub-text">구매</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="pc-pagination">
-          <div class="pc-page-btn">‹</div>
-          <div class="pc-page-btn active">1</div>
-          <div class="pc-page-btn">2</div>
-          <div class="pc-page-btn">›</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ══════════════════════════════════
-     현금영수증 발급 정보 모달 - 미등록 상태
-══════════════════════════════════ -->
-<div class="modal-overlay" id="modal-receipt-info" onclick="closeModalOutside(event,'modal-receipt-info')">
-  <div class="modal-sheet">
+          <div class="pc-footer-notice"><ul>
+            <li>캐시 유효기간: 충전 캐시는 마지막 사용일로부터 5년, 이벤트 캐시는 별도 유효기간 내 사용 가능합니다.</li>
+            <li>캐시 환불: 충전 후 미사용 캐시는 충전일로부터 7일 이내 고객센터를 통해 환불 신청 가능합니다.</li>
+            <li id="pc-footer-receipt-notice">현금영수증: 유료 충전 시 현금영수증 발급 정보를 등록하면 자동 발행됩니다.</li>
+            <li>문의: 카카오 고객센터 (kakao.com/cs)</li>
+          </ul></div>
+        </div>
+      </div>
+    </div><!-- /view-pc -->
 
-    <!-- STEP: 미등록 -->
-    <div id="ri-empty">
-      <div class="modal-header">
-        <div class="modal-title">현금영수증 발급 정보</div>
-        <button class="modal-close" onclick="closeModalById('modal-receipt-info')">×</button>
-      </div>
-      <div class="receipt-empty-box">
-        <div class="receipt-empty-icon">＋</div>
-        <div class="receipt-empty-title">등록된 정보가 없습니다</div>
-        <div class="receipt-empty-sub">발급정보 등록 후 현금영수증 자동 발행</div>
-      </div>
-      <div class="receipt-notice-box">
-        <div class="receipt-notice-title">안내</div>
-        <div class="receipt-notice-text">미등록 시 이후 결제 건은 무기명 자진발급 처리</div>
-      </div>
-      <button class="modal-primary-btn" onclick="riShowInput(false)">등록하기</button>
-    </div>
+  </div><!-- /view-area -->
 
-    <!-- STEP: 등록 입력 -->
-    <div id="ri-input" style="display:none;">
-      <div class="modal-header">
-        <div class="modal-title">현금영수증 발급 정보</div>
-        <button class="modal-close" onclick="closeModalById('modal-receipt-info')">×</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">발급 유형</label>
-        <div class="input-select" onclick="document.getElementById('type-sheet').classList.add('open')">
-          <span id="ri-type-label">개인 - 소득공제 (휴대폰)</span>
-          <span style="font-size:18px;color:#555">⌄</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">발급정보</label>
-        <input class="input-field" type="tel" id="ri-number-input" placeholder="휴대폰 번호 입력 (-제외)" oninput="riCheckBtn()" />
-      </div>
-      <div class="info-box">
-        <div class="info-text">
-          등록하신 발급정보 기준으로 현금영수증 자동 발행<br>
-          발급정보 미등록 시 무기명 자진발급 처리
-        </div>
-      </div>
-      <div class="consent-bar">
-        <div class="consent-check" id="ri-consent-check" onclick="riToggleConsent()">
-          <svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <span class="consent-label" onclick="riToggleConsent()">현금영수증 발급을 위한 정보수집에 동의</span>
-        <span class="consent-arrow" onclick="riShowPrivacy()">›</span>
-      </div>
-      <button class="modal-primary-btn" id="ri-confirm-btn" disabled style="opacity:0.4;cursor:not-allowed;" onclick="riShowRegistered()">확인</button>
-    </div>
+  <!-- ══ 우측 패널 ══ -->
 
-    <!-- STEP: 등록 완료 -->
-    <div id="ri-registered" style="display:none;">
-      <div class="modal-header">
-        <div class="modal-title">현금영수증 발급 정보</div>
-        <button class="modal-close" onclick="closeModalById('modal-receipt-info')">×</button>
-      </div>
-      <div class="receipt-registered-box">
-        <div class="receipt-reg-top">
-          <div class="receipt-reg-badge">등록 완료</div>
-          <div class="receipt-reg-type" id="ri-reg-type-label">개인 - 소득공제 (휴대폰)</div>
-          <div class="receipt-reg-number" id="ri-reg-number-display">010-1234-5678</div>
-        </div>
-        <div class="receipt-reg-actions">
-          <button class="receipt-reg-btn" onclick="riShowChange()">변경</button>
-          <div class="receipt-reg-divider"></div>
-          <button class="receipt-reg-btn" onclick="document.getElementById('delete-sheet').classList.add('open')">삭제</button>
-        </div>
-      </div>
-      <div class="receipt-notice-box">
-        <div class="receipt-notice-text">결제 시, 등록된 현금영수증 발급 정보로 현금영수증 자동 발행됩니다.</div>
-        <div class="receipt-notice-text" style="margin-top:4px;">발급된 현금영수증은 국세청 홈택스에서 확인이 가능합니다.</div>
-        <div class="receipt-notice-text" style="margin-top:4px;">삭제 전 발행 건 영향 없음</div>
-      </div>
-    </div>
+</div><!-- /layout -->
 
-    <!-- STEP: 변경 입력 -->
-    <div id="ri-change" style="display:none;">
-      <div class="modal-header">
-        <div class="modal-title">현금영수증 발급 정보 변경</div>
-        <button class="modal-close" onclick="riShowRegistered()">×</button>
-      </div>
-      <div class="change-info-box">변경 진입 시 기존 정보 입력 유지</div>
-      <div class="form-group">
-        <label class="form-label">발급 유형</label>
-        <div class="input-select" onclick="document.getElementById('type-sheet').classList.add('open')">
-          <span id="ri-change-type-label">개인 - 소득공제 (휴대폰)</span>
-          <span style="font-size:18px;color:#555">⌄</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">발급정보</label>
-        <input class="input-field" type="tel" id="ri-change-input" value="01012345678" style="border-color:#111;" oninput="riCheckChangeBtn()" />
-      </div>
-      <div class="info-box">
-        <div class="info-text">
-          저장 전 취소/X 선택 시 기존 등록 정보 유지<br>
-          변경 시마다 정보수집 동의 필수
-        </div>
-      </div>
-      <div class="consent-bar">
-        <div class="consent-check checked" id="ri-change-consent">
-          <svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <span class="consent-label">현금영수증 발급을 위한 정보수집에 동의</span>
-      </div>
-      <button class="modal-primary-btn" onclick="riShowRegistered()">변경하기</button>
-    </div>
-
-    <!-- STEP: 개인정보 동의 -->
-    <div id="ri-privacy" style="display:none;">
-      <div class="modal-header" style="border-bottom:1px solid #eceef1;padding-bottom:16px;margin-bottom:20px;">
-        <div class="modal-title" style="font-size:17px;">개인정보 수집 및 이용에 대한 동의</div>
-        <button class="modal-close" onclick="riHidePrivacy()">×</button>
-      </div>
-      <div class="privacy-body">
-        <p style="margin-bottom:24px;">(주) 카카오엔터테인먼트는 현금영수증 발급을 위해 아래와 같이 개인정보를 수집합니다.</p>
-        <div class="privacy-section">
-          <div class="privacy-section-title">1. 수집목적</div>
-          <div>카카오페이지 서비스 이용에 따른 현금영수증 발급</div>
-        </div>
-        <div class="privacy-section">
-          <div class="privacy-section-title">2. 수집항목</div>
-          <div>휴대폰 번호, 현금영수증 카드번호, 사업자 번호<br>(현금영수증 발급 시 등록하신 정보만 수집됩니다.)</div>
-        </div>
-        <div class="privacy-section">
-          <div class="privacy-section-title">3. 보유기간</div>
-          <div><strong>회원 탈퇴 후 즉시 파기</strong><br>(단, 법령에 의해 별도 보존이 필요한 경우 해당 법령에서 요구하는 기간까지 보관)</div>
-        </div>
-        <div class="privacy-note">
-          ※ 회원님께서는 개인정보 수집에 거부하실 수 있습니다.<br>
-          단, 거부 시 현금영수증 발급이 불가하오니 양해 부탁드립니다.<br><br>
-          더 자세한 내용에 대해서는 개인정보처리방침을 참고하시기 바랍니다.
-        </div>
-      </div>
-      <button class="modal-primary-btn" style="margin-top:24px;" onclick="riHidePrivacy()">확인</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- 발급 유형 선택 바텀시트 -->
-<div class="type-sheet-overlay" id="type-sheet" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="type-sheet">
-    <div class="type-sheet-handle"></div>
-    <div class="type-sheet-title">발급 유형 선택</div>
-    <div class="type-opt selected" onclick="riSelectType(this,'개인 - 소득공제 (휴대폰)','휴대폰 번호 입력 (-제외)')">
-      <span>개인 - 소득공제 (휴대폰)</span>
-      <div class="type-opt-check"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
-    </div>
-    <div class="type-opt" onclick="riSelectType(this,'개인 - 소득공제 (현금영수증 카드)','카드번호 입력')">
-      <span>개인 - 소득공제 (현금영수증 카드)</span>
-      <div class="type-opt-check"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
-    </div>
-    <div class="type-opt" onclick="riSelectType(this,'지출증빙 (사업자 번호)','사업자 번호 입력')">
-      <span>지출증빙 (사업자 번호)</span>
-      <div class="type-opt-check"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
-    </div>
-    <div class="type-opt" onclick="riSelectType(this,'지출증빙 (현금영수증 카드)','카드번호 입력')">
-      <span>지출증빙 (현금영수증 카드)</span>
-      <div class="type-opt-check"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 4.5L5 8.5L12 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
-    </div>
-    <button class="btn-sheet-cancel" onclick="document.getElementById('type-sheet').classList.remove('open')">취소</button>
-  </div>
-</div>
-
-<!-- 삭제 확인 바텀시트 -->
-<div class="delete-sheet-overlay" id="delete-sheet" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="delete-sheet">
-    <div class="delete-sheet-handle"></div>
-    <div class="delete-sheet-title">발급정보를 삭제할까요?</div>
-    <div class="delete-sheet-sub">
-      현금영수증 발급정보를 삭제하여도<br>이미 발행된 현금영수증에 영향은 없습니다.
-    </div>
-    <div class="delete-sheet-btns">
-      <button class="btn-sheet-cancel" onclick="document.getElementById('delete-sheet').classList.remove('open')">취소</button>
-      <button class="btn-sheet-delete" onclick="riDeleteConfirm()">삭제</button>
-    </div>
-  </div>
-</div>
-
-<!-- 현금영수증 상세 모달 (충전내역 버튼용) -->
+<!-- 현금영수증 상세 모달 -->
 <div class="modal-overlay" id="modal-receipt-detail" onclick="closeModalOutside(event,'modal-receipt-detail')">
   <div class="modal-sheet">
-    <div class="modal-header">
-      <div class="modal-title">현금영수증 상세</div>
-      <button class="modal-close" onclick="closeModalById('modal-receipt-detail')">×</button>
-    </div>
-    <div class="receipt-summary">
-      <div class="receipt-summary-top">
-        <div class="receipt-summary-label">발급정보</div>
-        <div class="receipt-status" id="detail-status">발급완료</div>
-      </div>
-      <div class="receipt-summary-amount">1,000원</div>
-    </div>
+    <div class="modal-header"><div class="modal-title">현금영수증 상세</div><button class="modal-close" onclick="closeModalById('modal-receipt-detail')">×</button></div>
+    <div class="receipt-summary"><div class="receipt-summary-top"><div class="receipt-summary-label">발급정보</div><div class="receipt-status" id="detail-status">발급완료</div></div><div class="receipt-summary-amount">1,000원</div></div>
     <div class="receipt-detail" id="detail-rows"></div>
-    <div class="receipt-notice">
-      <div class="receipt-notice-title2">안내사항</div>
-      <div class="receipt-notice-text2">발급된 현금영수증은 국세청 홈택스에서 확인 가능</div>
-    </div>
+    <div class="receipt-notice"><div class="receipt-notice-title2">안내사항</div><div class="receipt-notice-text2">발급된 현금영수증은 국세청 홈택스에서 확인 가능합니다.</div></div>
     <button class="modal-confirm-btn" onclick="closeModalById('modal-receipt-detail')">확인</button>
   </div>
 </div>
 
 <script>
-  /* ── 뷰 전환 ── */
-  function switchView(view, el) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('view-' + view).classList.add('active');
-    if (el) el.classList.add('active');
-    else { const t = document.getElementById(view==='mobile'?'vsm':'vsp'); if(t) t.classList.add('active'); }
-  }
+let currentUserType = 'integrated';
 
-  /* ── 탭 전환 ── */
-  function switchTab(device, tab) {
-    if (device === 'mobile') {
-      document.querySelectorAll('#view-mobile .tab-item').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('#view-mobile .tab-content').forEach(t => t.classList.remove('active'));
-      document.getElementById('mobile-' + tab).classList.add('active');
-      event.target.classList.add('active');
+function syncUserTypeBtns(type) {
+  document.querySelectorAll('.ut-btn2').forEach(b => {
+    b.classList.toggle('active', b.dataset.type === type);
+  });
+}
+
+function switchUserType(type, el) {
+  currentUserType = type;
+  syncUserTypeBtns(type);
+
+  const isIntegrated = type === 'integrated';
+  const isGlobal     = type === 'global';
+
+  // 서비스 뱃지: 항상 노출 (통합=KP+KW, 미동의/글로벌=KP 단일)
+  // KW 행 자체가 숨겨지므로 KP 뱃지는 모든 케이스에서 표시
+  document.querySelectorAll('.m-badge').forEach(b => { b.style.visibility = 'visible'; });
+  document.querySelectorAll('.pc-svc-c .svc-badge-sm, .pc-svc-u .svc-badge-sm').forEach(b => { b.style.visibility = 'visible'; });
+
+  // 서비스 필터 칩/드롭다운: 통합만 노출
+  document.getElementById('m-charge-chips').style.display = isIntegrated ? 'flex' : 'none';
+  document.getElementById('m-use-chips').style.display    = isIntegrated ? 'flex' : 'none';
+  document.getElementById('pc-svc-filter-charge').style.display = isIntegrated ? 'flex' : 'none';
+  document.getElementById('pc-svc-filter-use').style.display    = isIntegrated ? 'flex' : 'none';
+
+  // KW 행: 통합만 노출
+  document.querySelectorAll('.kw-only').forEach(r => { r.style.display = isIntegrated ? '' : 'none'; });
+
+  // 현금영수증: 글로벌만 미노출
+  document.getElementById('m-receipt-link').style.display  = isGlobal ? 'none' : '';
+  document.getElementById('pc-receipt-link').style.display = isGlobal ? 'none' : '';
+  document.querySelectorAll('.m-rcpt-btns, .pc-rcpt-btns').forEach(b => { b.style.display = isGlobal ? 'none' : ''; });
+  const th = document.getElementById('pc-th-receipt');
+  if (th) th.style.opacity = isGlobal ? '0.3' : '1';
+  const fr = document.getElementById('pc-footer-receipt-notice');
+  if (fr) fr.style.display = isGlobal ? 'none' : '';
+
+  // 충전 버튼: 글로벌도 버튼 노출, 클릭 시 알럿 (global-charge 안내는 숨김)
+  document.getElementById('m-charge-btn').style.display     = '';
+  document.getElementById('m-global-charge').style.display  = 'none';
+  document.getElementById('pc-charge-btn').style.display    = '';
+  document.getElementById('pc-global-charge').style.display = 'none';
+  // 글로벌일 때만 onclick 알럿 바인딩
+  ['m-charge-btn','pc-charge-btn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (isGlobal) {
+      btn.onclick = () => alert('글로벌 회원은 웹에서 캐시 충전이 지원되지 않습니다.\n앱에서 충전해 주세요.');
     } else {
-      document.querySelectorAll('#view-pc .pc-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('#view-pc .pc-tab-content').forEach(t => t.classList.remove('active'));
-      document.getElementById('pc-' + tab).classList.add('active');
-      event.target.classList.add('active');
+      btn.onclick = null;
     }
-  }
-
-  /* ── 서비스 필터 칩 ── */
-  function filterChip(type, svc) {
-    const chips = document.querySelectorAll('#' + type + '-chips .chip');
-    chips.forEach(c => c.classList.remove('active'));
-    event.target.classList.add('active');
-    const rows = document.querySelectorAll('#' + type + '-list .card-row');
-    rows.forEach(row => {
-      const rowSvc = row.dataset.svc;
-      if (svc === 'all') row.style.display = '';
-      else row.style.display = (rowSvc === svc) ? '' : 'none';
-    });
-  }
-
-  /* ── 기간 필터 ── */
-  function updateDateRange(tab) {
-    const select = document.getElementById('period-select-' + tab);
-    const fromInput = document.getElementById('date-from-' + tab);
-    const toInput = document.getElementById('date-to-' + tab);
-    const months = parseInt(select.value);
-    if (months === 0) { fromInput.removeAttribute('disabled'); toInput.removeAttribute('disabled'); return; }
-    const today = new Date(2026, 4, 14);
-    const from = new Date(today);
-    from.setMonth(from.getMonth() - months);
-    const fmt = d => d.toISOString().split('T')[0];
-    fromInput.value = fmt(from); toInput.value = fmt(today);
-    fromInput.setAttribute('disabled', true); toInput.setAttribute('disabled', true);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    ['charge', 'use'].forEach(tab => {
-      const f = document.getElementById('date-from-' + tab);
-      const t = document.getElementById('date-to-' + tab);
-      if (f) { f.setAttribute('disabled', true); t.setAttribute('disabled', true); }
-    });
   });
 
-  /* ══════════════════════════════════
-     현금영수증 발급 정보 모달 제어
-  ══════════════════════════════════ */
-  const riSteps = ['ri-empty','ri-input','ri-registered','ri-change','ri-privacy'];
-  function riShow(id) {
-    riSteps.forEach(s => document.getElementById(s).style.display = 'none');
-    document.getElementById(id).style.display = 'block';
+  // 잔액 예시
+  const bal = isGlobal ? '2,500 캐시' : '65,000 캐시';
+  document.getElementById('m-balance-amount').textContent  = bal;
+  document.getElementById('pc-balance-amount').textContent = bal;
+
+  resetPC('charge'); resetPC('use');
+}
+
+function switchView(view, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.vt-btn2').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  if (el) el.classList.add('active');
+  // 회원유형 버튼도 현재 타입으로 싱크
+  syncUserTypeBtns(currentUserType);
+}
+
+function switchTab(device, tab) {
+  if (device === 'mobile') {
+    document.querySelectorAll('#view-mobile .tab-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#view-mobile .tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('mobile-' + tab).classList.add('active');
+    event.target.classList.add('active');
+  } else {
+    document.querySelectorAll('#view-pc .pc-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#view-pc .pc-tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('pc-' + tab).classList.add('active');
+    event.target.classList.add('active');
   }
+}
 
-  let riConsentChecked = false;
+function filterChip(type, svc) {
+  const listId = type === 'charge' ? 'charge-list' : 'use-list';
+  document.querySelectorAll('#m-' + type + '-chips .chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('#' + listId + ' .card-row').forEach(row => {
+    if (row.classList.contains('kw-only') && currentUserType !== 'integrated') { row.style.display = 'none'; return; }
+    row.style.display = (svc === 'all' || row.dataset.svc === svc) ? '' : 'none';
+  });
+}
 
-  function openReceiptInfo() {
-    riConsentChecked = false;
-    document.getElementById('ri-consent-check').classList.remove('checked');
-    const inp = document.getElementById('ri-number-input');
-    if (inp) inp.value = '';
-    riShow('ri-empty');
-    document.getElementById('modal-receipt-info').classList.add('open');
-  }
+function updateDateRange(tab) {
+  const sel = document.getElementById('period-select-' + tab);
+  const f   = document.getElementById('date-from-' + tab);
+  const t   = document.getElementById('date-to-' + tab);
+  const m   = parseInt(sel.value);
+  if (m === 0) { f.removeAttribute('disabled'); t.removeAttribute('disabled'); return; }
+  const today = new Date(2026, 4, 14);
+  const from  = new Date(today); from.setMonth(from.getMonth() - m);
+  const fmt   = d => d.toISOString().split('T')[0];
+  f.value = fmt(from); t.value = fmt(today);
+  f.setAttribute('disabled', true); t.setAttribute('disabled', true);
+}
 
-  function riShowInput(isChange) {
-    riShow('ri-input');
-  }
+function filterPC(tab) {
+  const svc  = (document.getElementById('pc-svc-' + tab)      || {value:'all'}).value;
+  const stat = (document.getElementById('pc-status-' + tab)   || {value:'all'}).value;
+  const ct   = (document.getElementById('pc-cashtype-' + tab) || {value:'all'}).value;
+  document.querySelectorAll('#tbl-' + tab + ' tbody tr').forEach(row => {
+    if (row.classList.contains('kw-only') && currentUserType !== 'integrated') { row.style.display = 'none'; return; }
+    let show = true;
+    if (svc  !== 'all' && row.dataset.svc      !== svc)  show = false;
+    if (stat !== 'all' && row.dataset.status   !== stat)  show = false;
+    if (ct   !== 'all' && row.dataset.cashtype !== ct)    show = false;
+    row.style.display = show ? '' : 'none';
+  });
+}
 
-  function riShowRegistered() {
-    const typeLabel = document.getElementById('ri-type-label').textContent;
-    const num = document.getElementById('ri-number-input').value || '010-1234-5678';
-    document.getElementById('ri-reg-type-label').textContent = typeLabel;
-    document.getElementById('ri-reg-number-display').textContent = num || '010-1234-5678';
-    document.getElementById('ri-change-type-label').textContent = typeLabel;
-    document.getElementById('ri-change-input').value = (num || '01012345678').replace(/-/g,'');
-    document.getElementById('delete-sheet').classList.remove('open');
-    riShow('ri-registered');
-  }
+function resetPC(tab) {
+  ['pc-svc-','pc-status-','pc-cashtype-'].forEach(p => { const e = document.getElementById(p + tab); if (e) e.selectedIndex = 0; });
+  const pe = document.getElementById('period-select-' + tab);
+  if (pe) { pe.selectedIndex = 0; updateDateRange(tab); }
+  document.querySelectorAll('#tbl-' + tab + ' tbody tr').forEach(r => {
+    r.style.display = (r.classList.contains('kw-only') && currentUserType !== 'integrated') ? 'none' : '';
+  });
+}
 
-  function riShowChange() {
-    riShow('ri-change');
-  }
+const detailData = {
+  income_issued:   { status: '발급완료', rows: [{key:'발급일자',val:'2026-04-02 11:05:55'},{key:'현금영수증 종류',val:'소득공제'},{key:'발급정보',val:'010-1234-5678'},{key:'승인번호',val:'730634493'},{key:'가맹점 정보',val:'카카오엔터테인먼트<br>220-88-02594'}] },
+  income_canceled: { status: '취소완료', rows: [{key:'발급일자',val:'2026-04-02 11:05:55'},{key:'현금영수증 종류',val:'소득공제'},{key:'발급정보',val:'010-1234-5678'},{key:'승인번호',val:'730634493'},{key:'취소 승인번호',val:'730648983'},{key:'가맹점 정보',val:'카카오엔터테인먼트<br>220-88-02594'}] }
+};
 
-  function riShowPrivacy() {
-    riShow('ri-privacy');
-  }
+function openReceiptDetail(type) {
+  const d = detailData[type];
+  document.getElementById('detail-status').textContent = d.status;
+  document.getElementById('detail-rows').innerHTML = d.rows.map(r => `<div class="receipt-detail-row"><div class="receipt-detail-key">${r.key}</div><div class="receipt-detail-val">${r.val}</div></div>`).join('');
+  document.getElementById('modal-receipt-detail').classList.add('open');
+}
+function closeModalById(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalOutside(e, id) { if (e.target === document.getElementById(id)) closeModalById(id); }
 
-  function riHidePrivacy() {
-    riShow('ri-input');
-  }
-
-  function riToggleConsent() {
-    riConsentChecked = !riConsentChecked;
-    document.getElementById('ri-consent-check').classList.toggle('checked', riConsentChecked);
-    riCheckBtn();
-  }
-
-  function riCheckBtn() {
-    const inp = document.getElementById('ri-number-input');
-    const btn = document.getElementById('ri-confirm-btn');
-    const valid = inp && inp.value.trim().length >= 9 && riConsentChecked;
-    btn.disabled = !valid;
-    btn.style.opacity = valid ? '1' : '0.4';
-    btn.style.cursor = valid ? 'pointer' : 'not-allowed';
-  }
-
-  function riCheckChangeBtn() { /* 변경 입력은 기본 활성 */ }
-
-  function riSelectType(el, typeName, placeholder) {
-    document.querySelectorAll('#type-sheet .type-opt').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    document.getElementById('ri-type-label').textContent = typeName;
-    const inp = document.getElementById('ri-number-input');
-    if (inp) { inp.placeholder = placeholder; inp.value = ''; }
-    setTimeout(() => document.getElementById('type-sheet').classList.remove('open'), 150);
-  }
-
-  function riDeleteConfirm() {
-    document.getElementById('delete-sheet').classList.remove('open');
-    riConsentChecked = false;
-    document.getElementById('ri-consent-check').classList.remove('checked');
-    const inp = document.getElementById('ri-number-input');
-    if (inp) inp.value = '';
-    riShow('ri-empty');
-  }
-
-  /* ── 현금영수증 상세 모달 ── */
-  const detailData = {
-    income_issued: {
-      status: '발급완료',
-      rows: [
-        { key: '발급일자', val: '2026-04-02 11:05:55' },
-        { key: '현금영수증 종류', val: '소득공제' },
-        { key: '발급정보', val: '010-1234-5678' },
-        { key: '승인번호', val: '730634493' },
-        { key: '가맹점 정보', val: '카카오엔터테인먼트<br>220-88-02594' },
-      ]
-    },
-    income_canceled: {
-      status: '취소완료',
-      rows: [
-        { key: '발급일자', val: '2026-04-02 11:05:55' },
-        { key: '현금영수증 종류', val: '소득공제' },
-        { key: '발급정보', val: '010-1234-5678' },
-        { key: '승인번호', val: '730634493' },
-        { key: '취소 승인번호', val: '730648983' },
-        { key: '가맹점 정보', val: '카카오엔터테인먼트<br>220-88-02594' },
-      ]
-    }
-  };
-
-  function openReceiptDetail(type) {
-    const data = detailData[type];
-    document.getElementById('detail-status').textContent = data.status;
-    document.getElementById('detail-rows').innerHTML = data.rows.map(r => `
-      <div class="receipt-detail-row">
-        <div class="receipt-detail-key">${r.key}</div>
-        <div class="receipt-detail-val">${r.val}</div>
-      </div>`).join('');
-    document.getElementById('modal-receipt-detail').classList.add('open');
-  }
-
-  /* ── PC 테이블 필터 ── */
-  function filterPC(tab) {
-    const svcEl = document.getElementById('pc-svc-' + tab);
-    const statusEl = document.getElementById('pc-status-' + tab);
-    const cashtypeEl = document.getElementById('pc-cashtype-' + tab);
-    const svc = svcEl ? svcEl.value : 'all';
-    const status = statusEl ? statusEl.value : 'all';
-    const cashtype = cashtypeEl ? cashtypeEl.value : 'all';
-
-    document.querySelectorAll('#tbl-' + tab + ' tbody tr').forEach(row => {
-      const rs = row.dataset.svc || '';
-      const rstat = row.dataset.status || '';
-      const rct = row.dataset.cashtype || '';
-      let show = true;
-      if (svc !== 'all' && rs !== svc) show = false;
-      if (status !== 'all' && rstat !== status) show = false;
-      if (cashtype !== 'all' && rct !== cashtype) show = false;
-      row.style.display = show ? '' : 'none';
-    });
-  }
-
-  function resetPC(tab) {
-    const svcEl = document.getElementById('pc-svc-' + tab);
-    const statusEl = document.getElementById('pc-status-' + tab);
-    const cashtypeEl = document.getElementById('pc-cashtype-' + tab);
-    const periodEl = document.getElementById('period-select-' + tab);
-    if (svcEl) svcEl.selectedIndex = 0;
-    if (statusEl) statusEl.selectedIndex = 0;
-    if (cashtypeEl) cashtypeEl.selectedIndex = 0;
-    if (periodEl) { periodEl.selectedIndex = 0; updateDateRange(tab); }
-    document.querySelectorAll('#tbl-' + tab + ' tbody tr').forEach(r => r.style.display = '');
-  }
-
-  /* ── 공통 모달 닫기 ── */
-  function closeModalById(id) {
-    document.getElementById(id).classList.remove('open');
-  }
-  function closeModalOutside(e, id) {
-    if (e.target === document.getElementById(id)) closeModalById(id);
-  }
+document.addEventListener('DOMContentLoaded', () => {
+  ['charge','use'].forEach(tab => {
+    updateDateRange(tab);
+    const f = document.getElementById('date-from-' + tab);
+    const t = document.getElementById('date-to-' + tab);
+    if (f) { f.setAttribute('disabled', true); t.setAttribute('disabled', true); }
+  });
+});
 </script>
 </body>
 </html>

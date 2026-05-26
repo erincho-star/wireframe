@@ -66,13 +66,12 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 .frame{border:1px solid #ccc;border-radius:12px;overflow:hidden;background:#fff;position:relative;box-shadow:0 4px 20px rgba(0,0,0,.12);width:360px}
 
 /* header */
-.hd{background:#1a1a1a;padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
-.auto-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;cursor:pointer;text-decoration:none;transition:opacity .2s}
+.hd{background:#1a1a1a;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:relative}
+.auto-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;cursor:pointer;text-decoration:none;transition:opacity .2s;position:relative;z-index:1}
 .auto-pill span{font-size:11px;color:#fff;font-weight:500}
 .auto-pill .icon{font-size:12px;color:#FFD700}
-.hd-spacer{width:62px} /* placeholder width when auto-pill hidden */
-.hd-title{font-size:16px;font-weight:500;color:#fff}
-.hd-close{color:rgba(255,255,255,.65);cursor:pointer;font-size:18px;line-height:1}
+.hd-title{font-size:16px;font-weight:500;color:#fff;position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap}
+.hd-close{color:rgba(255,255,255,.65);cursor:pointer;font-size:18px;line-height:1;position:relative;z-index:1}
 
 /* cash row */
 .cash-row{padding:11px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f0f0}
@@ -94,10 +93,10 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 
 /* ── 부족분 컨텍스트 strip ── */
 .shortage-ctx{padding:10px 16px 4px}
-.shortage-ctx-box{background:#fff8e8;border:1px solid #fde68a;border-radius:8px;padding:10px 13px}
-.shortage-ctx-name{font-size:11px;color:#92400e;font-weight:600;margin-bottom:3px}
-.shortage-ctx-amount{font-size:13px;font-weight:700;color:var(--orange)}
-.shortage-ctx-hint{font-size:11px;color:var(--orange);margin-top:2px}
+.shortage-ctx-box{background:#f7f7f7;border:1px solid #e8e8e8;border-left:3px solid #FFD700;border-radius:8px;padding:10px 13px}
+.shortage-ctx-name{font-size:11px;color:#888;margin-bottom:3px}
+.shortage-ctx-amount{font-size:13px;font-weight:700;color:#1a1a1a}
+.shortage-ctx-hint{font-size:11px;color:#999;margin-top:2px}
 
 /* section label */
 .sec-lb{padding:10px 16px 4px;font-size:11px;font-weight:600;color:#888;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center}
@@ -140,11 +139,14 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 .notice-area{padding:10px 16px 6px}
 .notice-req{font-size:11px;color:var(--red);line-height:1.6;margin-bottom:8px}
 .agree-row{display:flex;align-items:flex-start;gap:8px}
-.chk{width:17px;height:17px;border-radius:4px;border:1.5px solid #ccc;flex-shrink:0;margin-top:1px;cursor:pointer}
+.chk{width:17px;height:17px;border-radius:4px;border:1.5px solid #ccc;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.chk.on{background:#1a1a1a;border-color:#1a1a1a}
+.chk.on::after{content:'✓';font-size:11px;color:#FFD700;font-weight:700;line-height:1}
 .agree-txt{font-size:12px;color:#666;line-height:1.5}
 .agree-link{color:#4a7cdc;text-decoration:underline;cursor:pointer}
-.next-btn{margin:8px 16px 12px;background:#FFD700;border:none;border-radius:8px;width:calc(100% - 32px);padding:14px;font-size:15px;font-weight:600;color:#1a1a1a;cursor:pointer;transition:opacity .15s;font-family:var(--font)}
+.next-btn{margin:8px 16px 12px;background:#FFD700;border:none;border-radius:8px;width:calc(100% - 32px);padding:14px;font-size:15px;font-weight:600;color:#1a1a1a;cursor:pointer;transition:all .15s;font-family:var(--font)}
 .next-btn:hover{opacity:.9}
+.next-btn.disabled{background:#e5e5e5;color:#bbb;cursor:not-allowed;opacity:1}
 .company-info{padding:8px 16px 14px;font-size:10px;color:#aaa;line-height:1.6;border-top:1px solid #f0f0f0}
 
 /* ── 이용안내 팝업 overlay ── */
@@ -179,9 +181,6 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 </style>
 </head>
 <body>
-
-<div class="page-title">캐시통합_충전창 와이어프레임_2차</div>
-<div class="page-subtitle">일반 충전 · 부족분 충전 케이스 통합 (우측 패널에서 케이스 전환)</div>
 
 <div class="page-wrap">
 
@@ -250,14 +249,14 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
       <div class="notice-area">
         <div class="notice-req">· 캐시 충전 시 카카오 본인인증이 1회 실행될 수 있으며, 14세 미만인 경우 보호자 동의가 진행됩니다.</div>
         <div class="agree-row">
-          <div class="chk"></div>
+          <div class="chk" id="agreeChk" onclick="toggleAgree()"></div>
           <span class="agree-txt">
             <span class="agree-link" onclick="openPopup('overlayTerms')">이용안내 및 결제</span>에 동의합니다.
           </span>
         </div>
       </div>
 
-      <button class="next-btn">다음</button>
+      <button class="next-btn disabled" id="nextBtn">다음</button>
 
       <div class="company-info">
         공동대표이사 고정희, 장윤중 &nbsp;|&nbsp; 사업자등록번호 220-88-02594 &nbsp;|&nbsp; 통신판매업 2018-성남분당B-0004<br>
@@ -312,7 +311,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           <div class="p01-body">
             <div class="p01-icon">⚠️</div>
             <div class="p01-title">부족분이 100,000원을 초과해요.</div>
-            <div class="p01-sub">부족분 충전은 최대 100,000원까지 지원합니다.<br>일반 충전 후 이용권을 구매해 주세요.</div>
+            <div class="p01-sub">부족분 충전은 최대 10만원까지 가능합니다.<br>10만원 초과 충전 시 일반충전을 이용해주세요.</div>
           </div>
           <button class="p01-btn" onclick="closePopup('overlayP01')">확인</button>
         </div>
@@ -408,29 +407,6 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
       </div>
     </div>
 
-    <!-- 화면 구성 메모 -->
-    <div class="side-card">
-      <div class="sc-title">화면 구성</div>
-
-      <!-- 일반충전 메모 -->
-      <div id="memoGeneral">
-        <div class="ann-item">좌상단 <strong>자동충전 바로가기</strong> 버튼 상시 노출</div>
-        <div class="ann-item">충전 / 지정금액 / 지정일 탭 구조 제거 — 단일 화면</div>
-        <div class="ann-item">보너스 캐시 컬럼 미노출 (PASS VIP 배너로만 유도)</div>
-        <div class="ann-item">\"이용안내 및 결제\" 링크 → 바텀시트 팝업</div>
-        <div class="ann-item">팝업 내 사업자 정보 접기/펼치기</div>
-      </div>
-
-      <!-- 부족분 메모 -->
-      <div id="memoShortage" style="display:none">
-        <div class="ann-item">이용권 구매 중 보유 캐시 부족 시에만 진입</div>
-        <div class="ann-item">좌상단 <strong>자동충전 바로가기</strong> 버튼 일반충전창과 동일하게 노출</div>
-        <div class="ann-item">부족분 = 상품금액 − 보유캐시 자동 산출, 선택 불가</div>
-        <div class="ann-item">컨텍스트 strip: <strong>이용권명 + 부족 캐시량</strong> 표시</div>
-        <div class="ann-item">부족분 &gt; 100,000원 → <strong>P01</strong> 안내 후 일반충전 유도</div>
-        <div class="ann-item">충전 완료 후 자동으로 이용권 구매 플로우 연결</div>
-      </div>
-    </div>
 
   </div>
 </div>
@@ -460,11 +436,27 @@ let selIdx     = 3; // 선택된 상품 인덱스
 /* ─── 유틸 ─── */
 function fmt(n){ return n.toLocaleString('ko-KR'); }
 
+/* ─── 동의 체크박스 ─── */
+let agreed = false;
+function toggleAgree() {
+  agreed = !agreed;
+  document.getElementById('agreeChk').classList.toggle('on', agreed);
+  document.getElementById('nextBtn').classList.toggle('disabled', !agreed);
+}
+
+function resetAgree() {
+  agreed = false;
+  document.getElementById('agreeChk').classList.remove('on');
+  document.getElementById('nextBtn').classList.add('disabled');
+}
+
 /* ─── 모드 전환 ─── */
 function setMode(m) {
   mode = m;
   document.getElementById('btnGeneral').className  = 'mode-btn' + (m === 'general' ? ' on' : '');
   document.getElementById('btnShortage').className = 'mode-btn' + (m === 'shortage' ? ' on' : '');
+
+  resetAgree();
 
   const isShortage = (m === 'shortage');
 
@@ -473,10 +465,6 @@ function setMode(m) {
   document.getElementById('cardRec').style.display      = isShortage ? 'none' : '';
   document.getElementById('cardShortage').style.display = isShortage ? '' : 'none';
   document.getElementById('cardPopups').style.display   = isShortage ? '' : 'none';
-
-  // 메모
-  document.getElementById('memoGeneral').style.display  = isShortage ? 'none' : '';
-  document.getElementById('memoShortage').style.display = isShortage ? '' : 'none';
 
   // 헤더: 자동충전 버튼 — 부족분에서도 동일하게 노출
 

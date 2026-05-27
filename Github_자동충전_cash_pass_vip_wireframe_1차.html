@@ -30,7 +30,13 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 .flow-info strong{color:var(--text);display:block;font-size:11.5px;margin-bottom:1px}
 .flow-info span{color:#999;font-size:10px}
 .flow-arr{font-size:11px;color:#ccc;align-self:center;margin-left:auto}
-.pf-item{display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid var(--border-lt)}
+.sc-group-lb{font-size:10px;font-weight:700;color:#bbb;letter-spacing:.06em;text-transform:uppercase;margin:10px 0 5px;padding-left:2px}
+.sc-group-lb:first-child{margin-top:0}
+.sc-btns{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:2px}
+.sc-btn{font-size:11px;font-weight:500;padding:6px 10px;border:1.5px solid #e0e0e0;border-radius:7px;background:#f7f7f7;color:#888;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.sc-btn:hover{background:#f0f0f0;color:#555}
+.sc-btn.on{border-color:#1a1a1a;background:#1a1a1a;color:#FFD700}
+.sc-divider{height:1px;background:#f0f0f0;margin:8px 0}
 .pf-item:last-child{border-bottom:none;padding-bottom:0}
 .pf-badge{font-size:9.5px;font-weight:700;background:#ebebeb;color:#666;border-radius:4px;padding:1px 5px;white-space:nowrap;flex-shrink:0}
 .pf-name{font-size:11px;color:#444;flex:1;line-height:1.4}
@@ -119,7 +125,8 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 .info-lb{font-size:12px;color:#888;min-width:88px;flex-shrink:0}
 .info-val{font-size:12px;color:#1a1a1a;font-weight:500;flex:1}
 .complete-area{padding:24px 16px 16px;text-align:center}
-.complete-icon{width:52px;height:52px;border-radius:50%;background:#FFD700;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px}
+.complete-icon{width:52px;height:52px;border-radius:50%;background:#FFD700;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.complete-icon svg{width:26px;height:26px}
 .complete-title{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:5px}
 .complete-sub{font-size:12px;color:#888;line-height:1.5}
 .termination-area{padding:20px 16px 12px}
@@ -154,8 +161,6 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 </head>
 <body>
 
-<div class="page-title">캐시 PASS VIP — 자동충전창 와이어프레임_1차</div>
-
 <div class="page-wrap">
 
   <!-- ── 폰 프레임 ── -->
@@ -180,7 +185,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         </div>
         <div class="tabs">
           <div class="tab on">지정금액 충전</div>
-          <div class="tab" onclick="showScreen('s02',null)">지정일 충전</div>
+          <div class="tab" onclick="showScreen('s02')">지정일 충전</div>
         </div>
         <div class="cash-row"><span class="cash-lb">보유 캐시</span><span class="cash-val">4,000 캐시</span></div>
         <div class="unit-wrap">
@@ -209,7 +214,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           <input type="checkbox" class="agree-chk" id="chk01">
           <label class="agree-chk-txt" for="chk01"><span class="agree-link" onclick="openPopup('p05')">이용안내</span> 및 자동충전에 동의합니다.</label>
         </div>
-        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s03',null)">다음</button></div>
+        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s03')">다음</button></div>
         <div class="info-footer">공동대표이사 고정희, 장윤중 | 사업자등록번호 220-88-02594 | 통신판매업 2018-성남분당B-0004 | © Kakao Entertainment Corp.</div>
       </div>
 
@@ -225,7 +230,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           <div class="db-coin">🪙</div>
         </div>
         <div class="tabs">
-          <div class="tab" onclick="showScreen('s01',null)">지정금액 충전</div>
+          <div class="tab" onclick="showScreen('s01')">지정금액 충전</div>
           <div class="tab on">지정일 충전</div>
         </div>
         <div class="cash-row"><span class="cash-lb">보유 캐시</span><span class="cash-val">4,000 캐시</span></div>
@@ -256,7 +261,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           <input type="checkbox" class="agree-chk" id="chk02">
           <label class="agree-chk-txt" for="chk02"><span class="agree-link" onclick="openPopup('p05')">이용안내</span> 및 자동충전에 동의합니다.</label>
         </div>
-        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s03',null)">다음</button></div>
+        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s03')">다음</button></div>
         <div class="info-footer">공동대표이사 고정희, 장윤중 | 사업자등록번호 220-88-02594 | 통신판매업 2018-성남분당B-0004 | © Kakao Entertainment Corp.</div>
       </div>
 
@@ -264,7 +269,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
       <div class="screen" id="s03">
         <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
         <div class="complete-area">
-          <div class="complete-icon">✓</div>
+          <div class="complete-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><polyline points="4,12 9,18 20,6"/></svg></div>
           <div class="complete-title">자동충전 가입이 완료되었습니다</div>
           <div class="complete-sub">아래 조건으로 자동 충전이 시작됩니다.</div>
         </div>
@@ -277,7 +282,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           <div class="info-row"><span class="info-lb">결제 일시</span><span class="info-val">2026.05.13 14:32</span></div>
           <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
         </div>
-        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s04',null)">확인</button></div>
+        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s04')">확인</button></div>
       </div>
 
       <!-- S04: 이용중 — 동일 서비스 -->
@@ -300,7 +305,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         </div>
         <div class="btn-wrap">
           <button class="btn primary" onclick="openPopup('p02')">조건 변경하기</button>
-          <button class="btn secondary" onclick="showScreen('s07',null)">해지하기</button>
+          <button class="btn secondary" onclick="showScreen('s07')">해지하기</button>
         </div>
       </div>
 
@@ -315,9 +320,9 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
             <div class="ub-sub">카카오페이지에서 가입된 자동 충전입니다</div>
           </div>
         </div>
-        <div class="notice-box">
-          <div class="nb-title">카카오페이지 캐시 PASS VIP 가입 중인 자동충전이에요</div>
-          <div class="nb-sub">조건 변경 시 현재 서비스(카카오웹툰) 기준으로 재가입됩니다.</div>
+        <div class="notice-box" style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:14px;flex-shrink:0">⚠️</span>
+          <div class="nb-sub" style="color:#3b82f6">조건 변경 시 현재 서비스 기준으로 재가입됩니다.</div>
         </div>
         <div class="info-tbl">
           <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액</span></div>
@@ -329,7 +334,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         </div>
         <div class="btn-wrap">
           <button class="btn primary" onclick="openPopup('p02')">조건 변경하기</button>
-          <button class="btn secondary" onclick="showScreen('s07',null)">해지하기</button>
+          <button class="btn secondary" onclick="showScreen('s07')">해지하기</button>
         </div>
       </div>
 
@@ -356,8 +361,8 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
         </div>
         <div class="btn-wrap row">
-          <button class="btn danger half" onclick="showScreen('s08',null)">해지하기</button>
-          <button class="btn primary half" onclick="showScreen('s04',null)">유지하기</button>
+          <button class="btn danger half" onclick="showScreen('s08')">해지하기</button>
+          <button class="btn primary half" onclick="showScreen('s04')">유지하기</button>
         </div>
       </div>
 
@@ -375,7 +380,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
         </div>
         <div class="btn-wrap row">
-          <button class="btn secondary half" onclick="showScreen('s04',null)">취소</button>
+          <button class="btn secondary half" onclick="showScreen('s04')">취소</button>
           <button class="btn primary half" onclick="openPopup('p03')">해지하기</button>
         </div>
       </div>
@@ -384,12 +389,12 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
       <div class="screen" id="s08">
         <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
         <div class="complete-area" style="padding-top:40px">
-          <div class="complete-icon" style="background:#f0f0f0;color:#888;font-size:22px">✓</div>
+          <div class="complete-icon" style="background:#f0f0f0"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><polyline points="4,12 9,18 20,6"/></svg></div>
           <div class="complete-title">자동충전 해지가 완료되었습니다</div>
           <div class="complete-sub">언제든지 다시 가입할 수 있어요</div>
         </div>
         <div style="height:60px"></div>
-        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s01',null)">확인</button></div>
+        <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s01')">확인</button></div>
       </div>
 
       <!-- P01: 중복 가입 불가 -->
@@ -401,7 +406,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           </div>
           <div class="popup-btns">
             <button class="popup-btn cancel" onclick="closePopup('p01')">취소</button>
-            <button class="popup-btn black" onclick="closePopup('p01');showScreen('s07',null)">해지하러 가기</button>
+            <button class="popup-btn black" onclick="closePopup('p01');showScreen('s07')">해지하러 가기</button>
           </div>
         </div>
       </div>
@@ -421,7 +426,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           </div>
           <div class="popup-btns">
             <button class="popup-btn cancel" onclick="closePopup('p02')">취소</button>
-            <button class="popup-btn confirm" onclick="closePopup('p02');showScreen('s01',null)">확인</button>
+            <button class="popup-btn confirm" onclick="closePopup('p02');showScreen('s01')">확인</button>
           </div>
         </div>
       </div>
@@ -435,7 +440,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           </div>
           <div class="popup-btns">
             <button class="popup-btn cancel" onclick="closePopup('p03')">취소</button>
-            <button class="popup-btn danger" onclick="closePopup('p03');showScreen('s08',null)">해지할게요</button>
+            <button class="popup-btn danger" onclick="closePopup('p03');showScreen('s08')">해지할게요</button>
           </div>
         </div>
       </div>
@@ -497,14 +502,30 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
     <!-- 화면 구성 -->
     <div class="side-card">
       <div class="sc-title">화면 구성</div>
-      <div class="flow-item" onclick="showScreen('s01',null)"><div class="flow-num on" id="fn-s01">1</div><div class="flow-info"><strong>미가입</strong> — 지정금액 충전<span>보유 캐시 N 미만 시 자동충전 설정</span></div><span class="flow-arr">›</span></div>
-      <div class="flow-item" onclick="showScreen('s02',null)"><div class="flow-num" id="fn-s02">2</div><div class="flow-info"><strong>미가입</strong> — 지정일 충전<span>매월 N일 자동충전 설정</span></div><span class="flow-arr">›</span></div>
-      <div class="flow-item" onclick="showScreen('s03',null)"><div class="flow-num" id="fn-s03">3</div><div class="flow-info"><strong>가입 완료</strong><span>결제 성공 시 노출</span></div><span class="flow-arr">›</span></div>
-      <div class="flow-item" onclick="showScreen('s04',null)"><div class="flow-num" id="fn-s04">4</div><div class="flow-info"><strong>이용중</strong> — 동일 서비스<span>조건 변경 / 해지 가능</span></div><span class="flow-arr">›</span></div>
-      <div class="flow-item" onclick="showScreen('s05',null)"><div class="flow-num" id="fn-s05">5</div><div class="flow-info"><strong>이용중</strong> — 타 서비스 (통합회원)<span>타 서비스 가입 캐시 PASS VIP 이용 중</span></div><span class="flow-arr">›</span></div>
-      <div class="flow-item" onclick="showScreen('s06',null)"><div class="flow-num" id="fn-s06">6</div><div class="flow-info"><strong>이용중</strong> — 비활성화<span>결제 최종 실패로 자동충전 중단</span></div><span class="flow-arr">›</span></div>
-      <div class="flow-item" onclick="showScreen('s07',null)"><div class="flow-num" id="fn-s07">7</div><div class="flow-info"><strong>해지 확인</strong><span>해지 대상 정보 요약 후 최종 확인</span></div><span class="flow-arr">›</span></div>
-      <div class="flow-item" onclick="showScreen('s08',null)"><div class="flow-num" id="fn-s08">8</div><div class="flow-info"><strong>해지 완료</strong><span>해지 완료 안내 및 재가입 유도</span></div><span class="flow-arr">›</span></div>
+
+      <div class="sc-group-lb">미가입</div>
+      <div class="sc-btns">
+        <button class="sc-btn on" id="sb-s01" onclick="showScreen('s01')">지정금액 충전</button>
+        <button class="sc-btn" id="sb-s02" onclick="showScreen('s02')">지정일 충전</button>
+      </div>
+
+      <div class="sc-divider"></div>
+
+      <div class="sc-group-lb">이용중</div>
+      <div class="sc-btns">
+        <button class="sc-btn" id="sb-s04" onclick="showScreen('s04')">동일 서비스</button>
+        <button class="sc-btn" id="sb-s05" onclick="showScreen('s05')">타 서비스</button>
+        <button class="sc-btn" id="sb-s06" onclick="showScreen('s06')">비활성화</button>
+      </div>
+
+      <div class="sc-divider"></div>
+
+      <div class="sc-group-lb">완료 / 해지</div>
+      <div class="sc-btns">
+        <button class="sc-btn" id="sb-s03" onclick="showScreen('s03')">가입 완료</button>
+        <button class="sc-btn" id="sb-s07" onclick="showScreen('s07')">해지 확인</button>
+        <button class="sc-btn" id="sb-s08" onclick="showScreen('s08')">해지 완료</button>
+      </div>
     </div>
 
     <!-- 팝업 구성 -->
@@ -547,17 +568,18 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 
 <script>
 const screens = ['s01','s02','s03','s04','s05','s06','s07','s08'];
+const sbMap = {'s01':'sb-s01','s02':'sb-s02','s03':'sb-s03','s04':'sb-s04','s05':'sb-s05','s06':'sb-s06','s07':'sb-s07','s08':'sb-s08'};
 let currentScreen = 's01';
 
-function showScreen(id, btn) {
+function showScreen(id) {
   screens.forEach(s => {
     document.getElementById(s).classList.remove('on');
-    const fn = document.getElementById('fn-'+s);
-    if (fn) fn.classList.remove('on');
+    const sb = document.getElementById('sb-' + s);
+    if (sb) sb.classList.remove('on');
   });
   document.getElementById(id).classList.add('on');
-  const fn = document.getElementById('fn-'+id);
-  if (fn) fn.classList.add('on');
+  const sb = document.getElementById('sb-' + id);
+  if (sb) sb.classList.add('on');
   currentScreen = id;
 }
 

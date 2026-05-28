@@ -296,8 +296,6 @@
 </head>
 <body>
 
-<div class="page-title">현금영수증 발급 정보 Flow</div>
-
 <div class="page-wrap">
 
   <div class="phone-col">
@@ -831,7 +829,7 @@
   <!-- ── 우측 패널 ── -->
   <div class="side-col">
     <div class="side-card">
-      <div class="sc-title">화면 구성</div>
+      <div class="sc-title">발급정보 등록 Flow</div>
   <button class="flow-btn active" onclick="goTo('s1')">
     <span class="fb-num">1</span><span class="fb-label">미등록</span><span class="fb-arr">›</span>
   </button>
@@ -853,6 +851,9 @@
   <button class="flow-btn" onclick="goTo('s7')">
     <span class="fb-num">7</span><span class="fb-label">개인정보 동의</span><span class="fb-arr">›</span>
   </button>
+    </div>
+    <div class="side-card">
+      <div class="sc-title">상세 화면</div>
   <button class="flow-btn" onclick="goTo('s8')">
     <span class="fb-num">8</span><span class="fb-label">상세 - 소득공제 발급</span><span class="fb-arr">›</span>
   </button>
@@ -886,10 +887,11 @@
     document.getElementById(id).classList.add('active');
 
     // 사이드 패널 버튼 active 업데이트
-    const btns = document.querySelectorAll('.flow-btn');
-    const idx = screenIds.indexOf(id);
-    btns.forEach((btn, i) => {
-      btn.classList.toggle('active', i === idx);
+    document.querySelectorAll('.flow-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('onclick') === `goTo('${id}')`) {
+        btn.classList.add('active');
+      }
     });
 
     // 화면 맨 위로 스크롤

@@ -107,9 +107,9 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 .bs-row.main .bs-val{font-size:16px;font-weight:700;color:#1a1a1a}
 .bs-div{height:1px;background:#e5e5e5;margin:5px 0}
 .agree-wrap{padding:8px 20px 4px;font-size:11px;color:#aaa;line-height:1.5}
-.agree-row-chk{display:flex;align-items:flex-start;gap:8px;padding:8px 20px 4px}
+.agree-row-chk{display:flex;align-items:center;gap:8px;padding:8px 20px 4px}
 .agree-chk{width:17px;height:17px;border-radius:4px;border:1.5px solid #ccc;flex-shrink:0;margin-top:1px;cursor:pointer;accent-color:#FFD700}
-.agree-chk-txt{font-size:12px;color:#555;line-height:1.5}
+.agree-chk-txt{font-size:12px;color:#555;line-height:1.5;flex:1}
 .agree-link{color:#4a7cdc;text-decoration:underline;cursor:pointer}
 .btn-wrap{padding:8px 20px 14px;display:flex;flex-direction:column;gap:8px}
 .btn-wrap.row{flex-direction:row}
@@ -158,6 +158,9 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 .popup-notice-list li{font-size:11px;color:#555;line-height:1.7;padding:5px 0 5px 14px;border-bottom:1px solid #f5f5f5;position:relative}
 .popup-notice-list li:last-child{border-bottom:none}
 .popup-notice-list li::before{content:'·';position:absolute;left:0;color:#aaa}
+
+  .agree-arrow { font-size:16px; color:#999; cursor:pointer; padding-left:6px; flex-shrink:0; }
+  .agree-arrow:hover { color:#555; }
 </style>
 </head>
 <body>
@@ -220,7 +223,8 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         <div class="agree-wrap">· 캐시 PASS VIP 가입 완료 즉시 첫 번째 결제가 발생합니다.</div>
         <div class="agree-row-chk">
           <input type="checkbox" class="agree-chk" id="chk01">
-          <label class="agree-chk-txt" for="chk01"><span class="agree-link" onclick="openPopup('p05')">이용안내</span> 및 자동충전에 동의합니다.</label>
+          <label class="agree-chk-txt" for="chk01">이용안내 및 자동충전에 동의합니다.</label>
+          <span class="agree-arrow" onclick="openPopup('p05')">›</span>
         </div>
         <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s03')">다음</button></div>
         <div class="info-footer">공동대표이사 고정희, 장윤중 | 사업자등록번호 220-88-02594 | 통신판매업 2018-성남분당B-0004 | © Kakao Entertainment Corp.</div>
@@ -267,7 +271,8 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         <div class="agree-wrap">· 캐시 PASS VIP 가입 완료 즉시 첫 번째 결제가 발생합니다.</div>
         <div class="agree-row-chk">
           <input type="checkbox" class="agree-chk" id="chk02">
-          <label class="agree-chk-txt" for="chk02"><span class="agree-link" onclick="openPopup('p05')">이용안내</span> 및 자동충전에 동의합니다.</label>
+          <label class="agree-chk-txt" for="chk02">이용안내 및 자동충전에 동의합니다.</label>
+          <span class="agree-arrow" onclick="openPopup('p05')">›</span>
         </div>
         <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s03')">다음</button></div>
         <div class="info-footer">공동대표이사 고정희, 장윤중 | 사업자등록번호 220-88-02594 | 통신판매업 2018-성남분당B-0004 | © Kakao Entertainment Corp.</div>

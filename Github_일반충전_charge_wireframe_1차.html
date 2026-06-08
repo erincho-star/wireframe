@@ -171,13 +171,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
 .company-detail.open{display:block}
 .copyright{font-size:10px;color:#bbb;padding-top:8px}
 
-/* ── P01: 10만원 초과 팝업 ── */
-.p01-sheet{background:#fff;border-radius:14px 14px 0 0;width:100%}
-.p01-body{padding:22px 20px 6px;text-align:center}
-.p01-icon{font-size:26px;margin-bottom:10px}
-.p01-title{font-size:14px;font-weight:700;color:#1a1a1a;line-height:1.6;margin-bottom:6px}
-.p01-sub{font-size:12px;color:#888;line-height:1.6}
-.p01-btn{margin:14px 18px 18px;background:#FFD700;border:none;border-radius:8px;width:calc(100% - 36px);padding:13px;font-size:14px;font-weight:700;color:#1a1a1a;cursor:pointer;font-family:var(--font)}
+
 </style>
 </head>
 <body>
@@ -222,25 +216,15 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         <span class="shortage-badge" id="shortageBadge" style="display:none"><span>부족분 충전</span></span>
       </div>
 
-      <!-- ② 부족분: 컬럼 헤더 -->
-      <div class="unit-col-hd" id="unitColHd" style="display:none">
-        <span class="unit-col-lb">충전 캐시</span>
-        <span class="unit-col-lb">추가 캐시 지급</span>
-      </div>
-
       <!-- ① 일반충전: 상품 목록 -->
       <div class="prod-list" id="prodList"></div>
 
-      <!-- ② 부족분: 단일 상품 -->
-      <div class="shortage-item" id="shortageItem" style="display:none">
-        <div class="shortage-coin">C</div>
-        <div class="shortage-item-name" id="shortageItemName">131,900 캐시</div>
-        <div class="shortage-item-right">—</div>
-      </div>
+      <!-- ② 부족분: 상품 목록 (부족금액 + 그보다 큰 상품군) -->
+      <div class="prod-list" id="shortageList" style="display:none"></div>
 
       <!-- 요약 -->
       <div class="summ">
-        <div class="sr main"><span class="sl">결제 금액</span><span class="sv" id="summMain">10,000 원</span></div>
+        <div class="sr main"><span class="sl">결제 금액</span><span class="sv" id="summMain">₩ 10,000</span></div>
         <div class="sdiv"></div>
         <div class="sr"><span class="sl">충전 후 보유 캐시</span><span class="sv" id="summAfter">14,000 캐시</span></div>
       </div>
@@ -305,15 +289,15 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         </div>
       </div>
 
-      <!-- ── P01: 부족분 10만원 초과 안내 팝업 ── -->
-      <div class="overlay" id="overlayP01">
-        <div class="p01-sheet">
-          <div class="p01-body">
-            <div class="p01-icon">⚠️</div>
-            <div class="p01-title">부족분이 100,000원을 초과해요.</div>
-            <div class="p01-sub">부족분 충전은 최대 10만원까지 가능합니다.<br>10만원 초과 충전 시 일반충전을 이용해주세요.</div>
+      <!-- ── 한도 초과 팝업 ── -->
+      <div class="overlay" id="overlayLimit">
+        <div class="popup">
+          <div class="popup-body" style="padding:28px 20px 8px;text-align:center">
+            <div style="font-size:15px;font-weight:700;color:#1a1a1a;line-height:1.6;margin-bottom:6px">한도가 초과되었습니다.<br>자세한 사항은 고객센터로 문의하시기 바랍니다.</div>
           </div>
-          <button class="p01-btn" onclick="closePopup('overlayP01')">확인</button>
+          <div style="padding:8px 16px 18px">
+            <button class="next-btn" style="margin:0;width:100%" onclick="closePopup('overlayLimit')">확인</button>
+          </div>
         </div>
       </div>
 
@@ -374,11 +358,11 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
       </div>
       <div class="ctrl-row">
         <span class="ctrl-label">보유 캐시</span>
-        <input type="number" class="sc-input" id="inpOwned" value="68100" onchange="recalcShortage()">
+        <input type="number" class="sc-input" id="inpOwned" value="3000" onchange="recalcShortage()">
       </div>
       <div class="ctrl-row">
         <span class="ctrl-label">상품 금액 (캐시)</span>
-        <input type="number" class="sc-input" id="inpPrice" value="200000" onchange="recalcShortage()">
+        <input type="number" class="sc-input" id="inpPrice" value="30000" onchange="recalcShortage()">
       </div>
       <div class="calc-row">
         <span class="calc-lb">→ 부족분</span>
@@ -392,18 +376,39 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
       <div class="pf-item">
         <span class="pf-badge">P01</span>
         <div class="pf-name">
-          <strong>10만원 초과 안내</strong>
-          <span class="pf-sub">부족분 &gt; 100,000원인 경우</span>
+          <strong>이용안내</strong>
+          <span class="pf-sub">이용안내 링크 클릭 시</span>
         </div>
-        <button class="pf-btn" onclick="openPopup('overlayP01')">열기</button>
+        <button class="pf-btn" onclick="openPopup('overlayTerms')">열기</button>
       </div>
       <div class="pf-item">
         <span class="pf-badge">P02</span>
         <div class="pf-name">
-          <strong>이용안내 팝업</strong>
+          <strong>한도 초과</strong>
+          <span class="pf-sub">충전 한도 초과 시</span>
+        </div>
+        <button class="pf-btn" onclick="openPopup('overlayLimit')">열기</button>
+      </div>
+    </div>
+
+    <!-- ① 팝업 구성 (일반충전 전용) -->
+    <div class="side-card" id="cardPopupsGeneral">
+      <div class="sc-title">팝업 구성</div>
+      <div class="pf-item">
+        <span class="pf-badge">P01</span>
+        <div class="pf-name">
+          <strong>이용안내</strong>
           <span class="pf-sub">이용안내 링크 클릭 시</span>
         </div>
         <button class="pf-btn" onclick="openPopup('overlayTerms')">열기</button>
+      </div>
+      <div class="pf-item">
+        <span class="pf-badge">P02</span>
+        <div class="pf-name">
+          <strong>한도 초과</strong>
+          <span class="pf-sub">충전 한도 초과 시</span>
+        </div>
+        <button class="pf-btn" onclick="openPopup('overlayLimit')">열기</button>
       </div>
     </div>
 
@@ -464,7 +469,8 @@ function setMode(m) {
   document.getElementById('cardBanner').style.display   = isShortage ? 'none' : '';
   document.getElementById('cardRec').style.display      = isShortage ? 'none' : '';
   document.getElementById('cardShortage').style.display = isShortage ? '' : 'none';
-  document.getElementById('cardPopups').style.display   = isShortage ? '' : 'none';
+  document.getElementById('cardPopups').style.display        = isShortage ? '' : 'none';
+  document.getElementById('cardPopupsGeneral').style.display = isShortage ? 'none' : '';
 
   // 헤더: 자동충전 버튼 — 부족분에서도 동일하게 노출
 
@@ -472,9 +478,8 @@ function setMode(m) {
   document.getElementById('bannerWrap').style.display   = isShortage ? 'none' : '';
   document.getElementById('shortageCtx').style.display  = isShortage ? '' : 'none';
   document.getElementById('shortageBadge').style.display= isShortage ? '' : 'none';
-  document.getElementById('unitColHd').style.display    = isShortage ? '' : 'none';
-  document.getElementById('prodList').style.display     = isShortage ? 'none' : '';
-  document.getElementById('shortageItem').style.display = isShortage ? '' : 'none';
+  document.getElementById('prodList').style.display      = isShortage ? 'none' : '';
+  document.getElementById('shortageList').style.display  = isShortage ? '' : 'none';
 
   if (isShortage) {
     document.getElementById('secLabelText').textContent = '충전단위 선택';
@@ -509,7 +514,7 @@ function selectProduct(idx) {
 
 /* ─── 일반충전: 요약 업데이트 ─── */
 function updateSummary(payAmt, ownedCash) {
-  document.getElementById('summMain').textContent  = fmt(payAmt) + ' 원';
+  document.getElementById('summMain').textContent  = '₩ ' + fmt(payAmt);
   document.getElementById('summAfter').textContent = fmt(ownedCash + payAmt) + ' 캐시';
 }
 
@@ -554,29 +559,56 @@ function updateRec() {
 }
 
 /* ─── 부족분: 값 재계산 ─── */
+let shortageSelIdx = 0;
+let shortageItems  = [];
+
 function recalcShortage() {
   const owned    = parseInt(document.getElementById('inpOwned').value)  || 0;
   const price    = parseInt(document.getElementById('inpPrice').value)  || 0;
   const itemName = document.getElementById('inpItemName').value.trim() || '이용권';
   const shortage = Math.max(0, price - owned);
-  const after    = owned + shortage;
 
   // 컨텍스트 strip
-  document.getElementById('ctxName').textContent    = itemName + ' 구매';
-  document.getElementById('ctxAmount').textContent  = fmt(shortage) + ' 캐시 부족';
-
-  // 단일 상품
-  document.getElementById('shortageItemName').textContent = fmt(shortage) + ' 캐시';
+  document.getElementById('ctxName').textContent   = itemName + ' 구매';
+  document.getElementById('ctxAmount').textContent = fmt(shortage) + ' 캐시 부족';
 
   // 보유캐시 row
   document.getElementById('cashVal').textContent = fmt(owned) + ' 캐시';
 
-  // 요약
-  document.getElementById('summMain').textContent  = fmt(shortage) + ' 원';
-  document.getElementById('summAfter').textContent = fmt(after) + ' 캐시';
-
   // 패널 calc
   document.getElementById('calcShortage').textContent = fmt(shortage) + ' 캐시';
+
+  // 부족분 상품 리스트: 부족금액 + 그보다 큰 기존 상품들
+  shortageItems = [
+    { n: fmt(shortage) + '캐시', v: shortage },
+    ...products.filter(p => p.v > shortage)
+  ];
+  shortageSelIdx = 0;
+
+  document.getElementById('shortageList').innerHTML = shortageItems.map((p, i) => `
+    <div class="prod" onclick="selectShortageProduct(${i})">
+      <div class="prod-l">
+        <div class="radio${i === 0 ? ' on' : ''}" id="sradio${i}"></div>
+        <span class="pname">${p.n}</span>
+      </div>
+      <span class="pprice">₩ ${fmt(p.v)}</span>
+    </div>`).join('');
+
+  updateShortageSummary(shortage, owned);
+}
+
+function selectShortageProduct(idx) {
+  shortageSelIdx = idx;
+  document.querySelectorAll('#shortageList .radio').forEach((r, i) => {
+    r.className = 'radio' + (i === idx ? ' on' : '');
+  });
+  const owned = parseInt(document.getElementById('inpOwned').value) || 0;
+  updateShortageSummary(shortageItems[idx].v, owned);
+}
+
+function updateShortageSummary(payAmt, ownedCash) {
+  document.getElementById('summMain').textContent  = '₩ ' + fmt(payAmt);
+  document.getElementById('summAfter').textContent = fmt(ownedCash + payAmt) + ' 캐시';
 }
 
 /* ─── 팝업 ─── */

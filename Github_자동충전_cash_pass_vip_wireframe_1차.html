@@ -168,6 +168,13 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
   <div class="phone-col">
     <div class="frame" id="frame">
 
+      <!-- Toast -->
+      <div id="toast" style="
+        display:none;position:absolute;bottom:80px;left:50%;transform:translateX(-50%);
+        background:rgba(0,0,0,0.8);color:#fff;font-size:13px;padding:10px 18px;
+        border-radius:20px;white-space:nowrap;z-index:9999;pointer-events:none;
+      "></div>
+
       <!-- S01: 미가입 — 지정금액 충전 -->
       <div class="screen on" id="s01">
         <div class="hd">
@@ -195,17 +202,17 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
             <span class="unit-desc">미만인 경우 아래 금액을 자동으로 충전합니다.</span>
           </div>
         </div>
-        <div class="prod-hd"><span class="prod-hd-l">충전 캐시</span><span class="prod-hd-r">원화금액</span></div>
+        <div class="prod-hd"><span class="prod-hd-l">충전 캐시</span><span class="prod-hd-r">결제 금액</span></div>
         <div class="prod-list" id="prodListS01" style="padding:0 20px">
-          <div class="prod" data-value="3000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">3,000캐시</div><div class="prod-bonus"><span>+ 100 캐시</span><span class="prod-rate">3%</span></div></div><div class="prod-price">3,000원</div></div>
-          <div class="prod" data-value="5000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">5,000캐시</div><div class="prod-bonus"><span>+ 200 캐시</span><span class="prod-rate">4%</span></div></div><div class="prod-price">5,000원</div></div>
-          <div class="prod" data-value="10000" onclick="selectProd(this)"><div class="radio on"></div><div class="prod-main"><div class="prod-cash">10,000캐시</div><div class="prod-bonus"><span>+ 500 캐시</span><span class="prod-rate">5%</span></div></div><div class="prod-price">10,000원</div></div>
-          <div class="prod" data-value="30000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">30,000캐시</div><div class="prod-bonus"><span>+ 1,800 캐시</span><span class="prod-rate">6%</span></div></div><div class="prod-price">30,000원</div></div>
-          <div class="prod" data-value="50000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">50,000캐시</div><div class="prod-bonus"><span>+ 3,500 캐시</span><span class="prod-rate">7%</span></div></div><div class="prod-price">50,000원</div></div>
-          <div class="prod" data-value="100000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">100,000캐시</div><div class="prod-bonus"><span>+ 10,000 캐시</span><span class="prod-rate">10%</span></div></div><div class="prod-price">100,000원</div></div>
+          <div class="prod" data-value="3000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">3,000캐시</div><div class="prod-bonus"><span>+ 100 캐시</span><span class="prod-rate">3%</span></div></div><div class="prod-price">₩ 3,000</div></div>
+          <div class="prod" data-value="5000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">5,000캐시</div><div class="prod-bonus"><span>+ 200 캐시</span><span class="prod-rate">4%</span></div></div><div class="prod-price">₩ 5,000</div></div>
+          <div class="prod" data-value="10000" onclick="selectProd(this)"><div class="radio on"></div><div class="prod-main"><div class="prod-cash">10,000캐시</div><div class="prod-bonus"><span>+ 500 캐시</span><span class="prod-rate">5%</span></div></div><div class="prod-price">₩ 10,000</div></div>
+          <div class="prod" data-value="30000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">30,000캐시</div><div class="prod-bonus"><span>+ 1,800 캐시</span><span class="prod-rate">6%</span></div></div><div class="prod-price">₩ 30,000</div></div>
+          <div class="prod" data-value="50000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">50,000캐시</div><div class="prod-bonus"><span>+ 3,500 캐시</span><span class="prod-rate">7%</span></div></div><div class="prod-price">₩ 50,000</div></div>
+          <div class="prod" data-value="100000" onclick="selectProd(this)"><div class="radio"></div><div class="prod-main"><div class="prod-cash">100,000캐시</div><div class="prod-bonus"><span>+ 10,000 캐시</span><span class="prod-rate">10%</span></div></div><div class="prod-price">₩ 100,000</div></div>
         </div>
         <div class="bottom-summ">
-          <div class="bs-row main"><span class="bs-lb">결제 금액</span><span class="bs-val">10,000 원</span></div>
+          <div class="bs-row main"><span class="bs-lb">결제 금액</span><span class="bs-val">₩ 10,000</span></div>
           <div class="bs-div"></div>
           <div class="bs-row"><span class="bs-lb">보너스 캐시</span><span class="bs-val">+ 500 캐시</span></div>
           <div class="bs-row"><span class="bs-lb">충전 후 보유 캐시</span><span class="bs-val">14,500 캐시</span></div>
@@ -242,17 +249,17 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
             <span class="unit-desc">에 자동 충전됩니다.</span>
           </div>
         </div>
-        <div class="prod-hd"><span class="prod-hd-l">충전 캐시</span><span class="prod-hd-r">원화금액</span></div>
+        <div class="prod-hd"><span class="prod-hd-l">충전 캐시</span><span class="prod-hd-r">결제 금액</span></div>
         <div class="prod-list" style="padding:0 20px">
-          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">3,000캐시</div><div class="prod-bonus"><span>+ 100 캐시</span><span class="prod-rate">3%</span></div></div><div class="prod-price">3,000원</div></div>
-          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">5,000캐시</div><div class="prod-bonus"><span>+ 200 캐시</span><span class="prod-rate">4%</span></div></div><div class="prod-price">5,000원</div></div>
-          <div class="prod"><div class="radio on"></div><div class="prod-main"><div class="prod-cash">10,000캐시</div><div class="prod-bonus"><span>+ 500 캐시</span><span class="prod-rate">5%</span></div></div><div class="prod-price">10,000원</div></div>
-          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">30,000캐시</div><div class="prod-bonus"><span>+ 1,800 캐시</span><span class="prod-rate">6%</span></div></div><div class="prod-price">30,000원</div></div>
-          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">50,000캐시</div><div class="prod-bonus"><span>+ 3,500 캐시</span><span class="prod-rate">7%</span></div></div><div class="prod-price">50,000원</div></div>
-          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">100,000캐시</div><div class="prod-bonus"><span>+ 10,000 캐시</span><span class="prod-rate">10%</span></div></div><div class="prod-price">100,000원</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">3,000캐시</div><div class="prod-bonus"><span>+ 100 캐시</span><span class="prod-rate">3%</span></div></div><div class="prod-price">₩ 3,000</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">5,000캐시</div><div class="prod-bonus"><span>+ 200 캐시</span><span class="prod-rate">4%</span></div></div><div class="prod-price">₩ 5,000</div></div>
+          <div class="prod"><div class="radio on"></div><div class="prod-main"><div class="prod-cash">10,000캐시</div><div class="prod-bonus"><span>+ 500 캐시</span><span class="prod-rate">5%</span></div></div><div class="prod-price">₩ 10,000</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">30,000캐시</div><div class="prod-bonus"><span>+ 1,800 캐시</span><span class="prod-rate">6%</span></div></div><div class="prod-price">₩ 30,000</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">50,000캐시</div><div class="prod-bonus"><span>+ 3,500 캐시</span><span class="prod-rate">7%</span></div></div><div class="prod-price">₩ 50,000</div></div>
+          <div class="prod"><div class="radio"></div><div class="prod-main"><div class="prod-cash">100,000캐시</div><div class="prod-bonus"><span>+ 10,000 캐시</span><span class="prod-rate">10%</span></div></div><div class="prod-price">₩ 100,000</div></div>
         </div>
         <div class="bottom-summ">
-          <div class="bs-row main"><span class="bs-lb">결제 금액</span><span class="bs-val">10,000 원</span></div>
+          <div class="bs-row main"><span class="bs-lb">결제 금액</span><span class="bs-val">₩ 10,000</span></div>
           <div class="bs-div"></div>
           <div class="bs-row"><span class="bs-lb">보너스 캐시</span><span class="bs-val">+ 500 캐시</span></div>
           <div class="bs-row"><span class="bs-lb">충전 후 보유 캐시</span><span class="bs-val">14,500 캐시</span></div>
@@ -277,10 +284,10 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         <div class="info-tbl">
           <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액 충전</span></div>
           <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">1,000캐시 미만 시</span></div>
-          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
-          <div class="info-row"><span class="info-lb">보너스 캐시</span><span class="info-val">500캐시</span></div>
-          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
-          <div class="info-row"><span class="info-lb">결제 일시</span><span class="info-val">2026.05.13 14:32</span></div>
+          <div class="info-row"><span class="info-lb">충전 캐시</span><span class="info-val">10,000캐시 (+500캐시)</span></div>
+          <div class="info-row"><span class="info-lb">결제 금액</span><span class="info-val">₩ 10,000</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026년 05월 13일</span></div>
+          <div class="info-row"><span class="info-lb">결제 일시</span><span class="info-val">2026년 05월 13일 14시 32분</span></div>
           <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
         </div>
         <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s04')">확인</button></div>
@@ -297,11 +304,16 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
             <div class="ub-sub">지정금액 충전</div>
           </div>
         </div>
+        <div class="notice-box" style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:14px;flex-shrink:0">ℹ️</span>
+          <div class="nb-sub" style="color:#1e40af">자동충전 조건을 변경하려면 해지 후 재가입이 필요합니다.</div>
+        </div>
         <div class="info-tbl">
           <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액</span></div>
           <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">5,000캐시 미만 시</span></div>
-          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
-          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          <div class="info-row"><span class="info-lb">충전 캐시</span><span class="info-val">10,000캐시 (+500캐시)</span></div>
+          <div class="info-row"><span class="info-lb">결제 금액</span><span class="info-val">₩ 10,000</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026년 05월 13일</span></div>
           <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
         </div>
         <div class="btn-wrap">
@@ -329,8 +341,9 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액</span></div>
           <div class="info-row"><span class="info-lb">가입 서비스</span><span class="info-val">카카오페이지</span></div>
           <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">5,000캐시 미만 시</span></div>
-          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
-          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          <div class="info-row"><span class="info-lb">충전 캐시</span><span class="info-val">10,000캐시 (+500캐시)</span></div>
+          <div class="info-row"><span class="info-lb">결제 금액</span><span class="info-val">₩ 10,000</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026년 05월 13일</span></div>
           <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
         </div>
         <div class="btn-wrap">
@@ -357,12 +370,13 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         <div class="info-tbl">
           <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액</span></div>
           <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">5,000캐시 미만 시</span></div>
-          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
-          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          <div class="info-row"><span class="info-lb">충전 캐시</span><span class="info-val">10,000캐시 (+500캐시)</span></div>
+          <div class="info-row"><span class="info-lb">결제 금액</span><span class="info-val">₩ 10,000</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026년 05월 13일</span></div>
           <div class="info-row"><span class="info-lb">결제 수단</span><span class="info-val">카카오페이머니</span></div>
         </div>
         <div class="btn-wrap row">
-          <button class="btn secondary half" onclick="showScreen('s08')">해지하기</button>
+          <button class="btn secondary half" onclick="showScreen('s07')">해지하기</button>
           <button class="btn primary half" onclick="showScreen('s04')">활성화하기</button>
         </div>
       </div>
@@ -377,16 +391,18 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         <div class="info-tbl">
           <div class="info-row"><span class="info-lb">자동충전 종류</span><span class="info-val">캐시 PASS VIP — 지정금액</span></div>
           <div class="info-row"><span class="info-lb">충전 조건</span><span class="info-val">5,000캐시 미만 시</span></div>
-          <div class="info-row"><span class="info-lb">충전 금액</span><span class="info-val">10,000캐시 (10,000원)</span></div>
-          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026.05.13</span></div>
+          <div class="info-row"><span class="info-lb">충전 캐시</span><span class="info-val">10,000캐시 (+500캐시)</span></div>
+          <div class="info-row"><span class="info-lb">결제 금액</span><span class="info-val">₩ 10,000</span></div>
+          <div class="info-row"><span class="info-lb">가입 일자</span><span class="info-val">2026년 05월 13일</span></div>
         </div>
         <div class="btn-wrap row">
-          <button class="btn secondary half" onclick="showScreen('s04')">취소</button>
-          <button class="btn primary half" onclick="openPopup('p03')">해지하기</button>
+          <button class="btn secondary half" onclick="showScreen('s01');showToast('자동충전이 해지되었습니다.')">해지하기</button>
+          <button class="btn primary half" onclick="showScreen('s04')">유지하기</button>
         </div>
       </div>
 
-      <!-- S08: 해지 완료 -->
+      <!-- S08: 해지 완료 (ATU 기준 토스트로 대체, 미사용) -->
+      <!--
       <div class="screen" id="s08">
         <div class="hd"><div class="hd-wrap"><div class="hd-title">캐시 PASS VIP</div><span class="hd-close">✕</span></div></div>
         <div class="complete-area" style="padding-top:40px">
@@ -397,6 +413,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         <div style="height:60px"></div>
         <div class="btn-wrap"><button class="btn primary" onclick="showScreen('s01')">확인</button></div>
       </div>
+      -->
 
       <!-- P01: 중복 가입 불가 -->
       <div class="overlay" id="p01">
@@ -421,8 +438,9 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
             <div class="popup-info">
               <div class="popup-info-row"><span class="popup-info-lb">자동충전 종류</span><span class="popup-info-val">캐시 PASS VIP</span></div>
               <div class="popup-info-row"><span class="popup-info-lb">충전 조건</span><span class="popup-info-val">5,000캐시 미만 시</span></div>
-              <div class="popup-info-row"><span class="popup-info-lb">충전 금액</span><span class="popup-info-val">10,000캐시 (10,000원)</span></div>
-              <div class="popup-info-row"><span class="popup-info-lb">가입 일자</span><span class="popup-info-val">2026.05.13</span></div>
+              <div class="popup-info-row"><span class="popup-info-lb">충전 캐시</span><span class="popup-info-val">10,000캐시 (+500캐시)</span></div>
+              <div class="popup-info-row"><span class="popup-info-lb">결제 금액</span><span class="popup-info-val">₩ 10,000</span></div>
+              <div class="popup-info-row"><span class="popup-info-lb">가입 일자</span><span class="popup-info-val">2026년 05월 13일</span></div>
             </div>
           </div>
           <div class="popup-btns">
@@ -432,7 +450,8 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         </div>
       </div>
 
-      <!-- P03: 해지 확인 -->
+      <!-- P03: 해지 확인 (ATU 기준 S07 화면으로 대체, 미사용) -->
+      <!--
       <div class="overlay" id="p03">
         <div class="popup">
           <div class="popup-body">
@@ -445,6 +464,7 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
           </div>
         </div>
       </div>
+      -->
 
       <!-- P04: 결제 실패 -->
       <div class="overlay" id="p04">
@@ -525,7 +545,6 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
       <div class="sc-btns">
         <button class="sc-btn" id="sb-s03" onclick="showScreen('s03')">가입 완료</button>
         <button class="sc-btn" id="sb-s07" onclick="showScreen('s07')">해지 확인</button>
-        <button class="sc-btn" id="sb-s08" onclick="showScreen('s08')">해지 완료</button>
       </div>
     </div>
 
@@ -542,10 +561,9 @@ body{font-family:var(--font);background:var(--bg);padding:20px 24px;color:var(--
         <div class="pf-name"><strong>조건 변경 확인</strong><span class="pf-sub">기존 상품 해지 후 신규 가입 안내</span></div>
         <button class="pf-btn" onclick="openPopup('p02')">열기</button>
       </div>
-      <div class="pf-item">
+      <div class="pf-item" style="opacity:0.4">
         <span class="pf-badge">P03</span>
-        <div class="pf-name"><strong>해지 확인</strong><span class="pf-sub">해지 즉시 적용 안내</span></div>
-        <button class="pf-btn" onclick="openPopup('p03')">열기</button>
+        <div class="pf-name"><strong>해지 확인</strong><span class="pf-sub">미사용 — S07 화면으로 대체</span></div>
       </div>
       <div class="pf-item">
         <span class="pf-badge">P04</span>
@@ -597,7 +615,7 @@ function selectProd(el) {
 }
 
 
-const sbMap = {'s01':'sb-s01','s02':'sb-s02','s03':'sb-s03','s04':'sb-s04','s05':'sb-s05','s06':'sb-s06','s07':'sb-s07','s08':'sb-s08'};
+const sbMap = {'s01':'sb-s01','s02':'sb-s02','s03':'sb-s03','s04':'sb-s04','s05':'sb-s05','s06':'sb-s06','s07':'sb-s07'};
 const screens = Object.keys(sbMap);
 let currentScreen = 's01';
 
@@ -618,6 +636,17 @@ function openPopup(id) {
 }
 function closePopup(id) {
   document.getElementById(id).classList.remove('on');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  t.style.opacity = '1';
+  setTimeout(() => {
+    t.style.opacity = '0';
+    setTimeout(() => { t.style.display = 'none'; }, 300);
+  }, 2500);
 }
 
 document.addEventListener('keydown', e => {
